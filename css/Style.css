@@ -1,1259 +1,401 @@
-/* =========================================================================
-   0. CSS 變數與基礎設定 (Variables & Base Styles)
-   ========================================================================= */
+@import url('./tokens.css');
 
-:root {
-  /* 新的柔和復古調色，貼近參考網站的霓虹感 */
-  --color-primary: #ff8a3c;
-  --color-secondary: #ffdd65;
-  --color-accent: #2adcc2;
-  --color-background-dark: #050714;
-  --color-background-mid: rgba(255, 255, 255, 0.92);
-  --color-background-light: rgba(255, 255, 255, 0.75);
-  --color-text-light: #1a130b;
-  --color-text-muted: rgba(26, 19, 11, 0.7);
-  --color-border: rgba(26, 19, 11, 0.08);
-
-  --color-success: #22c55e;
-  --color-danger: #f05252;
-  --color-info: #2563eb;
-  --color-warning: #f97316;
-
-  --padding-unit: 16px;
-  --spacing-s: 8px;
-  --spacing-m: 16px;
-  --spacing-l: 24px;
-  --spacing-xl: 32px;
-
-  --z-index-low: 10;
-  --z-index-mid: 100;
-  --z-index-high: 1000;
-  --z-index-curtain: 9999;
-
-  --transition-fast: 0.2s ease-out;
-  --transition-medium: 0.5s ease-in-out;
-  --transition-slow: 1s cubic-bezier(0.8, 0.2, 0.2, 0.8);
-
-  --border-radius-s: 10px;
-  --border-radius-m: 18px;
-  --border-radius-l: 28px;
-}
-
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 body {
-  font-family: "Space Grotesk", "Noto Sans TC", system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--color-text-light);
+  margin: 0;
+  font-family: var(--font-sans);
+  background: radial-gradient(circle at 20% 20%, rgba(152, 245, 210, 0.08), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(176, 255, 107, 0.06), transparent 32%),
+    linear-gradient(135deg, #0f0f12 0%, #111118 60%, #0d0d12 100%);
+  color: var(--color-text);
   min-height: 100vh;
-  background: radial-gradient(circle at top left, #ffeaa7 0%, #ffd7b5 30%, #fff 55%),
-    linear-gradient(135deg, #1d2342, #050714 60%);
-  background-attachment: fixed;
-  overflow-x: hidden;
+  letter-spacing: 0.02em;
+}
+
+.page-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--spacing-12) var(--spacing-8) var(--spacing-16);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+header.page-header {
+  display: flex;
   align-items: center;
-  padding: clamp(20px, 4vw, 60px);
-  position: relative;
-  touch-action: manipulation;
+  justify-content: space-between;
+  gap: var(--spacing-6);
 }
 
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  width: 45vmax;
-  height: 45vmax;
-  background: radial-gradient(circle, rgba(255, 184, 0, 0.18), transparent 65%);
-  z-index: 0;
-  filter: blur(2px);
-  transform: translateZ(0);
+.brand-mark {
+  font-size: 18px;
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
 }
 
-body::before {
-  top: -10vmax;
-  right: -6vmax;
+.brand-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--accent-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
-body::after {
-  bottom: -15vmax;
-  left: -8vmax;
+header.page-header nav {
+  display: flex;
+  gap: var(--spacing-4);
+  align-items: center;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  color: var(--color-primary);
-  font-family: "ZCOOL KuaiLe", "Space Grotesk", cursive;
-  letter-spacing: 1px;
+header.page-header a {
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-p {
-  line-height: 1.7;
+header.page-header a:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
-.highlight {
-  color: var(--color-accent);
-  font-weight: 600;
-  text-shadow: 0 12px 30px rgba(42, 220, 194, 0.4);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-/* =========================================================================
-   1. 遊戲容器與畫面切換 (Game Container & Screen Management)
-   ========================================================================= */
-
-#game-container {
-  width: min(1200px, 100%);
-  min-height: clamp(640px, 88vh, 980px);
-  border-radius: 32px;
+.hero {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-6);
+  align-items: end;
+  padding: var(--spacing-12);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
   position: relative;
   overflow: hidden;
-  padding: clamp(20px, 3vw, 40px);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), #fff4e3);
-  box-shadow: 0 40px 120px rgba(5, 7, 20, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  isolation: isolate;
 }
 
-#game-container::before,
-#game-container::after {
+.hero::after {
   content: "";
   position: absolute;
   inset: 0;
+  background: radial-gradient(circle at 70% 30%, rgba(176, 255, 107, 0.08), transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(152, 245, 210, 0.12), transparent 40%);
   pointer-events: none;
-  z-index: 1;
+  mix-blend-mode: screen;
 }
 
-#game-container::before {
-  background: radial-gradient(circle at 15% 20%, rgba(255, 155, 85, 0.25), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(42, 220, 194, 0.2), transparent 35%);
+.hero h1 {
+  grid-column: span 7;
+  font-size: var(--text-h1);
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 0.92;
 }
 
-#game-container::after {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
-  background-size: 120px 120px;
-  opacity: 0.3;
-  mix-blend-mode: color-burn;
+.hero p {
+  grid-column: span 4;
+  font-size: var(--text-body);
+  color: var(--color-muted);
+  line-height: 1.6;
+  margin: 0;
 }
 
-.screen {
-  position: absolute;
-  inset: clamp(10px, 2vw, 24px);
-  border-radius: 28px;
-  padding: clamp(16px, 3vw, 48px);
+.hero .cta-row {
+  grid-column: span 12;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-glow), var(--accent-celadon));
+  color: #0a0a0f;
+  border: none;
+  padding: 14px 22px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    filter var(--transition-fast);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02) rotate(-0.3deg);
+  box-shadow: var(--shadow-hover);
+  filter: brightness(1.05);
+}
+
+.hero .meta-tag {
+  font-size: 14px;
+  color: var(--color-muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.section-heading {
+  font-size: var(--text-h2);
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+  margin: 0 0 var(--spacing-4);
+}
+
+.editorial-section {
+  background: var(--color-surface-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-10);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-6);
+  box-shadow: var(--shadow-soft);
+}
+
+.editorial-section .lede {
+  grid-column: span 5;
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.editorial-section .pullquote {
+  grid-column: span 7;
+  font-size: 24px;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.hover-gallery {
   display: flex;
   flex-direction: column;
-  gap: clamp(16px, 2.5vw, 32px);
-  align-items: stretch;
-  justify-content: space-between;
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.95), rgba(255, 245, 229, 0.95));
-  box-shadow: 0 40px 60px rgba(13, 10, 24, 0.18);
-  backdrop-filter: blur(12px);
-  transition: opacity var(--transition-medium),
-    transform var(--transition-medium),
-    box-shadow var(--transition-medium);
+  gap: var(--spacing-4);
+}
+
+.hover-gallery p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.hover-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-auto-rows: 120px;
+  gap: var(--spacing-3);
+}
+
+.hover-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition-slow), filter var(--transition-fast),
+    background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hover-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 55%);
   opacity: 0;
-  pointer-events: none;
-  transform: translate3d(40px, 0, 0);
-  z-index: var(--z-index-low);
-}
-
-.screen.active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0);
-  z-index: var(--z-index-mid);
-  box-shadow: 0 30px 80px rgba(5, 7, 20, 0.25);
-}
-
-.scrollable-content-area {
-  width: 100%;
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: var(--spacing-m) 0;
-}
-
-/* =========================================================================
-   2. 通用 UI 元件 (Buttons, Alerts)
-   ========================================================================= */
-
-.btn {
-  padding: 14px 28px;
-  border: 2px solid;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  transition: all var(--transition-fast);
-  text-transform: uppercase;
-  background: transparent;
-}
-
-/* Primary Button (金色) */
-.btn-primary {
-  background: linear-gradient(120deg, #ff8a3c, #ffdd65);
-  border-color: transparent;
-  color: #2f1300;
-  box-shadow: 0 15px 35px rgba(255, 138, 60, 0.4);
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 25px 35px rgba(255, 138, 60, 0.45);
-}
-
-/* Secondary Button (深色邊框) */
-.btn-secondary {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-color: rgba(26, 19, 11, 0.2);
-  color: var(--color-text-light);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  color: var(--color-primary);
-  border-color: rgba(255, 138, 60, 0.6);
-}
-
-.btn:disabled,
-.btn[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-/* Alert Message (彈出訊息) */
-.alert {
-  position: fixed;
-  top: var(--spacing-m);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: var(--z-index-high);
-  display: flex;
-  align-items: center;
-  padding: var(--spacing-m) var(--spacing-l);
-  border-radius: var(--border-radius-l);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  transition: transform var(--transition-fast), opacity var(--transition-fast);
-  opacity: 1;
-}
-
-.alert.hidden {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-50px);
-}
-
-.alert-icon-symbol {
-  margin-right: var(--spacing-m);
-  font-size: 1.2rem;
-}
-
-.alert.success {
-  background-color: var(--color-success);
-}
-.alert.error {
-  background-color: var(--color-danger);
-}
-.alert.info {
-  background-color: var(--color-info);
-}
-
-/* =========================================================================
-   3. 特殊效果與轉場 (Curtain & Modals)
-   ========================================================================= */
-
-/* A. 布幕轉場 (Curtain) */
-.curtain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(circle at top, rgba(255, 221, 101, 0.6), transparent),
-    linear-gradient(120deg, #ff8a3c, #ffdd65);
-  z-index: var(--z-index-curtain);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
-  pointer-events: none;
-}
-
-.curtain-closed {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.curtain-open {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.curtain-center-logo {
-  /* 煉金符號或 Logo 佔位符 */
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 6px solid rgba(255, 255, 255, 0.8);
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), transparent 60%);
-  animation: pulse 1.5s infinite alternate;
-  box-shadow: 0 20px 60px rgba(255, 136, 56, 0.4);
-}
-
-@keyframes pulse {
-  from {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-  }
-  to {
-    box-shadow: 0 0 40px rgba(255, 255, 255, 1);
-  }
-}
-
-/* B. 結果彈窗 (Modal) */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  z-index: var(--z-index-high);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
   transition: opacity var(--transition-fast);
 }
 
-.modal.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.modal-content {
-  background-color: var(--color-background-mid);
-  padding: var(--spacing-xl);
-  border-radius: var(--border-radius-l);
-  max-width: 90%;
-  width: 380px;
-  text-align: center;
-  position: relative;
-  border: 3px solid var(--color-primary);
-  box-shadow: 0 0 30px rgba(240, 163, 10, 0.6);
-  transform: scale(0.8);
-  opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 0.4s ease-out;
-}
-
-.modal.active .modal-content {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: var(--color-text-light);
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 5px;
-  transition: color var(--transition-fast);
-}
-
-.close-btn:hover {
-  color: var(--color-danger);
-}
-
-.result-egg-img {
-  width: 150px;
-  height: 150px;
-  object-fit: contain;
-  margin: var(--spacing-m) auto;
-  animation: float-and-glow 3s infinite ease-in-out;
-}
-
-@keyframes float-and-glow {
-  0%,
-  100% {
-    transform: translateY(0);
-    box-shadow: 0 0 15px rgba(240, 163, 10, 0.5);
-  }
-  50% {
-    transform: translateY(-10px);
-    box-shadow: 0 0 25px rgba(240, 163, 10, 0.8);
-  }
-}
-
-.result-metadata {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-top: var(--spacing-s);
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: space-around;
-  margin-top: var(--spacing-xl);
-}
-
-/* =========================================================================
-   4. Screen 1 (首頁) 樣式
-   ========================================================================= */
-
-#screen-1 {
-  justify-content: space-between;
-}
-
-.title-section {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: clamp(10px, 2vw, 40px);
-  mix-blend-mode: multiply;
-}
-
-.lottie-title-container {
-  width: min(420px, 90%);
-  height: clamp(120px, 18vh, 220px);
-  margin: 0 auto;
-}
-
-.game-subtitle {
-  color: var(--color-text-light);
-  font-size: clamp(1rem, 2vw, 1.4rem);
+.hover-card .card-title {
+  margin: 0;
+  font-size: var(--text-h3);
+  letter-spacing: var(--letter-wide);
   text-transform: uppercase;
-  letter-spacing: 0.2rem;
-  color: var(--color-primary);
 }
 
-.menu-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: clamp(16px, 2.5vw, 32px);
-  width: 100%;
-  padding: clamp(8px, 2vw, 24px);
+.hover-card .card-subtitle {
+  margin: var(--spacing-2) 0 0;
+  color: var(--color-muted);
+  font-size: var(--text-small);
 }
 
-.menu-item-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 30px 60px rgba(13, 10, 24, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: transform var(--transition-medium),
-    box-shadow var(--transition-medium);
+.hover-card .card-arrow {
+  justify-self: flex-end;
+  font-size: 18px;
+  color: var(--color-text);
+  align-self: end;
 }
 
-.menu-item-wrapper:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 40px 80px rgba(13, 10, 24, 0.2);
+.hover-card:hover {
+  transform: translateY(-6px) scale(1.03) rotate(-0.8deg);
+  background: var(--card-bg, var(--color-surface-strong));
+  box-shadow: var(--shadow-hover);
+  filter: drop-shadow(0 8px 26px rgba(0, 0, 0, 0.4));
 }
 
-.lottie-button-container,
-.menu-item-wrapper .btn,
-.menu-item-wrapper .btn-secondary {
-  width: 100%;
-}
-
-.lottie-button-container {
-  aspect-ratio: 1;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  border-radius: 28px;
-  background: linear-gradient(135deg, #fff1d0, #ffd089);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5),
-    0 25px 35px rgba(255, 138, 60, 0.3);
-}
-
-.lottie-btn-text {
-  position: relative;
-  z-index: 1;
-  color: var(--color-text-light);
-  font-weight: 700;
-  font-size: clamp(0.8rem, 1.2vw, 1rem);
-  letter-spacing: 0.08em;
-  pointer-events: none;
-}
-
-.menu-item-description {
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
-  margin-top: var(--spacing-s);
-}
-
-.menu-desc-highlight {
-  color: var(--color-primary);
-  font-weight: 600;
-}
-
-.game-version-info {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  text-align: center;
-}
-
-/* =========================================================================
-   5. Screen 2 (故事對話) 樣式
-   ========================================================================= */
-
-#screen-2 {
-  padding: var(--spacing-m);
-}
-
-.story-area {
-  flex-grow: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: var(--spacing-m);
-}
-
-.dialog-history-container {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: var(--spacing-m);
-  border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 246, 230, 0.85));
-  border: 1px solid rgba(26, 19, 11, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  margin-bottom: var(--spacing-m);
-}
-
-.dialog-placeholder-intro {
-  text-align: center;
-  color: var(--color-text-muted);
-  margin-top: 50%;
-  transform: translateY(-50%);
-}
-
-.chat-bubble {
-  padding: var(--spacing-m);
-  border-radius: 24px;
-  margin-bottom: var(--spacing-m);
-  max-width: 80%;
-  word-wrap: break-word;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 25px 40px rgba(5, 7, 20, 0.12);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out,
-    box-shadow var(--transition-medium);
-}
-
-.chat-bubble.active {
+.hover-card:hover::before {
   opacity: 1;
-  transform: translateY(0);
 }
 
-.speaker-name {
-  display: block;
-  font-weight: bold;
-  color: var(--color-primary);
-  margin-bottom: 4px;
-}
-
-.dialog-footer-controls {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-m);
-}
-
-/* =========================================================================
-   6. Screen 4 (食材選擇) 樣式
-   ========================================================================= */
-
-#screen-4 {
-  justify-content: flex-start;
-  gap: var(--spacing-m);
-}
-
-.selection-header {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding-bottom: var(--spacing-s);
-  border-bottom: 1px solid rgba(26, 19, 11, 0.08);
-}
-
-.selection-status {
-  font-weight: 700;
-  color: var(--color-accent);
-  font-size: 1.1rem;
-}
-
-.ingredient-grid-wrapper {
-  flex-grow: 1;
-  width: 100%;
-  overflow-y: auto;
-  padding: var(--spacing-m) 0;
-}
-
-.ingredient-grid {
+.story-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: clamp(12px, 1.5vw, 20px);
-  padding: var(--spacing-s);
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-6);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-10);
+  box-shadow: var(--shadow-soft);
 }
 
-.ingredient-card {
+.story-title {
+  grid-column: span 5;
+  font-size: var(--text-h2);
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.story-body {
+  grid-column: span 7;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background: linear-gradient(175deg, #fff9f1, #ffe5bc);
-  border-radius: 18px;
-  padding: 18px 12px;
-  cursor: pointer;
-  position: relative;
-  transition: transform var(--transition-medium),
-    box-shadow var(--transition-medium),
-    border var(--transition-fast);
-  text-align: center;
-  box-shadow: 0 20px 30px rgba(5, 7, 20, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  gap: var(--spacing-3);
+  color: var(--color-muted);
+  line-height: 1.7;
 }
 
-.ingredient-card:hover {
-  transform: translateY(-6px) rotate(-1deg);
-  box-shadow: 0 30px 50px rgba(5, 7, 20, 0.18);
+.future-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-4);
 }
 
-.ing-img {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-}
-
-.card-name {
-  font-size: 0.9rem;
-  margin-top: var(--spacing-s);
-  color: var(--color-text-light);
-}
-
-/* 選擇狀態 */
-.ingredient-card.selected {
-  border-color: rgba(255, 138, 60, 0.8);
-  box-shadow: 0 30px 45px rgba(255, 138, 60, 0.25);
-  transform: translateY(-8px) scale(1.02);
-  background: linear-gradient(160deg, #fff0d6, #ffd59e);
-}
-
-.selection-checkbox {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 2px solid rgba(26, 19, 11, 0.2);
-}
-
-.ingredient-card.selected .selection-checkbox {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-/* 鎖定狀態 */
-.ingredient-card.locked {
-  opacity: 0.3;
-  cursor: not-allowed;
-  border-style: dashed;
-}
-
-.ingredient-card.locked .card-name {
-  color: var(--color-danger);
-}
-
-/* 禁用狀態（選滿 3 個後） */
-.ingredient-card.disabled:not(.selected) {
-  opacity: 0.6;
-  pointer-events: none;
-  border-color: rgba(26, 19, 11, 0.08);
-}
-
-.selection-footer {
-  width: 100%;
-  padding-top: var(--spacing-m);
-  border-top: 1px solid rgba(26, 19, 11, 0.08);
-}
-
-/* =========================================================================
-   7. Screen 5 (煉金儀式) 樣式
-   ========================================================================= */
-
-#screen-5 {
-  justify-content: space-around;
-}
-
-.video-container {
-  width: min(520px, 90%);
-  aspect-ratio: 16 / 9;
+.future-card {
+  padding: var(--spacing-6);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-strong);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spacing-3);
   position: relative;
   overflow: hidden;
-  border-radius: 30px;
-  box-shadow: 0 30px 80px rgba(5, 7, 20, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-#casting-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.5s ease;
-  opacity: 0.18;
-  filter: saturate(1.2);
-}
-
-.spinner-overlay {
+.future-card::after {
+  content: "";
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(180deg, rgba(5, 7, 20, 0.2), rgba(5, 7, 20, 0.6));
-  backdrop-filter: blur(2px);
+  background: radial-gradient(circle at 20% 20%, rgba(152, 245, 210, 0.08), transparent 50%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
-.loading-spinner {
-  border: 6px solid rgba(255, 255, 255, 0.4);
-  border-top: 6px solid var(--color-accent);
-  border-radius: 50%;
-  width: 64px;
-  height: 64px;
-  animation: spin 1.5s linear infinite;
+.future-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
 }
 
-@keyframes spin {
+.future-card:hover::after {
+  opacity: 1;
+}
+
+.future-card h3 {
+  margin: 0;
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+}
+
+.future-card p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.marquee {
+  margin-top: var(--spacing-10);
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--spacing-3) 0;
+}
+
+.marquee-track {
+  display: inline-flex;
+  gap: var(--spacing-6);
+  animation: marquee 18s linear infinite;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-wide);
+  color: var(--color-muted);
+}
+
+.marquee-segment {
+  font-size: 16px;
+}
+
+@keyframes marquee {
   0% {
-    transform: rotate(0deg);
+    transform: translateX(0);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translateX(-50%);
   }
 }
 
-.loading-text {
-  margin-top: var(--spacing-m);
-  color: var(--color-accent);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-}
-
-.casting-footer {
-  padding-top: var(--spacing-m);
-}
-
-/* =========================================================================
-   8. 持久性 UI (Persistent UI)
-   ========================================================================= */
-
-.persistent-ui {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: var(--z-index-mid);
-}
-
-/* UI 控制按鈕 */
-.ui-controls {
-  position: absolute;
-  top: clamp(12px, 4vw, 32px);
-  right: clamp(12px, 4vw, 32px);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  pointer-events: auto;
-}
-
-.ui-btn {
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid rgba(255, 138, 60, 0.4);
-  border-radius: 18px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: var(--color-primary);
-  transition: transform var(--transition-fast),
-    box-shadow var(--transition-fast);
-  box-shadow: 0 15px 30px rgba(5, 7, 20, 0.15);
-}
-
-.ui-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 40px rgba(5, 7, 20, 0.25);
-}
-
-/* 手部裝飾 */
-
-.hand-image-container {
-  position: absolute;
-  width: clamp(120px, 20vw, 200px);
-  height: clamp(120px, 20vw, 200px);
-  bottom: 0;
-  z-index: var(--z-index-low);
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-.hand-left {
-  left: 0;
-  transform: translateX(-20%);
-}
-
-.hand-right {
-  right: 0;
-  transform: translateX(20%);
-}
-
-.hand-graphic {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(5, 7, 20, 0.25));
-}
-
-.hand-status-light {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-}
-
-.status-ready {
-  background-color: var(--color-success);
-}
-.status-active {
-  background-color: var(--color-accent);
-  animation: glow 1s infinite alternate;
-}
-
-@keyframes glow {
-  from {
-    opacity: 0.7;
+@media (max-width: 960px) {
+  .page-shell {
+    padding: var(--spacing-8) var(--spacing-4) var(--spacing-12);
   }
-  to {
-    opacity: 1;
+  .hero,
+  .editorial-section,
+  .story-section {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .hero h1,
+  .hero p,
+  .hero .cta-row,
+  .editorial-section .lede,
+  .editorial-section .pullquote,
+  .story-title,
+  .story-body {
+    grid-column: span 6;
   }
 }
 
-/* 狀態欄 */
-.status-bar-placeholder {
-  position: absolute;
-  top: clamp(12px, 4vw, 32px);
-  left: clamp(12px, 4vw, 32px);
-  background: rgba(255, 255, 255, 0.92);
-  padding: 12px 16px;
-  border-radius: 20px;
-  border: 1px solid rgba(26, 19, 11, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  pointer-events: none;
-  box-shadow: 0 20px 40px rgba(5, 7, 20, 0.15);
-}
-
-.player-info {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-.resource-bar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-}
-
-.resource-label {
-  color: var(--color-text-muted);
-  width: 40px;
-}
-
-.bar-fill {
-  height: 6px;
-  border-radius: 4px;
-  transition: width 0.5s ease;
-}
-
-.mana-bar .bar-fill {
-  background-color: var(--color-accent);
-}
-.hp-bar .bar-fill {
-  background-color: var(--color-danger);
-}
-
-.bar-text {
-  width: 40px;
-  text-align: right;
-}
-
-/* =========================================================================
-   9. 新手導覽覆蓋層 (Guide Overlay) 樣式
-   ========================================================================= */
-
-
-.guide-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(5, 7, 20, 0.65);
-  backdrop-filter: blur(6px);
-  z-index: var(--z-index-curtain);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.3s;
-}
-
-.guide-overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.guide-focus-ring {
-  position: absolute;
-  pointer-events: none;
-  border: 4px solid rgba(255, 138, 60, 0.8);
-  border-radius: 30px;
-  box-shadow: 0 10px 40px rgba(255, 138, 60, 0.45);
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-.guide-tooltip {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 24px;
-  padding: var(--spacing-m);
-  width: min(280px, 90%);
-  box-shadow: 0 40px 70px rgba(5, 7, 20, 0.3);
-  pointer-events: auto;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-
-.tooltip-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-s);
-  border-bottom: 1px solid rgba(26, 19, 11, 0.08);
-  padding-bottom: 5px;
-}
-
-.tooltip-stage-indicator {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
-
-.tooltip-main-text {
-  font-size: 0.95rem;
-  color: var(--color-text-light);
-}
-
-.tooltip-footer {
-  margin-top: var(--spacing-m);
-  text-align: right;
-}
-
-
-.guide-click-prompt {
-  position: absolute;
-  bottom: 8%;
-  color: #fff;
-  background-color: rgba(5, 7, 20, 0.4);
-  padding: var(--spacing-s) var(--spacing-l);
-  border-radius: 999px;
-  font-size: 0.9rem;
-  animation: blink 1.5s infinite;
-  letter-spacing: 0.08em;
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/* =========================================================================
-   10. Screen Menu (食譜選單) & Gallery (圖鑑)
-   ========================================================================= */
-
-.recipe-list,
-.gallery-grid {
-  list-style: none;
-  padding: 0;
-  width: 100%;
-}
-
-.recipe-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-m);
-}
-
-.recipe-item {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 24px;
-  padding: var(--spacing-m);
-  border: 1px solid rgba(26, 19, 11, 0.08);
-  transition: transform var(--transition-medium),
-    box-shadow var(--transition-medium);
-  box-shadow: 0 25px 40px rgba(5, 7, 20, 0.12);
-}
-
-.recipe-item:hover:not(.locked) {
-  transform: translateY(-6px);
-  box-shadow: 0 40px 60px rgba(5, 7, 20, 0.18);
-}
-
-.recipe-card-wrapper {
-  display: flex;
-  gap: var(--spacing-m);
-  align-items: center;
-}
-
-.recipe-thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
-  object-fit: contain;
-  background-color: rgba(255, 255, 255, 0.7);
-}
-
-.recipe-info {
-  flex-grow: 1;
-}
-
-.recipe-name {
-  font-size: 1.1rem;
-  margin-bottom: 4px;
-}
-
-.recipe-ingredients,
-.recipe-description {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-}
-
-.highlight-success {
-  color: var(--color-success);
-}
-.highlight-danger {
-  color: var(--color-danger);
-}
-
-/* 鎖定食譜 */
-.recipe-card-locked {
-  opacity: 0.7;
-}
-
-.recipe-details-hidden {
-  margin-top: var(--spacing-s);
-}
-
-.hint-text {
-  color: var(--color-primary);
-  font-style: italic;
-}
-
-/* 圖鑑網格 */
-.gallery-filter-bar {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-m);
-  margin-top: var(--spacing-m);
-}
-
-.gallery-filter-bar .filter-btn {
-  background: rgba(255, 255, 255, 0.7);
-  border: none;
-  color: var(--color-text-muted);
-  font-weight: 600;
-  cursor: pointer;
-  padding: 8px 14px;
-  border-radius: 999px;
-  transition: all var(--transition-fast);
-}
-
-.gallery-filter-bar .filter-btn:hover,
-.gallery-filter-bar .filter-btn.active {
-  color: var(--color-primary);
-  box-shadow: 0 10px 25px rgba(5, 7, 20, 0.15);
-  background: #fff;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: clamp(12px, 2vw, 24px);
-  margin-top: var(--spacing-l);
-}
-
-.gallery-card {
-  text-align: center;
-  padding: var(--spacing-m);
-  border: 1px solid rgba(26, 19, 11, 0.08);
-  border-radius: 20px;
-  position: relative;
-  transition: transform var(--transition-medium),
-    box-shadow var(--transition-medium);
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 25px 40px rgba(5, 7, 20, 0.12);
-}
-
-.gallery-card:hover:not(.locked) {
-  transform: translateY(-6px);
-  box-shadow: 0 40px 60px rgba(5, 7, 20, 0.2);
-}
-
-.gallery-img {
-  width: 90%;
-  height: auto;
-  margin-bottom: var(--spacing-s);
-}
-
-.gallery-card.locked {
-  opacity: 0.4;
-}
-
-.card-overlay-detail {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(5, 7, 20, 0.5);
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 4px 12px;
-  border-radius: 999px;
-}
-
-/* =========================================================================
-   11. 響應式調整
-   ========================================================================= */
-
-@media (max-width: 1024px) {
-  body {
-    padding: 24px;
-  }
-
-  #game-container {
-    padding: 20px;
-    border-radius: 28px;
-  }
-
-  .menu-options {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  body {
-    padding: 16px;
-    align-items: flex-start;
-  }
-
-  #game-container {
-    min-height: calc(100vh - 32px);
-    padding: 16px;
-    border-radius: 24px;
-  }
-
-  .screen {
-    position: relative;
-    inset: 0;
-    border-radius: 20px;
-    padding: 20px;
-  }
-
-  .menu-options {
-    grid-template-columns: 1fr;
-  }
-
-  .ui-controls {
-    top: 16px;
-    right: 16px;
-  }
-
-  .status-bar-placeholder {
-    top: 16px;
-    left: 16px;
-  }
-
-  .hand-image-container {
-    opacity: 0.35;
-  }
-}
-
-@media (max-width: 480px) {
-  .selection-header {
+@media (max-width: 640px) {
+  header.page-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .dialog-footer-controls {
-    flex-direction: column;
+  header.page-header nav {
+    flex-wrap: wrap;
   }
 
-  .ingredient-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .hero {
+    padding: var(--spacing-8);
+  }
+
+  .hover-gallery-grid {
+    grid-auto-rows: 160px;
   }
 }
