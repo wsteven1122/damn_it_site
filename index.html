@@ -21,38 +21,62 @@
           DAMN IT! Magic Egg Lab
         </div>
         <nav>
-          <a href="#hero">Home</a>
+          <a href="#home">Home</a>
           <a href="#story">Story</a>
           <a href="#hover-gallery">Lab Notes</a>
           <a href="#future">Roadmap</a>
         </nav>
       </header>
 
-      <section class="hero" id="hero">
-        <h1>Alchemy Kitchen for Lost Eggs</h1>
-        <p>
-          A calm, story-driven playground for the mythical 米特蛋. Large breaths
-          of whitespace, gentle glows, and soft interactions guide you through a
-          living zine about cooking with chaos.
-        </p>
-        <div class="cta-row">
-          <button class="btn-primary">開始遊戲</button>
-          <span class="meta-tag">calm — editorial — exploratory</span>
+      <section class="grid-hero" id="home">
+        <div class="grid-hero-text">
+          <h1>Alchemy Kitchen for Lost Eggs</h1>
+          <p>
+            A calm, story-driven playground for the mythical 米特蛋。留白、霧面玻璃
+            與螢光邊界構成一個呼吸式的桌面。滑過卡片時，微量的旋轉與縮放
+            讓你像在翻閱一本活的雜誌。
+          </p>
+          <div class="grid-hero-meta">
+            <button class="btn-primary">開始遊戲</button>
+            <button class="btn-ghost">閱讀故事</button>
+            <span class="meta-tag">calm — editorial — exploratory</span>
+          </div>
         </div>
+        <div class="grid-hero-cards" id="grid-hero-cards"></div>
       </section>
 
       <section class="editorial-section" id="story">
         <h2 class="section-heading">魔法廚師 + 米特蛋的故事</h2>
         <div class="lede">
           魔法廚師在一座永夜的城市裡，收集失眠者的夢、街角的蒸氣與廚餘的溫度，
-          煉製出第一顆米特蛋。這本活的雜誌紀錄了她如何以柔和的呼吸動畫、
-          編輯式的版面，邀請你一起迷路。
+          煉製出第一顆米特蛋。這本活的雜誌紀錄了她如何以柔和的呼吸動畫、編輯式的版面，
+          邀請你一起迷路。滾動時的 reveal 像手工翻頁，hover 則是紙張微微隆起。
         </div>
         <div class="pullquote">
           「留白越多，香氣越明顯。」— 米特蛋魂<br />
-          以大寫無襯線、緊湊行距，配上柔和的霓光點綴，營造 calm editorial
-          的氛圍。
+          大寫無襯線、緊湊行距、螢光點綴，營造 calm editorial 的氛圍。
         </div>
+      </section>
+
+      <section class="story-double" aria-label="chaptered story">
+        <article class="story-block">
+          <div class="story-badge">Chapter 01</div>
+          <h3>霍格滑茲的夜班廚房</h3>
+          <p>
+            城堡最深的廚房藏著 56 種米特蛋結局。每顆蛋都帶著不同的香氣、色彩與音調，
+            一如 zine 的拼貼頁面。當主廚把你引入檯面，光暈與霧面玻璃交疊，
+            你會看到一個不完全對稱的格子世界。
+          </p>
+        </article>
+        <article class="story-block">
+          <div class="story-badge">Chapter 02</div>
+          <h3>母胎單身的咒語</h3>
+          <p>
+            她把孤獨煉成香料，將自我對話寫成邊欄註解。每個卡片都附著呼吸動畫，
+            hover 時微微放大、旋轉、甚至有一點霧度的浮出。就像 roundandround 的編輯設計，
+            你在探索時會覺得自己正翻閱一本有聲的手工刊物。
+          </p>
+        </article>
       </section>
 
       <section class="hover-gallery" id="hover-gallery">
@@ -62,16 +86,17 @@
       </section>
 
       <section class="story-section" aria-labelledby="story-title">
-        <h2 class="story-title" id="story-title">Story Chapter 01</h2>
+        <h2 class="story-title" id="story-title">Story Chapter 03</h2>
         <div class="story-body">
           <p>
-            在霍格滑茲的深處，魔法廚師收藏著 56 種米特蛋結局。每顆蛋都帶有
-            不同的香氣、色彩與音調。入口時，你感覺到一種貼近雜誌頁面的紙張觸感。
+            在霍格滑茲的深處，魔法廚師收藏著 56 種米特蛋結局。每顆蛋都帶有不同的香氣、
+            色彩與音調。入口時，你感覺到一種貼近雜誌頁面的紙張觸感。按鈕與卡片的 hover
+            都遵循統一的 easing 與時間，像呼吸一樣輕。
           </p>
           <p>
-            我們用 CSS Grid 做出偏灰階的基底，再以螢光點綴界定互動。滑過卡片時，
-            文字微微放大、旋轉與漂浮，像呼吸般的微互動。滾動則有平滑的 reveal
-            感，讓閱讀像走進地下印刷廠。
+            我們用 CSS Grid 做出偏灰階的基底，再以螢光點綴界定互動。滑過卡片時，文字微微放大、
+            旋轉與漂浮，讓閱讀像走進地下印刷廠。未來的遊玩、結果、圖鑑與 Premium 頁會沿用這套
+            版面與 token，保持 editorial + interactive 的一致性。
           </p>
         </div>
       </section>
