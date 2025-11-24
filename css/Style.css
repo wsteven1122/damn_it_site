@@ -17,7 +17,12 @@
 body {
   font-family: "Noto Sans TC", "Inter", system-ui, sans-serif;
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  background: #527cfa;
+  background: linear-gradient(
+    178deg,
+    rgba(82, 124, 250, 1) 0%,
+    rgba(207, 213, 255, 1) 100%
+  );
   display: flex;
   justify-content: center;
   align-items: center;
