@@ -24,6 +24,7 @@ body {
   overflow: hidden;
   color: var(--text);
   position: relative;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42'><defs><radialGradient id='a' cx='50%' cy='50%' r='50%'><stop offset='0%' stop-color='%23ffd799'/><stop offset='100%' stop-color='%23ff9f57'/></radialGradient></defs><g fill='none'><circle cx='21' cy='21' r='12' fill='url(%23a)' fill-opacity='0.9'/><circle cx='21' cy='21' r='16' stroke='%23ffb774' stroke-width='2' stroke-opacity='0.6'/></g></svg>") 20 20, auto;
 }
 
 .floating-background {
@@ -31,6 +32,16 @@ body {
   inset: 0;
   overflow: hidden;
   z-index: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.24), transparent 32%),
+    radial-gradient(circle at 80% 0%, rgba(255, 209, 143, 0.2), transparent 30%);
+}
+
+.floating-background canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .hero {
