@@ -68,7 +68,6 @@ class GameController {
   getDOMElements() {
     // 集中查詢所有需要的 DOM 元素
     return {
-      curtainOverlay: document.getElementById("curtain-overlay"),
       persistentUI: document.getElementById("persistent-ui"),
       nextScreenBtns: document.querySelectorAll(".next-screen-btn"),
       ingredientCards: document.querySelectorAll(".ingredient-card"),
@@ -111,41 +110,13 @@ class GameController {
   }
 
   init() {
-    this.dom.curtainOverlay.style.pointerEvents = "none";
     this.dom.persistentUI.style.display = "none";
     this.loadLottieAnimations();
     this.initEventListeners();
     this.updateIngredientStatus();
-
-    // 首次開場動畫：布幕打開
-    setTimeout(() => {
-      this.dom.curtainOverlay.classList.add("curtain-open");
-      this.dom.curtainOverlay.classList.remove("curtain-closed");
-    }, 100);
   }
 
   // ---------------------- 核心流程控制 ----------------------
-
-  async closeCurtain() {
-    return new Promise((resolve) => {
-      this.dom.curtainOverlay.classList.remove("curtain-open");
-      this.dom.curtainOverlay.classList.add("curtain-closed");
-      this.dom.curtainOverlay.style.pointerEvents = "auto";
-      setTimeout(resolve, CONFIG.TRANSITION_DURATION);
-    });
-  }
-
-  async openCurtain() {
-    return new Promise((resolve) => {
-      this.dom.curtainOverlay.classList.remove("curtain-closed");
-      this.dom.curtainOverlay.classList.add("curtain-open");
-
-      setTimeout(() => {
-        this.dom.curtainOverlay.style.pointerEvents = "none";
-        resolve();
-      }, CONFIG.TRANSITION_DURATION);
-    });
-  }
 
   switchScreens(nextScreenId) {
     let currentScreen = document.querySelector(".screen.active");
@@ -173,7 +144,7 @@ class GameController {
     }
   }
 
-  /** 執行紅色布幕轉場動畫並處理特殊流程 */
+  /** 執行畫面切換並處理特殊流程 */
   async performTransition(nextScreenId) {
     if (this.state.isTransitioning) return;
 
@@ -182,26 +153,22 @@ class GameController {
     this.dom.resultModal.style.display = "none";
 
     try {
-      await this.closeCurtain();
       this.switchScreens(nextScreenId);
 
       if (nextScreenId === "screen-2") {
         // 進入對話流程
         await this.Dialog.start();
-        this.performTransition(this.dom.continueBtn.dataset.target); // Dialog結束後自動切換到screen-3
+        this.state.isTransitioning = false;
+        await this.performTransition(this.dom.continueBtn.dataset.target); // Dialog結束後自動切換到screen-3
+        return;
       } else if (nextScreenId === "screen-5") {
         // 影片播放流程
         await this.handleVideoTransition();
-        await this.openCurtain();
       } else if (nextScreenId === "screen-6") {
         // 結果生成與彈窗
         this.generateResult();
-        await this.openCurtain();
         this.dom.resultModal.classList.add("active");
         this.dom.resultModal.style.display = "flex";
-      } else {
-        // 普通頁面切換
-        await this.openCurtain();
       }
 
       // 額外處理：回到首頁時重置遊戲
@@ -211,12 +178,8 @@ class GameController {
     } catch (error) {
       console.error(`轉場失敗到 ${nextScreenId}:`, error);
       this.showAlert("error", "轉場動畫或流程出錯了！");
-      await this.openCurtain();
     } finally {
-      // 只有 screen-2 的流程需要由 Dialog 內部 resolve Transitioning 狀態
-      if (nextScreenId !== "screen-2") {
-        this.state.isTransitioning = false;
-      }
+      this.state.isTransitioning = false;
     }
   }
 
