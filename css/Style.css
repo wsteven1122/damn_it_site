@@ -7,9 +7,9 @@
   --color-primary: #f0a30a; /* 金色/橙色 (亮點) */
   --color-secondary: #c07a00; /* 深金色 */
   --color-accent: #0af0c0; /* 青綠色 (魔法/Lottie 效果) */
-  --color-background-dark: #121212; /* 主背景深灰 */
-  --color-background-mid: #1e1e1e; /* 卡片/容器背景 */
-  --color-background-light: #2c2c2c; /* 次級背景 */
+  --color-background-dark: #7db9e8; /* 主背景淺藍 */
+  --color-background-mid: #5f8aff; /* 卡片/容器背景 */
+  --color-background-light: #68c2ff; /* 次級背景 */
   --color-text-light: #e0e0e0; /* 主要文字 */
   --color-text-muted: #9e9e9e; /* 輔助文字 */
   --color-border: rgba(240, 163, 10, 0.4); /* 邊框 */

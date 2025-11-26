@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-TW" class="game-client" data-version="1.0.2-max-detail">
   <head>
+    <div class="cursor" style="transform: translate3d(0px, 385px, 0px)">
+      <div class="cursor__item"><span></span></div>
+    </div>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -40,6 +43,7 @@
       }
     </style>
   </head>
+       <div class="guide-click-prompt">點擊任意處或按 [下一步] 繼續</div>
   <body class="theme-dark-alchemy screen-ready">
     <div
       id="curtain-overlay"
@@ -78,10 +82,7 @@
             <span id="tip-total-steps">4</span></span
           >
         </header>
-        <p id="tip-text" class="tooltip-main-text">指引提示文字</p>
-        <footer class="tooltip-footer">
-          <button id="tip-next-btn" class="btn btn-primary tooltip-nav-btn">
-            下一步
+        
           </button>
         </footer>
       </div>
@@ -152,7 +153,7 @@
             class="lottie-title-container"
             role="img"
             aria-label="遊戲標題動畫"
-          ></div>
+          ><img src="./img/123.mp4" alt="標題動畫"></div>
           <h1 class="visually-hidden">蛋米特煉金廚房</h1>
           <p class="game-subtitle">煉造你的米特蛋傳說</p>
         </header>
@@ -243,8 +244,8 @@
           </button>
         </div>
 
-        <div class="scene-decoration-left" aria-hidden="true"></div>
-        <div class="scene-decoration-right" aria-hidden="true"></div>
+        <div class="scene-decoration-left" aria-hidden="true"><img src="./img/Lhand.png" alt="Lhand"></div>
+        <div class="scene-decoration-right" aria-hidden="true"><img src="./img/Rhand.png" alt="Rhand"></div>
       </section>
 
       <section
