@@ -57,6 +57,16 @@
 body {
   font-family: "AlchemyFont", "Noto Sans TC", sans-serif;
   background-color: var(--color-background-dark);
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(240, 163, 10, 0.12), transparent 35%),
+    radial-gradient(circle at 80% 10%, rgba(10, 240, 192, 0.16), transparent 40%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%);
+  background-size: 100% 100%, 100% 100%, 14px 14px, 14px 14px, 14px 14px,
+    14px 14px;
+  background-position: center, center, 0 0, 0 7px, 7px -7px, -7px 0;
   color: var(--color-text-light);
   min-height: 100vh;
   overflow: hidden; /* 確保沒有滾動條 */
@@ -65,6 +75,59 @@ body {
   align-items: center;
   position: relative;
   touch-action: manipulation;
+}
+
+.collage-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+}
+
+.collage-photo {
+  position: absolute;
+  border: 6px solid #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  transform-origin: center;
+  animation: floaty 8s ease-in-out infinite;
+  mix-blend-mode: screen;
+  opacity: 0.75;
+}
+
+.collage-hero {
+  width: 340px;
+  top: 8%;
+  left: 12%;
+  --rotate: -4deg;
+}
+
+.collage-title {
+  width: 260px;
+  bottom: 12%;
+  right: 10%;
+  --rotate: 6deg;
+  animation-delay: 1.2s;
+}
+
+.collage-sticker {
+  width: 180px;
+  bottom: 18%;
+  left: 6%;
+  --rotate: -12deg;
+  animation-delay: 0.6s;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--rotate, 0deg));
+  }
+  50% {
+    transform: translateY(-18px) rotate(calc(var(--rotate, 0deg) + 2deg));
+  }
 }
 
 h1,
@@ -112,6 +175,7 @@ p {
   border: 4px solid var(--color-border);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
   background-color: var(--color-background-dark);
+  z-index: 1;
 }
 
 .screen {
@@ -236,60 +300,10 @@ p {
 }
 
 /* =========================================================================
-   3. 特殊效果與轉場 (Curtain & Modals)
+   3. 特殊效果與轉場 (Modals & Layers)
    ========================================================================= */
 
-/* A. 布幕轉場 (Curtain) */
-.curtain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--color-background-dark);
-  z-index: var(--z-index-curtain);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
-  pointer-events: none;
-}
-
-.curtain-closed {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.curtain-open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.curtain-center-logo {
-  /* 煉金符號或 Logo 佔位符 */
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 5px solid var(--color-primary);
-  background: radial-gradient(
-    circle,
-    var(--color-secondary) 0%,
-    transparent 70%
-  );
-  animation: pulse 1.5s infinite alternate;
-}
-
-@keyframes pulse {
-  from {
-    box-shadow: 0 0 10px var(--color-primary);
-  }
-  to {
-    box-shadow: 0 0 30px var(--color-primary);
-  }
-}
-
-/* B. 結果彈窗 (Modal) */
+/* 結果彈窗 (Modal) */
 .modal {
   position: fixed;
   top: 0;
