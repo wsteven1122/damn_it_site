@@ -213,15 +213,13 @@
         aria-label="故事介紹：煉金廚房的起源"
       >
         <div class="story-area">
-          <div
-            id="dialog-history"
-            class="dialog-history-container"
-            role="log"
-            aria-live="polite"
-            tabindex="0"
-          >
-            <div class="dialog-placeholder-intro">
-              <p>點擊畫面或氣泡以推進對話...</p>
+          <div class="story-phone" aria-label="故事訊息播放區">
+            <div id="messages" class="messages" role="log" aria-live="polite"></div>
+
+            <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
             </div>
           </div>
         </div>

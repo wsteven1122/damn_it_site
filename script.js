@@ -5,20 +5,14 @@
 const CONFIG = {
   TRANSITION_DURATION: 1000,
   MAX_INGREDIENTS: 3,
-  // 故事腳本 (Screen 2)
-  DIALOG_LINES: [
-    {
-      speaker: "旁白",
-      text: "你來到了古老的煉金廚房，這裡瀰漫著硫磺和蛋的氣味。",
-    },
-    {
-      speaker: "米特蛋魂",
-      text: "歡迎，挑戰者！我的米特蛋身軀需要你用奇異的食材重塑。",
-    },
-    {
-      speaker: "米特蛋魂",
-      text: "記住，組合是關鍵。去吧，將你的意念轉化為食材，鑄造傳說！",
-    },
+  // 故事訊息 (Screen 2)
+  STORY_MESSAGES: [
+    "我是一位廚師，因為到了30歲依舊母胎單身，因此獲得魔法成為了魔法廚師。",
+    "在因緣巧合之下，我拿到了霍格滑茲的入學 offer，一年前順利畢業。",
+    "直到上週六做飯時，我突然想到——如果把魔法用在食材上會怎麼樣？",
+    "於是我買了蛋、米特蛋、還跑到十公里外的賣場找魔法材料。",
+    "至於結果？我也不知道。",
+    "事不宜遲，馬上開始行動！",
   ],
   // 導覽步驟 (Guide Module)
   GUIDE_STEPS: [
@@ -44,6 +38,8 @@ const CONFIG = {
     },
   ],
 };
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // =========================================================================
 // II. 遊戲控制器類別 (GameController Class)
@@ -75,7 +71,8 @@ class GameController {
       lottieTitleContainer: document.getElementById("lottie-title-container"),
       lottieStartBtn: document.getElementById("lottie-start-btn"),
 
-      dialogHistory: document.getElementById("dialog-history"),
+      messagesContainer: document.getElementById("messages"),
+      typingIndicator: document.getElementById("typingIndicator"),
       continueBtn: document.getElementById("continue-btn"),
       dialogSkipBtn: document.getElementById("dialog-skip-btn"),
 
@@ -391,94 +388,97 @@ class GameController {
   // ---------------------- 對話模塊 (Screen 2) ----------------------
 
   createDialogModule() {
-    let currentStepIndex = 0;
+    let aborted = false;
     const self = this;
 
-    // ... (內部函數 createBubble, showStepAndAwaitClick, finishDialog 略，與上一個版本相同)
+    function showTyping() {
+      self.dom.typingIndicator.classList.add("visible");
+    }
 
-    // 內部函數：創建並顯示聊天氣泡
-    function createBubble(speaker, text) {
-      return new Promise((resolve) => {
+    function hideTyping() {
+      self.dom.typingIndicator.classList.remove("visible");
+    }
+
+    async function typeMessage(text) {
+      const bubble = document.createElement("div");
+      bubble.className = "message-bubble";
+      bubble.textContent = "";
+      self.dom.messagesContainer.appendChild(bubble);
+      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+
+      await wait(250);
+
+      for (let i = 0; i <= text.length; i++) {
+        if (aborted) return;
+        bubble.textContent = text.substring(0, i);
+        await wait(35);
+      }
+
+      bubble.classList.add("pop-in");
+      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+    }
+
+    function renderAllMessagesInstant() {
+      self.dom.messagesContainer.innerHTML = "";
+      CONFIG.STORY_MESSAGES.forEach((text) => {
         const bubble = document.createElement("div");
-        bubble.classList.add("chat-bubble");
-        bubble.innerHTML = `<span class="speaker-name">${speaker}</span>${text}`;
-
-        self.dom.dialogHistory.appendChild(bubble);
-        self.dom.dialogHistory.scrollTop = self.dom.dialogHistory.scrollHeight;
-
-        setTimeout(() => {
-          bubble.classList.add("active");
-          resolve(bubble);
-        }, 10);
+        bubble.className = "message-bubble instant";
+        bubble.textContent = text;
+        self.dom.messagesContainer.appendChild(bubble);
       });
+      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      hideTyping();
     }
 
-    // 內部函數：顯示下一步並等待點擊
-    function showStepAndAwaitClick() {
-      return new Promise((resolveStep) => {
-        if (currentStepIndex >= CONFIG.DIALOG_LINES.length) {
-          finishDialog();
-          resolveStep();
-          return;
-        }
-
-        const step = CONFIG.DIALOG_LINES[currentStepIndex];
-
-        createBubble(step.speaker, step.text).then(() => {
-          const clickHandler = () => {
-            self.dom.dialogHistory.removeEventListener("click", clickHandler);
-            resolveStep();
-          };
-          self.dom.dialogHistory.addEventListener("click", clickHandler);
-        });
-      });
-    }
-
-    // 內部函數：故事結束，顯示繼續按鈕
     function finishDialog() {
-      currentStepIndex = CONFIG.DIALOG_LINES.length;
+      hideTyping();
       self.dom.continueBtn.classList.remove("hidden");
-      self.dom.dialogHistory.style.pointerEvents = "none";
+      self.dom.dialogSkipBtn.disabled = true;
     }
 
     return {
       start: () => {
         return new Promise((resolve) => {
-          currentStepIndex = 0;
+          aborted = false;
           self.dom.continueBtn.classList.add("hidden");
-          self.dom.dialogHistory.innerHTML = "";
-          self.dom.dialogHistory.style.pointerEvents = "auto";
+          self.dom.dialogSkipBtn.disabled = false;
+          self.dom.messagesContainer.innerHTML = "";
+          self.dom.messagesContainer.scrollTop = 0;
 
-          // Continue按鈕的職責：觸發轉場到選材頁 (並結束 Dialog.start Promise)
-          self.dom.continueBtn.onclick = () => {
-            self.state.isTransitioning = false;
+          const handleContinue = () => {
             resolve();
           };
 
-          // Skip按鈕的職責：直接跳到 Dialog 結束
+          self.dom.continueBtn.addEventListener("click", handleContinue, {
+            once: true,
+          });
+
           self.dom.dialogSkipBtn.onclick = () => {
-            currentStepIndex = CONFIG.DIALOG_LINES.length;
+            aborted = true;
+            renderAllMessagesInstant();
             finishDialog();
           };
 
-          let sequence = Promise.resolve();
-          for (let i = 0; i < CONFIG.DIALOG_LINES.length; i++) {
-            sequence = sequence.then(() => {
-              currentStepIndex = i;
-              return showStepAndAwaitClick();
-            });
-          }
+          (async () => {
+            for (let i = 0; i < CONFIG.STORY_MESSAGES.length; i++) {
+              if (aborted) break;
+              showTyping();
+              await wait(900 + Math.random() * 700);
+              hideTyping();
+              await typeMessage(CONFIG.STORY_MESSAGES[i]);
+            }
 
-          sequence.then(() => {
-            finishDialog();
-          });
+            if (!aborted) {
+              finishDialog();
+            }
+          })();
         });
       },
       reset: () => {
-        currentStepIndex = 0;
-        self.dom.dialogHistory.innerHTML = "";
+        aborted = false;
+        self.dom.messagesContainer.innerHTML = "";
         self.dom.continueBtn.classList.add("hidden");
-        self.dom.dialogHistory.style.pointerEvents = "none";
+        hideTyping();
       },
     };
   }

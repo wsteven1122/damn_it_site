@@ -56,17 +56,11 @@
 /* 字體佔位符：實際應用時需替換為遊戲字體 */
 body {
   font-family: "AlchemyFont", "Noto Sans TC", sans-serif;
-  background-color: var(--color-background-dark);
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(240, 163, 10, 0.12), transparent 35%),
-    radial-gradient(circle at 80% 10%, rgba(10, 240, 192, 0.16), transparent 40%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
-    linear-gradient(225deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
-    linear-gradient(45deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
-    linear-gradient(315deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%);
-  background-size: 100% 100%, 100% 100%, 14px 14px, 14px 14px, 14px 14px,
-    14px 14px;
-  background-position: center, center, 0 0, 0 7px, 7px -7px, -7px 0;
+  background-color: #b9d3f6;
+  background-image: url("../img/1.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   color: var(--color-text-light);
   min-height: 100vh;
   overflow: hidden; /* 確保沒有滾動條 */
@@ -477,6 +471,7 @@ p {
 
 #screen-2 {
   padding: var(--spacing-m);
+  justify-content: center;
 }
 
 .story-area {
@@ -485,47 +480,99 @@ p {
   display: flex;
   flex-direction: column;
   padding-bottom: var(--spacing-m);
+  align-items: center;
+  justify-content: center;
 }
 
-.dialog-history-container {
-  flex-grow: 1;
+.story-phone {
+  width: min(440px, 100%);
+  height: 680px;
+  background: #fffdf5;
+  border: 10px solid #1f1f1f;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.messages {
+  flex: 1;
+  padding: 28px 22px 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   overflow-y: auto;
-  padding: var(--spacing-m);
-  border-radius: var(--border-radius-m);
-  background-color: var(--color-background-mid);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-  margin-bottom: var(--spacing-m);
 }
 
-.dialog-placeholder-intro {
-  text-align: center;
-  color: var(--color-text-muted);
-  margin-top: 50%;
-  transform: translateY(-50%);
-}
-
-.chat-bubble {
-  padding: var(--spacing-m);
-  border-radius: var(--border-radius-l);
-  margin-bottom: var(--spacing-m);
-  max-width: 80%;
-  word-wrap: break-word;
-  background-color: var(--color-background-light);
+.message-bubble {
+  background: white;
+  color: #111;
+  padding: 14px 18px;
+  border-radius: 18px;
+  max-width: 84%;
+  line-height: 1.6;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  transform: translateY(18px) scale(0.96) rotate(-1deg);
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.chat-bubble.active {
+.message-bubble.pop-in {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1) rotate(0deg);
 }
 
-.speaker-name {
-  display: block;
-  font-weight: bold;
-  color: var(--color-primary);
-  margin-bottom: 4px;
+.message-bubble.instant {
+  transition: none;
+  opacity: 1;
+  transform: translateY(0) scale(1) rotate(0deg);
+}
+
+.typing-bubble {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  display: flex;
+  gap: 5px;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 16px;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.typing-bubble.visible {
+  opacity: 1;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  background: #777;
+  border-radius: 50%;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
 }
 
 .dialog-footer-controls {
