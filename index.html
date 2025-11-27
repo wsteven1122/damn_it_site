@@ -38,20 +38,6 @@
     </style>
   </head>
   <body class="theme-dark-alchemy screen-ready">
-    <div class="collage-bg" aria-hidden="true">
-      <img
-        src="./img/IMG_9989 1.png"
-        class="collage-photo collage-hero"
-        alt=""
-      />
-      <img
-        src="./img/frame_001 1.png"
-        class="collage-photo collage-title"
-        alt=""
-      />
-      <img src="img/1.png" class="collage-photo collage-sticker" alt="" />
-    </div>
-
     <div
       id="alert-message"
       class="alert hidden"
@@ -142,68 +128,36 @@
     <main id="game-container" role="application">
       <section
         id="screen-1"
-        class="screen active"
+        class="screen home-screen active"
         data-index="1"
-        aria-label="首頁：歡迎來到蛋米特煉金廚房"
+        aria-label="首頁：蛋米特 DAMN IT!"
       >
-        <header class="title-section">
-          <div
-            id="lottie-title-container"
-            class="lottie-title-container"
-            role="img"
-            aria-label="遊戲標題動畫"
-          ></div>
-          <h1 class="visually-hidden">蛋米特煉金廚房</h1>
-          <p class="game-subtitle">煉造你的米特蛋傳說</p>
-        </header>
+        <div class="floating-ingredients" aria-hidden="true">
+          <img src="./img/IMG_9990 1.png" class="float-item item-1" alt="" />
+          <img src="./img/IMG_9998 1.png" class="float-item item-2" alt="" />
+          <img src="./img/IMG_0003 1.png" class="float-item item-3" alt="" />
+          <img src="./img/IMG_9997 1.png" class="float-item item-4" alt="" />
+          <img src="./img/IMG_9985 1.png" class="float-item item-5" alt="" />
+          <img src="./img/IMG_9986 1.png" class="float-item item-6" alt="" />
+          <img src="./img/IMG_9999 1.png" class="float-item item-7" alt="" />
+        </div>
 
-        <nav
-          id="main-menu-options"
-          class="menu-options horizontal-layout"
-          aria-label="主菜單"
-        >
-          <div class="menu-item-wrapper menu-menu">
-            <button
-              id="menu-btn"
-              class="btn btn-secondary next-screen-btn"
-              data-target="screen-menu"
-            >
-              主食選單 (MENU)
-            </button>
-            <span class="menu-item-description">查看所有食譜</span>
-          </div>
-
-          <div class="menu-item-wrapper menu-start">
-            <div
-              id="lottie-start-btn"
-              class="lottie-button-container next-screen-btn"
-              data-target="screen-2"
-              role="button"
-              tabindex="0"
-              aria-label="開始煉蛋"
-            >
-              <p class="lottie-btn-text">開始煉蛋 (START)</p>
-            </div>
-            <span class="menu-item-description menu-desc-highlight"
-              >開始你的煉金之旅</span
-            >
-          </div>
-
-          <div class="menu-item-wrapper menu-gallery">
-            <button
-              id="gallery-btn"
-              class="btn btn-secondary next-screen-btn"
-              data-target="screen-gallery"
-            >
-              成果圖鑑 (GALLERY)
-            </button>
-            <span class="menu-item-description">查看已解鎖的成果</span>
-          </div>
-        </nav>
-
-        <footer class="game-version-info">
-          <p>Ver 1.0.2 | Final Project 2025 | Powered by Alchemist Team</p>
-        </footer>
+        <div class="home-hero">
+          <img
+            src="./img/frame_001 1.png"
+            alt="蛋米特 DAMN IT!"
+            class="hero-logo"
+            loading="lazy"
+          />
+          <button
+            id="lottie-start-btn"
+            class="start-button next-screen-btn"
+            data-target="screen-2"
+            aria-label="開始遊戲"
+          >
+            <span class="visually-hidden">開始遊戲</span>
+          </button>
+        </div>
       </section>
 
       <section
@@ -213,15 +167,18 @@
         aria-label="故事介紹：煉金廚房的起源"
       >
         <div class="story-area">
-          <div
-            id="dialog-history"
-            class="dialog-history-container"
-            role="log"
-            aria-live="polite"
-            tabindex="0"
-          >
-            <div class="dialog-placeholder-intro">
-              <p>點擊畫面或氣泡以推進對話...</p>
+          <div class="story-phone" aria-label="故事訊息播放區">
+            <div
+              id="messages"
+              class="messages"
+              role="log"
+              aria-live="polite"
+            ></div>
+
+            <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
             </div>
           </div>
         </div>
@@ -838,6 +795,13 @@
         loading="lazy"
       ></iframe>
 
+      <audio
+        id="bgm-audio"
+        src="./img/784908236.161834.mp4"
+        preload="auto"
+        loop
+        hidden
+      ></audio>
       <audio
         id="sfx-click"
         src="assets/audio/sfx_click.mp3"
