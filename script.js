@@ -70,6 +70,7 @@ class GameController {
 
       lottieTitleContainer: document.getElementById("lottie-title-container"),
       lottieStartBtn: document.getElementById("lottie-start-btn"),
+      bgmAudio: document.getElementById("bgm-audio"),
 
       messagesContainer: document.getElementById("messages"),
       typingIndicator: document.getElementById("typingIndicator"),
@@ -109,6 +110,7 @@ class GameController {
   init() {
     this.dom.persistentUI.style.display = "none";
     this.loadLottieAnimations();
+    this.setupBackgroundMusic();
     this.initEventListeners();
     this.updateIngredientStatus();
   }
@@ -210,6 +212,7 @@ class GameController {
 
   loadLottieAnimations() {
     if (typeof lottie === "undefined") return;
+    if (!this.dom.lottieTitleContainer || !this.dom.lottieStartBtn) return;
 
     // 標題動畫
     this.state.lottieInstances.title = lottie.loadAnimation({
@@ -236,6 +239,26 @@ class GameController {
     this.dom.lottieStartBtn.addEventListener("mouseleave", () =>
       this.state.lottieInstances.startBtn.stop()
     );
+  }
+
+  setupBackgroundMusic() {
+    const bgm = this.dom.bgmAudio;
+    if (!bgm) return;
+
+    bgm.volume = 0.5;
+
+    const attemptPlay = () => bgm.play().catch(() => {});
+    attemptPlay();
+
+    const unlockAudio = () => {
+      bgm.muted = false;
+      attemptPlay();
+      document.removeEventListener("pointerdown", unlockAudio);
+      document.removeEventListener("touchstart", unlockAudio);
+    };
+
+    document.addEventListener("pointerdown", unlockAudio);
+    document.addEventListener("touchstart", unlockAudio);
   }
 
   // ---------------------- 食材選擇邏輯 ----------------------
@@ -616,11 +639,13 @@ class GameController {
       });
     });
 
-    // 2. Lottie 開始遊戲按鈕 (Screen 1 Start)
-    this.dom.lottieStartBtn.addEventListener("click", () => {
-      if (this.state.isTransitioning) return;
-      this.performTransition(this.dom.lottieStartBtn.dataset.target);
-    });
+    // 2. 開始遊戲按鈕 (Screen 1 Start)
+    if (this.dom.lottieStartBtn) {
+      this.dom.lottieStartBtn.addEventListener("click", () => {
+        if (this.state.isTransitioning) return;
+        this.performTransition(this.dom.lottieStartBtn.dataset.target);
+      });
+    }
 
     // 3. 食材選擇
     this.dom.ingredientCards.forEach((card) => {
@@ -656,6 +681,9 @@ class GameController {
       this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
       if (this.dom.castingVideo) {
         this.dom.castingVideo.muted = this.state.isMuted;
+      }
+      if (this.dom.bgmAudio) {
+        this.dom.bgmAudio.muted = this.state.isMuted;
       }
     });
 
