@@ -3,7 +3,7 @@
 // =========================================================================
 
 const CONFIG = {
-  TRANSITION_DURATION: 800,
+  TRANSITION_DURATION: 650,
   MAX_INGREDIENTS: 3,
   // 故事訊息 (Screen 2)
   STORY_MESSAGES: [
@@ -76,6 +76,8 @@ class GameController {
       typingIndicator: document.getElementById("typingIndicator"),
       continueBtn: document.getElementById("continue-btn"),
       dialogSkipBtn: document.getElementById("dialog-skip-btn"),
+
+      collageLayer: document.getElementById("collage-transition"),
 
       castingVideo: document.getElementById("casting-video"),
       nextFromVideoBtn: document.getElementById("next-from-video-btn"),
@@ -158,7 +160,7 @@ class GameController {
     this.dom.resultModal.style.display = "none";
 
     try {
-      this.switchScreens(nextScreenId);
+      await this.playCollageTransition(() => this.switchScreens(nextScreenId));
 
       if (nextScreenId === "screen-2") {
         // 進入對話流程
@@ -186,6 +188,35 @@ class GameController {
     } finally {
       this.state.isTransitioning = false;
     }
+  }
+
+  playCollageTransition(midpointCallback) {
+    return new Promise((resolve) => {
+      const layer = this.dom.collageLayer;
+
+      if (!layer) {
+        midpointCallback?.();
+        resolve();
+        return;
+      }
+
+      layer.classList.remove("fade-out");
+      // 觸發 reflow 以重新啟動動畫
+      void layer.offsetWidth;
+      layer.classList.add("active");
+
+      const midpointTimer = setTimeout(() => {
+        midpointCallback?.();
+        layer.classList.add("fade-out");
+      }, CONFIG.TRANSITION_DURATION * 0.45);
+
+      const cleanupTimer = setTimeout(() => {
+        layer.classList.remove("active", "fade-out");
+        resolve();
+      }, CONFIG.TRANSITION_DURATION);
+
+      this.state.transitionTimers = [midpointTimer, cleanupTimer];
+    });
   }
 
   resetGame() {
