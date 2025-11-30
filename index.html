@@ -38,7 +38,6 @@
     </style>
   </head>
   <body class="theme-dark-alchemy screen-ready">
-
     <div
       id="alert-message"
       class="alert hidden"
@@ -145,7 +144,7 @@
 
         <div class="home-hero">
           <img
-            src="./img/eggmain.jpg"
+            src="./img/frame_001 1.png"
             alt="蛋米特 DAMN IT!"
             class="hero-logo"
             loading="lazy"
@@ -169,7 +168,12 @@
       >
         <div class="story-area">
           <div class="story-phone" aria-label="故事訊息播放區">
-            <div id="messages" class="messages" role="log" aria-live="polite"></div>
+            <div
+              id="messages"
+              class="messages"
+              role="log"
+              aria-live="polite"
+            ></div>
 
             <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
               <div class="typing-dot"></div>
@@ -215,11 +219,11 @@
           </p>
           <ul class="intro-list rule-list">
             <li class="rule-item">
-              <span class="icon">✨</span> **食材限制:** 每次煉金最多只能選擇
+              <span class="icon">✨</span> 食材限制: 每次煉金最多只能選擇
               <strong class="highlight">3 種</strong> 食材。
             </li>
             <li class="rule-item">
-              <span class="icon">🔮</span> **核心原理:**
+              <span class="icon">🔮</span> 核心原理:
               選擇食材的組合將決定米特蛋的<strong class="highlight"
                 >類型、屬性與最終造型</strong
               >。
@@ -229,7 +233,13 @@
             </li>
           </ul>
           <div class="alchemist-quote">
-            <p>"煉金術，是將平凡轉化為奇蹟的藝術。" - 神秘阿瓜</p>
+            <p>
+              這將是一場載入史冊的魔法料理實驗！
+              我選擇了用蛋來當主食，不過品種或許還需要思考一下，我想這可能會影響實驗結果。
+              選好了主食蛋後就可以開始實驗了，魔法蛋都很有個性，所以我需要靠把食材喂食給它才能進行實驗。這次實驗我準備了八種食材，就放在桌子上，我打算每次只喂三種食材就好，
+              把食材拖動到蛋那裏給它吃個飽，之後就可以施展魔法了，magic！
+              不知道會出現什麽樣的結果呢……出結果之後我得做一個結果圖鑒才行，記錄一下我偉大的實驗成果。
+            </p>
           </div>
         </div>
         <footer class="intro-footer">
@@ -290,14 +300,15 @@
 
             <div class="main-egg-display" aria-label="米特蛋核心">
               <div class="egg-graphic">
-                <span class="egg-eye eye-left"></span>
-                <span class="egg-eye eye-right"></span>
-                <span class="egg-blush blush-left"></span>
-                <span class="egg-blush blush-right"></span>
+                <img src="./img/待機蛋 (去背) 1.png" alt="" />
               </div>
             </div>
 
-            <div class="ingredient-cloud" role="group" aria-label="可選擇的魔法食材">
+            <div
+              class="ingredient-cloud"
+              role="group"
+              aria-label="可選擇的魔法食材"
+            >
               <div
                 class="ingredient-card"
                 data-ingredient="榴槤"
@@ -504,13 +515,13 @@
             <div class="video-shell">
               <video
                 id="casting-video"
-                src="assets/videos/casting_video.mp4"
+                src="./img/桌子.mp4"
                 playsinline
                 preload="auto"
                 poster="assets/videos/video_poster.jpg"
                 aria-label="煉金過程影片"
               ></video>
-              <div class="video-placeholder">即將放入雙手變身影片</div>
+              <div class="video-placeholder"></div>
               <div
                 id="spinner-overlay"
                 class="spinner-overlay"
@@ -820,18 +831,7 @@
     </div>
 
     <div aria-hidden="true" class="audio-preload-container">
-      ><iframe
-        data-testid="embed-iframe"
-        style="border-radius: 12px"
-        src="https://open.spotify.com/embed/track/6wGHmNboSYbrh8gADp5IDL?utm_source=generator"
-        width="100%"
-        height="352"
-        frameborder="0"
-        allowfullscreen=""
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"
-      ></iframe>
-
+      >
       <audio
         id="bgm-audio"
         src="./img/784908236.161834.mp4"
