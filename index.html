@@ -38,19 +38,6 @@
     </style>
   </head>
   <body class="theme-dark-alchemy screen-ready">
-    <div class="collage-bg" aria-hidden="true">
-      <img
-        src="./img/IMG_9989 1.png"
-        class="collage-photo collage-hero"
-        alt=""
-      />
-      <img
-        src="./img/frame_001 1.png"
-        class="collage-photo collage-title"
-        alt=""
-      />
-      <img src="img/1.png" class="collage-photo collage-sticker" alt="" />
-    </div>
 
     <div
       id="alert-message"
@@ -142,68 +129,36 @@
     <main id="game-container" role="application">
       <section
         id="screen-1"
-        class="screen active"
+        class="screen home-screen active"
         data-index="1"
-        aria-label="首頁：歡迎來到蛋米特煉金廚房"
+        aria-label="首頁：蛋米特 DAMN IT!"
       >
-        <header class="title-section">
-          <div
-            id="lottie-title-container"
-            class="lottie-title-container"
-            role="img"
-            aria-label="遊戲標題動畫"
-          ></div>
-          <h1 class="visually-hidden">蛋米特煉金廚房</h1>
-          <p class="game-subtitle">煉造你的米特蛋傳說</p>
-        </header>
+        <div class="floating-ingredients" aria-hidden="true">
+          <img src="./img/IMG_9990 1.png" class="float-item item-1" alt="" />
+          <img src="./img/IMG_9998 1.png" class="float-item item-2" alt="" />
+          <img src="./img/IMG_0003 1.png" class="float-item item-3" alt="" />
+          <img src="./img/IMG_9997 1.png" class="float-item item-4" alt="" />
+          <img src="./img/IMG_9985 1.png" class="float-item item-5" alt="" />
+          <img src="./img/IMG_9986 1.png" class="float-item item-6" alt="" />
+          <img src="./img/IMG_9999 1.png" class="float-item item-7" alt="" />
+        </div>
 
-        <nav
-          id="main-menu-options"
-          class="menu-options horizontal-layout"
-          aria-label="主菜單"
-        >
-          <div class="menu-item-wrapper menu-menu">
-            <button
-              id="menu-btn"
-              class="btn btn-secondary next-screen-btn"
-              data-target="screen-menu"
-            >
-              主食選單 (MENU)
-            </button>
-            <span class="menu-item-description">查看所有食譜</span>
-          </div>
-
-          <div class="menu-item-wrapper menu-start">
-            <div
-              id="lottie-start-btn"
-              class="lottie-button-container next-screen-btn"
-              data-target="screen-2"
-              role="button"
-              tabindex="0"
-              aria-label="開始煉蛋"
-            >
-              <p class="lottie-btn-text">開始煉蛋 (START)</p>
-            </div>
-            <span class="menu-item-description menu-desc-highlight"
-              >開始你的煉金之旅</span
-            >
-          </div>
-
-          <div class="menu-item-wrapper menu-gallery">
-            <button
-              id="gallery-btn"
-              class="btn btn-secondary next-screen-btn"
-              data-target="screen-gallery"
-            >
-              成果圖鑑 (GALLERY)
-            </button>
-            <span class="menu-item-description">查看已解鎖的成果</span>
-          </div>
-        </nav>
-
-        <footer class="game-version-info">
-          <p>Ver 1.0.2 | Final Project 2025 | Powered by Alchemist Team</p>
-        </footer>
+        <div class="home-hero">
+          <img
+            src="./img/eggmain.jpg"
+            alt="蛋米特 DAMN IT!"
+            class="hero-logo"
+            loading="lazy"
+          />
+          <button
+            id="lottie-start-btn"
+            class="start-button next-screen-btn"
+            data-target="screen-2"
+            aria-label="開始遊戲"
+          >
+            <span class="visually-hidden">開始遊戲</span>
+          </button>
+        </div>
       </section>
 
       <section
@@ -213,15 +168,13 @@
         aria-label="故事介紹：煉金廚房的起源"
       >
         <div class="story-area">
-          <div
-            id="dialog-history"
-            class="dialog-history-container"
-            role="log"
-            aria-live="polite"
-            tabindex="0"
-          >
-            <div class="dialog-placeholder-intro">
-              <p>點擊畫面或氣泡以推進對話...</p>
+          <div class="story-phone" aria-label="故事訊息播放區">
+            <div id="messages" class="messages" role="log" aria-live="polite"></div>
+
+            <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
             </div>
           </div>
         </div>
@@ -296,203 +249,203 @@
         data-index="4"
         aria-label="食材選擇"
       >
-        <header class="selection-header">
-          <h2>🍳 食材選擇 (最多 3 種)</h2>
-          <div
-            id="selection-status"
-            class="selection-status"
-            role="status"
-            aria-live="polite"
-          >
-            已選擇：<span id="current-selection-count">0</span> /
-            <span id="max-selection-count">3</span>
+        <div class="alchemy-workbench">
+          <div class="kitchen-top-bar">
+            <div
+              class="slot-row"
+              role="list"
+              aria-label="已放入的食材欄位 (最多 4 種)"
+            >
+              <div class="selection-slot" data-slot-index="1" role="listitem">
+                <span class="slot-label">空槽</span>
+                <button class="slot-clear" aria-label="移除這個食材">✕</button>
+              </div>
+              <div class="selection-slot" data-slot-index="2" role="listitem">
+                <span class="slot-label">空槽</span>
+                <button class="slot-clear" aria-label="移除這個食材">✕</button>
+              </div>
+              <div class="selection-slot" data-slot-index="3" role="listitem">
+                <span class="slot-label">空槽</span>
+                <button class="slot-clear" aria-label="移除這個食材">✕</button>
+              </div>
+              <div class="selection-slot" data-slot-index="4" role="listitem">
+                <span class="slot-label">空槽</span>
+                <button class="slot-clear" aria-label="移除這個食材">✕</button>
+              </div>
+            </div>
+
+            <div class="selection-status chip" role="status" aria-live="polite">
+              已選擇：<span id="current-selection-count">0</span> /
+              <span id="max-selection-count">4</span>
+            </div>
+
+            <div class="magic-pill" aria-hidden="true">
+              <span>MAGIC!</span>
+              <span class="magic-trace"></span>
+            </div>
           </div>
-        </header>
 
-        <div class="ingredient-grid-wrapper">
-          <div
-            class="ingredient-grid"
-            role="group"
-            aria-labelledby="screen-4-header"
-          >
-            <div
-              class="ingredient-card"
-              data-ingredient="榴槤"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_durian.png"
-                alt="榴槤"
-                class="ing-img"
-              />
-              <p class="card-name">榴槤</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
-            </div>
-            <div
-              class="ingredient-card"
-              data-ingredient="服裝"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_clothes.png"
-                alt="服裝"
-                class="ing-img"
-              />
-              <p class="card-name">服裝</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
-            </div>
-            <div
-              class="ingredient-card"
-              data-ingredient="TNT"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_tnt.png"
-                alt="TNT"
-                class="ing-img"
-              />
-              <p class="card-name">TNT</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
-            </div>
-            <div
-              class="ingredient-card"
-              data-ingredient="隕石"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_meteorite.png"
-                alt="隕石"
-                class="ing-img"
-              />
-              <p class="card-name">隕石</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
-            </div>
-            <div
-              class="ingredient-card"
-              data-ingredient="檸檬"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_lemon.png"
-                alt="檸檬"
-                class="ing-img"
-              />
-              <p class="card-name">檸檬</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
-            </div>
-            <div
-              class="ingredient-card"
-              data-ingredient="手機"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_phone.png"
-                alt="手機"
-                class="ing-img"
-              />
-              <p class="card-name">手機</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
-            </div>
-            <div
-              class="ingredient-card"
-              data-ingredient="香菜"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_cilantro.png"
-                alt="香菜"
-                class="ing-img"
-              />
-              <p class="card-name">香菜</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
-            </div>
-            <div
-              class="ingredient-card"
-              data-ingredient="魷魚"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_squid.png"
-                alt="魷魚"
-                class="ing-img"
-              />
-              <p class="card-name">魷魚</p>
-              <div class="selection-checkbox" aria-hidden="true"></div>
+          <div class="workbench-body">
+            <div class="kitchen-illustration" aria-hidden="true"></div>
+
+            <div class="main-egg-display" aria-label="米特蛋核心">
+              <div class="egg-graphic">
+                <span class="egg-eye eye-left"></span>
+                <span class="egg-eye eye-right"></span>
+                <span class="egg-blush blush-left"></span>
+                <span class="egg-blush blush-right"></span>
+              </div>
             </div>
 
-            <div
-              class="ingredient-card locked"
-              data-ingredient="黃金"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_locked.png"
-                alt="未解鎖食材"
-                class="ing-img"
-              />
-              <p class="card-name">???</p>
-            </div>
-            <div
-              class="ingredient-card locked"
-              data-ingredient="空氣"
-              role="checkbox"
-              tabindex="0"
-              aria-checked="false"
-            >
-              <img
-                src="assets/ingredients/ing_locked.png"
-                alt="未解鎖食材"
-                class="ing-img"
-              />
-              <p class="card-name">???</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p1">
-              <p class="card-name">Placeholder 1</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p2">
-              <p class="card-name">Placeholder 2</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p3">
-              <p class="card-name">Placeholder 3</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p4">
-              <p class="card-name">Placeholder 4</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p5">
-              <p class="card-name">Placeholder 5</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p6">
-              <p class="card-name">Placeholder 6</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p7">
-              <p class="card-name">Placeholder 7</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p8">
-              <p class="card-name">Placeholder 8</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p9">
-              <p class="card-name">Placeholder 9</p>
-            </div>
-            <div class="ingredient-card placeholder" data-ingredient="p10">
-              <p class="card-name">Placeholder 10</p>
+            <div class="ingredient-cloud" role="group" aria-label="可選擇的魔法食材">
+              <div
+                class="ingredient-card"
+                data-ingredient="榴槤"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_durian.png"
+                  alt="榴槤"
+                  class="ing-img"
+                />
+                <p class="card-name">榴槤</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card"
+                data-ingredient="服裝"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_clothes.png"
+                  alt="服裝"
+                  class="ing-img"
+                />
+                <p class="card-name">服裝</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card"
+                data-ingredient="TNT"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_tnt.png"
+                  alt="TNT"
+                  class="ing-img"
+                />
+                <p class="card-name">TNT</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card"
+                data-ingredient="隕石"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_meteorite.png"
+                  alt="隕石"
+                  class="ing-img"
+                />
+                <p class="card-name">隕石</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card"
+                data-ingredient="檸檬"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_lemon.png"
+                  alt="檸檬"
+                  class="ing-img"
+                />
+                <p class="card-name">檸檬</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card"
+                data-ingredient="手機"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_phone.png"
+                  alt="手機"
+                  class="ing-img"
+                />
+                <p class="card-name">手機</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card"
+                data-ingredient="香菜"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_cilantro.png"
+                  alt="香菜"
+                  class="ing-img"
+                />
+                <p class="card-name">香菜</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card"
+                data-ingredient="魷魚"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_squid.png"
+                  alt="魷魚"
+                  class="ing-img"
+                />
+                <p class="card-name">魷魚</p>
+                <div class="selection-checkbox" aria-hidden="true"></div>
+              </div>
+              <div
+                class="ingredient-card locked"
+                data-ingredient="黃金"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_locked.png"
+                  alt="未解鎖食材"
+                  class="ing-img"
+                />
+                <p class="card-name">???</p>
+              </div>
+              <div
+                class="ingredient-card locked"
+                data-ingredient="空氣"
+                role="checkbox"
+                tabindex="0"
+                aria-checked="false"
+              >
+                <img
+                  src="assets/ingredients/ing_locked.png"
+                  alt="未解鎖食材"
+                  class="ing-img"
+                />
+                <p class="card-name">???</p>
+              </div>
             </div>
           </div>
         </div>
@@ -516,31 +469,61 @@
         data-index="5"
         aria-label="煉金儀式進行中"
       >
-        <header>
-          <h2 id="casting-title">正在進行煉金儀式...</h2>
-          <p class="casting-subtitle">請等待你的米特蛋完成蛻變</p>
+        <header class="casting-header">
+          <div class="casting-title-block">
+            <h2 id="casting-title">煉金儀式啟動！</h2>
+            <p class="casting-subtitle">空間變暗，雙手蓄能，準備進入變身特效</p>
+          </div>
+          <div class="casting-badge">變身模式</div>
         </header>
 
-        <div class="video-container">
-          <video
-            id="casting-video"
-            src="assets/videos/casting_video.mp4"
-            playsinline
-            preload="auto"
-            poster="assets/videos/video_poster.jpg"
-            aria-label="煉金過程影片"
-          ></video>
-          <div
-            id="spinner-overlay"
-            class="spinner-overlay"
-            role="status"
-            aria-label="載入中"
-          >
-            <div class="loading-spinner"></div>
-            <p class="loading-text">米特蛋正在劇烈反應中...</p>
-            <div class="progress-bar-placeholder"></div>
+        <div class="transformation-space">
+          <div class="kitchen-scene-backdrop" aria-hidden="true"></div>
+          <div class="dark-veil" aria-hidden="true"></div>
+
+          <div class="sparkle-field" aria-hidden="true">
+            <span class="sparkle s1"></span>
+            <span class="sparkle s2"></span>
+            <span class="sparkle s3"></span>
+            <span class="sparkle s4"></span>
           </div>
-          <div class="video-frame-decoration" aria-hidden="true"></div>
+
+          <div class="hand-gesture left" aria-hidden="true">
+            <img src="./img/Lhand.png" alt="左手施法動畫" />
+            <div class="hand-flare"></div>
+          </div>
+          <div class="hand-gesture right" aria-hidden="true">
+            <img src="./img/Rhand.png" alt="右手施法動畫" />
+            <div class="hand-flare"></div>
+          </div>
+
+          <div class="circle-stage" aria-label="變身影片與光暈">
+            <div class="shine-ring"></div>
+            <div class="pulse-glow"></div>
+
+            <div class="video-shell">
+              <video
+                id="casting-video"
+                src="assets/videos/casting_video.mp4"
+                playsinline
+                preload="auto"
+                poster="assets/videos/video_poster.jpg"
+                aria-label="煉金過程影片"
+              ></video>
+              <div class="video-placeholder">即將放入雙手變身影片</div>
+              <div
+                id="spinner-overlay"
+                class="spinner-overlay"
+                role="status"
+                aria-label="載入中"
+              >
+                <div class="loading-spinner"></div>
+                <p class="loading-text">米特蛋正在劇烈反應中...</p>
+                <div class="progress-bar-placeholder"></div>
+              </div>
+              <div class="video-frame-decoration" aria-hidden="true"></div>
+            </div>
+          </div>
         </div>
 
         <footer class="casting-footer">
@@ -765,6 +748,17 @@
       </section>
     </main>
 
+    <div id="collage-transition" aria-hidden="true">
+      <span class="scrap piece-1"></span>
+      <span class="scrap piece-2"></span>
+      <span class="scrap piece-3"></span>
+      <span class="scrap piece-4"></span>
+      <span class="scrap piece-5 paper"></span>
+      <span class="scrap piece-6 paper"></span>
+      <span class="scrap piece-7"></span>
+      <div class="noise-layer"></div>
+    </div>
+
     <div id="persistent-ui" class="persistent-ui" aria-hidden="true">
       <nav class="ui-controls" aria-label="遊戲控制選項">
         <button
@@ -838,6 +832,13 @@
         loading="lazy"
       ></iframe>
 
+      <audio
+        id="bgm-audio"
+        src="./img/784908236.161834.mp4"
+        preload="auto"
+        loop
+        hidden
+      ></audio>
       <audio
         id="sfx-click"
         src="assets/audio/sfx_click.mp3"
