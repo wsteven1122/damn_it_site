@@ -9,53 +9,103 @@
     <meta name="description" content="蛋米特DAMN_IT網頁遊戲。" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>蛋米特DAMN IT! - 傳說中的米特蛋</title>
-    <link rel="icon" type="image/png" href="./img/frame_001 1.png" sizes="32x32" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="./img/frame_001 1.png"
+      sizes="32x32"
+    />
     <link rel="apple-touch-icon" href="./img/botton_Start_.png" />
     <link rel="stylesheet" href="./css/Style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"
+      defer
+    ></script>
     <script src="script.js" defer></script>
     <link rel="prefetch" href="./img/784908236.161834.mp4" as="video" />
   </head>
   <body class="theme-dark-alchemy screen-ready">
-    <div id="alert-message" class="alert hidden" role="alert" aria-live="polite">
+    <div
+      id="alert-message"
+      class="alert hidden"
+      role="alert"
+      aria-live="polite"
+    >
       <span id="alert-icon" class="alert-icon-symbol" aria-hidden="true"></span>
       <span id="alert-text" class="alert-content-text">系統訊息文字</span>
       <div class="alert-progress-bar"></div>
     </div>
 
-    <div id="guide-overlay" class="guide-overlay hidden" aria-modal="true" role="dialog" aria-label="新手導覽">
+    <div
+      id="guide-overlay"
+      class="guide-overlay hidden"
+      aria-modal="true"
+      role="dialog"
+      aria-label="新手導覽"
+    >
       <div id="guide-focus-ring" class="guide-focus-ring"></div>
       <div id="guide-tooltip" class="guide-tooltip">
         <header class="tooltip-header">
-          <span class="tooltip-stage-indicator">步驟 <span id="tip-current-step">1</span> / <span id="tip-total-steps">4</span></span>
+          <span class="tooltip-stage-indicator"
+            >步驟 <span id="tip-current-step">1</span> /
+            <span id="tip-total-steps">4</span></span
+          >
         </header>
         <p id="tip-text" class="tooltip-main-text">指引提示文字</p>
         <footer class="tooltip-footer">
-          <button id="tip-next-btn" class="btn btn-primary tooltip-nav-btn">下一步</button>
+          <button id="tip-next-btn" class="btn btn-primary tooltip-nav-btn">
+            下一步
+          </button>
         </footer>
       </div>
       <div class="guide-click-prompt">點擊任意處或按 [下一步] 繼續</div>
     </div>
 
-    <div id="result-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div
+      id="result-modal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       <div class="modal-content">
         <button class="close-btn" aria-label="關閉結果視窗">&times;</button>
         <header class="modal-header-container">
           <h3 id="modal-title" class="modal-header">煉金結果：未知米特蛋</h3>
         </header>
         <div class="result-display">
-          <img id="result-image" src="assets/results/result_egg_fail.png" alt="煉金結果圖像" class="result-egg-img" />
-          <div id="result-lottie-effect" class="result-lottie-effect" aria-hidden="true"></div>
+          <img
+            id="result-image"
+            src="./img/待機蛋 (去背) 1.png"
+            alt="煉金結果圖像"
+            class="result-egg-img"
+          />
+          <div
+            id="result-lottie-effect"
+            class="result-lottie-effect"
+            aria-hidden="true"
+          ></div>
         </div>
         <div class="result-description-container">
-          <p id="result-text" class="modal-description">煉金結果的詳細說明文字。</p>
+          <p id="result-text" class="modal-description">
+            煉金結果的詳細說明文字。
+          </p>
           <p class="result-metadata">
-            編號: <span id="result-number">???</span> | 稀有度: <span id="result-rarity">E</span>
+            編號: <span id="result-number">???</span> | 稀有度:
+            <span id="result-rarity">E</span>
           </p>
         </div>
         <footer class="modal-footer">
-          <button class="btn btn-primary next-screen-btn" data-target="screen-1" aria-controls="screen-1">再次挑戰 (RETRY)</button>
-          <button id="save-to-gallery-btn" class="btn btn-secondary">儲存到圖鑑</button>
+          <button
+            class="btn btn-primary next-screen-btn"
+            data-target="screen-1"
+            aria-controls="screen-1"
+          >
+            再次挑戰 (RETRY)
+          </button>
+          <button id="save-to-gallery-btn" class="btn btn-secondary">
+            儲存到圖鑑
+          </button>
         </footer>
       </div>
       <div class="modal-decoration-top"></div>
@@ -68,7 +118,12 @@
     </div>
 
     <main id="game-container" role="application">
-      <section id="screen-1" class="screen home-screen active" data-index="1" aria-label="首頁：蛋米特 DAMN IT!">
+      <section
+        id="screen-1"
+        class="screen home-screen active"
+        data-index="1"
+        aria-label="首頁：蛋米特 DAMN IT!"
+      >
         <div class="home-top-bar">
           <button id="volume-btn" class="icon-btn" aria-label="音量">
             <img src="./img/l_red.jpeg" alt="音量" />
@@ -77,7 +132,12 @@
             <button id="guide-btn" class="icon-btn" aria-label="新手導覽">
               <img src="./img/frame_001 1.png" alt="導覽" />
             </button>
-            <button id="settings-btn" class="icon-btn next-screen-btn" data-target="screen-settings" aria-label="設定">
+            <button
+              id="settings-btn"
+              class="icon-btn next-screen-btn"
+              data-target="screen-settings"
+              aria-label="設定"
+            >
               <img src="./img/IMG_9990 1.png" alt="設定" />
             </button>
           </div>
@@ -93,25 +153,58 @@
         </div>
 
         <div class="home-hero">
-          <img src="./img/eggmain.jpg" alt="蛋米特 DAMN IT!" class="hero-logo" loading="lazy" />
+          <img
+            src="./img/frame_001 1.png"
+            alt="蛋米特 DAMN IT!"
+            class="hero-logo"
+            loading="lazy"
+          />
           <div class="hero-actions">
-            <button id="lottie-start-btn" class="start-button menu-image-btn next-screen-btn" data-target="screen-2" aria-label="開始遊戲">
+            <button
+              id="lottie-start-btn"
+              class="start-button menu-image-btn next-screen-btn"
+              data-target="screen-2"
+              aria-label="開始遊戲"
+            >
               <img src="./img/botton_Start_.png" alt="開始遊戲" />
             </button>
-            <button class="menu-image-btn next-screen-btn" data-target="screen-gallery" id="menu-btn">
-              <img src="./img/Rectangle 97.png" alt="成果圖鑑" />
+            <button
+              class="menu-image-btn next-screen-btn"
+              data-target="screen-gallery"
+              id="menu-btn"
+            >
+              <img
+                src="./img/Secondary Botton_Picture Book_Default.png"
+                alt="成果圖鑑"
+              />
             </button>
-            <button class="menu-image-btn next-screen-btn" data-target="screen-menu">
-              <img src="./img/4609640818edf7192ee548942a94223665401b7f (1).jpeg" alt="特別任務" />
+            <button
+              class="menu-image-btn next-screen-btn"
+              data-target="screen-menu"
+            >
+              <img
+                src="./img/Secondary Botton_Magic_Default.png"
+                alt="特別任務"
+              />
             </button>
           </div>
         </div>
       </section>
 
-      <section id="screen-2" class="screen" data-index="2" aria-label="故事介紹：煉金廚房的起源">
+      <section
+        id="screen-2"
+        class="screen"
+        data-index="2"
+        aria-label="故事介紹：煉金廚房的起源"
+      >
         <div class="story-area">
           <div class="story-bubble" aria-label="故事訊息播放區">
-            <div id="messages" class="messages" role="log" aria-live="polite"></div>
+            <div
+              id="messages"
+              class="messages"
+              role="log"
+              aria-live="polite"
+            ></div>
             <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
               <div class="typing-dot"></div>
               <div class="typing-dot"></div>
@@ -121,32 +214,62 @@
         </div>
 
         <div class="dialog-footer-controls">
-          <button id="continue-btn" class="btn btn-primary next-screen-btn hidden" data-target="screen-3" aria-controls="screen-3">
+          <button
+            id="continue-btn"
+            class="btn btn-primary next-screen-btn hidden"
+            data-target="screen-3"
+            aria-controls="screen-3"
+          >
             進入煉金爐 (CONTINUE)
           </button>
-          <button id="dialog-skip-btn" class="btn btn-secondary dialog-skip-btn">跳過故事 (SKIP)</button>
+          <button
+            id="dialog-skip-btn"
+            class="btn btn-secondary dialog-skip-btn"
+          >
+            跳過故事 (SKIP)
+          </button>
         </div>
       </section>
 
-      <section id="screen-3" class="screen" data-index="3" aria-label="煉金爐介紹">
+      <section
+        id="screen-3"
+        class="screen"
+        data-index="3"
+        aria-label="煉金爐介紹"
+      >
         <div class="guide-panel">
           <div class="guide-bubble">
             <h2>煉金爐操作指南</h2>
-            <p>把食材拖到米特蛋上，最多三種。桌面周圍的食材都可以試試，選中後會在上方欄位顯示，點叉叉可以取消。</p>
+            <p>
+              把食材拖到米特蛋上，最多三種。桌面周圍的食材都可以試試，選中後會在上方欄位顯示，點叉叉可以取消。
+            </p>
             <p>影片播放完才能查看結果，右下角有半透明的 Skip 按鈕。</p>
           </div>
           <div class="guide-panel-footer">
-            <button class="btn btn-primary next-screen-btn" data-target="screen-4" aria-controls="screen-4">
+            <button
+              class="btn btn-primary next-screen-btn"
+              data-target="screen-4"
+              aria-controls="screen-4"
+            >
               準備好了，選擇食材！
             </button>
           </div>
         </div>
       </section>
 
-      <section id="screen-4" class="screen" data-index="4" aria-label="食材選擇">
+      <section
+        id="screen-4"
+        class="screen"
+        data-index="4"
+        aria-label="食材選擇"
+      >
         <div class="alchemy-workbench bright">
           <div class="kitchen-top-bar">
-            <div class="slot-row" role="list" aria-label="已放入的食材欄位 (最多 3 種)">
+            <div
+              class="slot-row"
+              role="list"
+              aria-label="已放入的食材欄位 (最多 3 種)"
+            >
               <div class="selection-slot" data-slot-index="1" role="listitem">
                 <span class="slot-label">空槽</span>
                 <button class="slot-clear" aria-label="移除這個食材">✕</button>
@@ -175,29 +298,65 @@
               <p class="drop-hint">拖曳食材到米特蛋</p>
             </div>
 
-            <div class="ingredient-table" role="group" aria-label="可選擇的魔法食材">
-              <div class="ingredient-token" data-ingredient="榴槤" draggable="true">
+            <div
+              class="ingredient-table"
+              role="group"
+              aria-label="可選擇的魔法食材"
+            >
+              <div
+                class="ingredient-token"
+                data-ingredient="榴槤"
+                draggable="true"
+              >
                 <img src="./img/IMG_9985 1.png" alt="榴槤" />
               </div>
-              <div class="ingredient-token" data-ingredient="魷魚" draggable="true">
+              <div
+                class="ingredient-token"
+                data-ingredient="魷魚"
+                draggable="true"
+              >
                 <img src="./img/IMG_9986 1.png" alt="魷魚" />
               </div>
-              <div class="ingredient-token" data-ingredient="檸檬" draggable="true">
+              <div
+                class="ingredient-token"
+                data-ingredient="檸檬"
+                draggable="true"
+              >
                 <img src="./img/IMG_9997 1.png" alt="檸檬" />
               </div>
-              <div class="ingredient-token" data-ingredient="手機" draggable="true">
+              <div
+                class="ingredient-token"
+                data-ingredient="手機"
+                draggable="true"
+              >
                 <img src="./img/IMG_9998 1.png" alt="手機" />
               </div>
-              <div class="ingredient-token" data-ingredient="TNT" draggable="true">
+              <div
+                class="ingredient-token"
+                data-ingredient="TNT"
+                draggable="true"
+              >
                 <img src="./img/IMG_9999 1.png" alt="TNT" />
               </div>
-              <div class="ingredient-token" data-ingredient="香菜" draggable="true">
+              <div
+                class="ingredient-token"
+                data-ingredient="香菜"
+                draggable="true"
+              >
                 <img src="./img/IMG_0003 1.png" alt="香菜" />
               </div>
-              <div class="ingredient-token" data-ingredient="隕石" draggable="true">
+              <div
+                class="ingredient-token"
+                data-ingredient="隕石"
+                draggable="true"
+              >
                 <img src="./img/IMG_9989 1.png" alt="隕石" />
               </div>
-              <div class="ingredient-token" data-ingredient="服裝" draggable="true">
+              <div
+                class="ingredient-token"
+                data-ingredient="服裝"
+                draggable="true"
+              >
                 <img src="./img/IMG_9990 1.png" alt="服裝" />
               </div>
             </div>
@@ -205,13 +364,24 @@
         </div>
 
         <footer class="selection-footer">
-          <button id="cast-spell-btn" class="btn btn-primary next-screen-btn" data-target="screen-5" aria-controls="screen-5" disabled>
+          <button
+            id="cast-spell-btn"
+            class="btn btn-primary next-screen-btn"
+            data-target="screen-5"
+            aria-controls="screen-5"
+            disabled
+          >
             開始唸咒！
           </button>
         </footer>
       </section>
 
-      <section id="screen-5" class="screen" data-index="5" aria-label="煉金儀式進行中">
+      <section
+        id="screen-5"
+        class="screen"
+        data-index="5"
+        aria-label="煉金儀式進行中"
+      >
         <header class="casting-header">
           <div class="casting-title-block">
             <h2 id="casting-title">煉金儀式啟動！</h2>
@@ -245,9 +415,21 @@
             <div class="pulse-glow"></div>
 
             <div class="video-shell">
-              <video id="casting-video" src="assets/videos/casting_video.mp4" playsinline preload="auto" poster="assets/videos/video_poster.jpg" aria-label="煉金過程影片"></video>
+              <video
+                id="casting-video"
+                src="./img/桌子.mp4"
+                playsinline
+                preload="auto"
+                poster="assets/videos/video_poster.jpg"
+                aria-label="煉金過程影片"
+              ></video>
               <div class="video-placeholder">即將放入雙手變身影片</div>
-              <div id="spinner-overlay" class="spinner-overlay" role="status" aria-label="載入中">
+              <div
+                id="spinner-overlay"
+                class="spinner-overlay"
+                role="status"
+                aria-label="載入中"
+              >
                 <div class="loading-spinner"></div>
               </div>
             </div>
@@ -256,38 +438,87 @@
         </div>
 
         <footer class="casting-footer">
-          <button id="next-from-video-btn" class="btn btn-primary next-screen-btn locked" data-target="screen-6" aria-controls="screen-6" disabled>
+          <button
+            id="next-from-video-btn"
+            class="btn btn-primary next-screen-btn locked"
+            data-target="screen-6"
+            aria-controls="screen-6"
+            disabled
+          >
             查看結果
           </button>
         </footer>
       </section>
 
-      <section id="screen-6" class="screen" data-index="6" aria-label="煉金結果">
+      <section
+        id="screen-6"
+        class="screen"
+        data-index="6"
+        aria-label="煉金結果"
+      >
         <div class="result-shell">
           <h2>煉金結果</h2>
           <p>結果已同步到上方彈窗。</p>
-          <button class="btn btn-primary next-screen-btn" data-target="screen-1" aria-controls="screen-1">返回首頁</button>
+          <button
+            class="btn btn-primary next-screen-btn"
+            data-target="screen-1"
+            aria-controls="screen-1"
+          >
+            返回首頁
+          </button>
         </div>
       </section>
 
-      <section id="screen-menu" class="screen" data-index="7" aria-label="特別任務選單">
+      <section
+        id="screen-menu"
+        class="screen"
+        data-index="7"
+        aria-label="特別任務選單"
+      >
         <div class="placeholder-card">特別任務準備中</div>
       </section>
 
-      <section id="screen-gallery" class="screen" data-index="8" aria-label="成果圖鑑">
+      <section
+        id="screen-gallery"
+        class="screen"
+        data-index="8"
+        aria-label="成果圖鑑"
+      >
         <div class="placeholder-card">成果圖鑑準備中</div>
       </section>
 
-      <section id="screen-settings" class="screen" data-index="9" aria-label="設定">
+      <section
+        id="screen-settings"
+        class="screen"
+        data-index="9"
+        aria-label="設定"
+      >
         <div class="placeholder-card">設定頁面</div>
       </section>
     </main>
 
     <div id="persistent-ui" class="persistent-ui">
-      <button id="menu-btn" class="btn btn-secondary next-screen-btn" data-target="screen-menu">主選單</button>
-      <button id="gallery-btn" class="btn btn-secondary next-screen-btn" data-target="screen-gallery">成果圖鑑</button>
+      <button
+        id="menu-btn"
+        class="btn btn-secondary next-screen-btn"
+        data-target="screen-menu"
+      >
+        主選單
+      </button>
+      <button
+        id="gallery-btn"
+        class="btn btn-secondary next-screen-btn"
+        data-target="screen-gallery"
+      >
+        成果圖鑑
+      </button>
     </div>
 
-    <audio id="bgm-audio" src="./img/784908236.063573.mp4" preload="auto" loop></audio>
+    <audio
+      id="bgm-audio"
+      src="./img/784908236.063573.mp4"
+      preload="auto"
+      loop
+    ></audio>
   </body>
 </html>
