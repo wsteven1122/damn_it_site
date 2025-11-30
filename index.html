@@ -38,7 +38,6 @@
     </style>
   </head>
   <body class="theme-dark-alchemy screen-ready">
-
     <div
       id="alert-message"
       class="alert hidden"
@@ -90,7 +89,7 @@
         <div class="result-display">
           <img
             id="result-image"
-            src="assets/results/result_egg_fail.png"
+            src="./img/regularEgg.jpeg"
             alt="煉金結果圖像"
             class="result-egg-img"
           />
@@ -145,7 +144,7 @@
 
         <div class="home-hero">
           <img
-            src="./img/eggmain.jpg"
+            src="./img/frame_001 1.png"
             alt="蛋米特 DAMN IT!"
             class="hero-logo"
             loading="lazy"
@@ -169,7 +168,12 @@
       >
         <div class="story-area">
           <div class="story-phone" aria-label="故事訊息播放區">
-            <div id="messages" class="messages" role="log" aria-live="polite"></div>
+            <div
+              id="messages"
+              class="messages"
+              role="log"
+              aria-live="polite"
+            ></div>
 
             <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
               <div class="typing-dot"></div>
@@ -534,7 +538,7 @@
             <li class="recipe-item unlocked" data-recipe-id="001" tabindex="0">
               <div class="recipe-card-wrapper">
                 <img
-                  src="assets/icons/default_egg.png"
+                  src="./img/regularEgg.jpeg"
                   alt="經典雞蛋"
                   class="recipe-thumb"
                 />
@@ -790,17 +794,7 @@
     </div>
 
     <div aria-hidden="true" class="audio-preload-container">
-      ><iframe
-        data-testid="embed-iframe"
-        style="border-radius: 12px"
-        src="https://open.spotify.com/embed/track/6wGHmNboSYbrh8gADp5IDL?utm_source=generator"
-        width="100%"
-        height="352"
-        frameborder="0"
-        allowfullscreen=""
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"
-      ></iframe>
+      >
 
       <audio
         id="bgm-audio"
