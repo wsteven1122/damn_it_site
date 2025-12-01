@@ -3,22 +3,16 @@
 // =========================================================================
 
 const CONFIG = {
-  TRANSITION_DURATION: 1000,
+  TRANSITION_DURATION: 700,
   MAX_INGREDIENTS: 3,
-  // 故事腳本 (Screen 2)
-  DIALOG_LINES: [
-    {
-      speaker: "旁白",
-      text: "你來到了古老的煉金廚房，這裡瀰漫著硫磺和蛋的氣味。",
-    },
-    {
-      speaker: "米特蛋魂",
-      text: "歡迎，挑戰者！我的米特蛋身軀需要你用奇異的食材重塑。",
-    },
-    {
-      speaker: "米特蛋魂",
-      text: "記住，組合是關鍵。去吧，將你的意念轉化為食材，鑄造傳說！",
-    },
+  // 故事訊息 (Screen 2)
+  STORY_MESSAGES: [
+    "我是一位廚師，因為到了30歲依舊母胎單身，因此獲得魔法成為了魔法廚師。",
+    "在因緣巧合之下，我拿到了霍格滑茲的入學 offer，一年前順利畢業。",
+    "直到上週六做飯時，我突然想到——如果把魔法用在食材上會怎麼樣？",
+    "於是我買了蛋、米特蛋、還跑到十公里外的賣場找魔法材料。",
+    "至於結果？我也不知道。",
+    "事不宜遲，馬上開始行動！",
   ],
   // 導覽步驟 (Guide Module)
   GUIDE_STEPS: [
@@ -45,6 +39,8 @@ const CONFIG = {
   ],
 };
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // =========================================================================
 // II. 遊戲控制器類別 (GameController Class)
 // =========================================================================
@@ -70,14 +66,20 @@ class GameController {
     return {
       persistentUI: document.getElementById("persistent-ui"),
       nextScreenBtns: document.querySelectorAll(".next-screen-btn"),
-      ingredientCards: document.querySelectorAll(".ingredient-card"),
+      ingredientTokens: document.querySelectorAll(".ingredient-token"),
+      dropTarget: document.querySelector(".drop-target"),
 
       lottieTitleContainer: document.getElementById("lottie-title-container"),
       lottieStartBtn: document.getElementById("lottie-start-btn"),
+      bgmAudio: document.getElementById("bgm-audio"),
 
-      dialogHistory: document.getElementById("dialog-history"),
+      messagesContainer: document.getElementById("messages"),
+      typingIndicator: document.getElementById("typingIndicator"),
       continueBtn: document.getElementById("continue-btn"),
       dialogSkipBtn: document.getElementById("dialog-skip-btn"),
+
+      curtainLayer: document.getElementById("curtain-transition"),
+      transformationSpace: document.querySelector(".transformation-space"),
 
       castingVideo: document.getElementById("casting-video"),
       nextFromVideoBtn: document.getElementById("next-from-video-btn"),
@@ -93,6 +95,8 @@ class GameController {
       volumeBtn: document.getElementById("volume-btn"),
       guideBtn: document.getElementById("guide-btn"),
       settingsBtn: document.getElementById("settings-btn"),
+      spinnerOverlay: document.getElementById("spinner-overlay"),
+      skipVideoBtn: document.getElementById("skip-video-btn"),
 
       // Guide Elements
       guideOverlay: document.getElementById("guide-overlay"),
@@ -105,13 +109,21 @@ class GameController {
       resultText: document.getElementById("result-text"),
       resultImage: document.getElementById("result-image"),
       selectionStatus: document.getElementById("current-selection-count"),
+      selectionSlots: document.querySelectorAll(".selection-slot"),
       castSpellBtn: document.getElementById("cast-spell-btn"),
     };
   }
 
   init() {
     this.dom.persistentUI.style.display = "none";
+    if (this.dom.curtainLayer) {
+      this.dom.curtainLayer.classList.add("open");
+      this.dom.curtainLayer.setAttribute("aria-hidden", "true");
+    }
     this.loadLottieAnimations();
+    this.setupBackgroundMusic();
+    const maxCountLabel = document.getElementById("max-selection-count");
+    if (maxCountLabel) maxCountLabel.textContent = CONFIG.MAX_INGREDIENTS;
     this.initEventListeners();
     this.updateIngredientStatus();
   }
@@ -122,14 +134,25 @@ class GameController {
     let currentScreen = document.querySelector(".screen.active");
     let nextScreen = document.getElementById(nextScreenId);
 
-    if (currentScreen) {
+    if (currentScreen && currentScreen.id !== nextScreenId) {
       currentScreen.classList.remove("active");
+      currentScreen.classList.add("exiting");
+      setTimeout(
+        () => currentScreen.classList.remove("exiting"),
+        CONFIG.TRANSITION_DURATION
+      );
     }
+
     if (nextScreen) {
       nextScreen.classList.add("active");
     }
     this.state.currentScreenId = nextScreenId;
     this.updatePersistentUI(nextScreenId);
+    this.updateSceneMood(nextScreenId);
+  }
+
+  updateSceneMood(screenId) {
+    document.body.classList.toggle("scene-kitchen", screenId === "screen-5");
   }
 
   updatePersistentUI(screenId) {
@@ -153,7 +176,7 @@ class GameController {
     this.dom.resultModal.style.display = "none";
 
     try {
-      this.switchScreens(nextScreenId);
+      await this.playCurtainTransition(() => this.switchScreens(nextScreenId));
 
       if (nextScreenId === "screen-2") {
         // 進入對話流程
@@ -181,6 +204,35 @@ class GameController {
     } finally {
       this.state.isTransitioning = false;
     }
+  }
+
+  playCurtainTransition(midpointCallback) {
+    return new Promise((resolve) => {
+      const layer = this.dom.curtainLayer;
+      if (!layer) {
+        midpointCallback?.();
+        resolve();
+        return;
+      }
+
+      layer.setAttribute("aria-hidden", "false");
+      layer.classList.add("active");
+      layer.classList.remove("open");
+      void layer.offsetWidth;
+      const midpointTimer = setTimeout(() => {
+        midpointCallback?.();
+        layer.classList.add("open");
+      }, CONFIG.TRANSITION_DURATION * 0.45);
+
+      const cleanupTimer = setTimeout(() => {
+        layer.classList.remove("active");
+        layer.classList.add("open");
+        layer.setAttribute("aria-hidden", "true");
+        resolve();
+      }, CONFIG.TRANSITION_DURATION);
+
+      this.state.transitionTimers = [midpointTimer, cleanupTimer];
+    });
   }
 
   resetGame() {
@@ -213,6 +265,7 @@ class GameController {
 
   loadLottieAnimations() {
     if (typeof lottie === "undefined") return;
+    if (!this.dom.lottieTitleContainer || !this.dom.lottieStartBtn) return;
 
     // 標題動畫
     this.state.lottieInstances.title = lottie.loadAnimation({
@@ -241,6 +294,26 @@ class GameController {
     );
   }
 
+  setupBackgroundMusic() {
+    const bgm = this.dom.bgmAudio;
+    if (!bgm) return;
+
+    bgm.volume = 0.5;
+
+    const attemptPlay = () => bgm.play().catch(() => {});
+    attemptPlay();
+
+    const unlockAudio = () => {
+      bgm.muted = false;
+      attemptPlay();
+      document.removeEventListener("pointerdown", unlockAudio);
+      document.removeEventListener("touchstart", unlockAudio);
+    };
+
+    document.addEventListener("pointerdown", unlockAudio);
+    document.addEventListener("touchstart", unlockAudio);
+  }
+
   // ---------------------- 食材選擇邏輯 ----------------------
 
   updateIngredientStatus() {
@@ -256,34 +329,40 @@ class GameController {
       this.dom.castSpellBtn.disabled = isCastDisabled;
     }
 
-    this.dom.ingredientCards.forEach((card) => {
+    this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
       const isSelected = this.state.selectedIngredients.has(ingredient);
-      const isFull =
-        this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
-
+      const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
       card.classList.toggle("selected", isSelected);
-      card.setAttribute("aria-checked", isSelected);
-      card.classList.toggle(
-        "disabled",
-        !isSelected && isFull && !card.classList.contains("locked")
-      );
+      card.setAttribute("aria-pressed", isSelected);
+      card.classList.toggle("disabled", !isSelected && isFull);
     });
+
+    const selectedArr = Array.from(this.state.selectedIngredients);
+    if (this.dom.selectionSlots) {
+      this.dom.selectionSlots.forEach((slot, index) => {
+        const label = slot.querySelector(".slot-label");
+        const clearBtn = slot.querySelector(".slot-clear");
+        const ingredient = selectedArr[index];
+
+        if (ingredient) {
+          slot.classList.add("filled");
+          slot.dataset.ingredient = ingredient;
+          if (label) label.textContent = ingredient;
+          if (clearBtn) clearBtn.disabled = false;
+        } else {
+          slot.classList.remove("filled");
+          slot.dataset.ingredient = "";
+          if (label) label.textContent = "空槽";
+          if (clearBtn) clearBtn.disabled = true;
+        }
+      });
+    }
   }
 
-  handleIngredientSelection(event) {
-    const card = event.currentTarget;
-    const ingredient = card.dataset.ingredient;
-
-    if (
-      card.classList.contains("locked") ||
-      card.classList.contains("disabled")
-    )
-      return;
-
+  toggleIngredient(ingredient) {
     const isSelected = this.state.selectedIngredients.has(ingredient);
-    const isFull =
-      this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+    const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
 
     if (isSelected) {
       this.state.selectedIngredients.delete(ingredient);
@@ -297,7 +376,7 @@ class GameController {
         return;
       }
       this.state.selectedIngredients.add(ingredient);
-      this.showAlert("success", `✨ ${ingredient} 已成功加入煉金爐！`);
+      this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
     }
 
     this.updateIngredientStatus();
@@ -306,16 +385,30 @@ class GameController {
   // ---------------------- 影片與結果處理 ----------------------
 
   async handleVideoTransition() {
-    this.dom.nextFromVideoBtn.classList.add("hidden");
+    this.dom.nextFromVideoBtn.classList.add("locked");
+    this.dom.nextFromVideoBtn.disabled = true;
+    this.dom.transformationSpace?.classList.remove("casting-finished");
+    this.dom.transformationSpace?.classList.add("casting-active");
     if (this.dom.castingVideo) {
-      this.dom.castingVideo.style.opacity = 1;
+      this.dom.castingVideo.style.opacity = 0.9;
       this.dom.castingVideo.muted = this.state.isMuted;
+    }
+
+    if (this.dom.spinnerOverlay) {
+      this.dom.spinnerOverlay.style.opacity = 1;
+      this.dom.spinnerOverlay.style.display = "flex";
     }
 
     try {
       if (this.dom.castingVideo) {
         this.dom.castingVideo.currentTime = 0;
         await this.dom.castingVideo.play();
+        if (this.dom.spinnerOverlay) {
+          setTimeout(() => {
+            this.dom.spinnerOverlay.style.opacity = 0;
+            this.dom.spinnerOverlay.style.display = "none";
+          }, 400);
+        }
       }
     } catch (error) {
       console.warn("影片自動播放被阻止:", error);
@@ -329,7 +422,10 @@ class GameController {
     if (this.dom.castingVideo) {
       this.dom.castingVideo.style.opacity = 0.5; // 播放完畢後變暗
     }
-    this.dom.nextFromVideoBtn.classList.remove("hidden");
+    this.dom.transformationSpace?.classList.remove("casting-active");
+    this.dom.transformationSpace?.classList.add("casting-finished");
+    this.dom.nextFromVideoBtn.classList.remove("locked");
+    this.dom.nextFromVideoBtn.disabled = false;
   }
 
   generateResult() {
@@ -391,94 +487,97 @@ class GameController {
   // ---------------------- 對話模塊 (Screen 2) ----------------------
 
   createDialogModule() {
-    let currentStepIndex = 0;
+    let aborted = false;
     const self = this;
 
-    // ... (內部函數 createBubble, showStepAndAwaitClick, finishDialog 略，與上一個版本相同)
+    function showTyping() {
+      self.dom.typingIndicator.classList.add("visible");
+    }
 
-    // 內部函數：創建並顯示聊天氣泡
-    function createBubble(speaker, text) {
-      return new Promise((resolve) => {
+    function hideTyping() {
+      self.dom.typingIndicator.classList.remove("visible");
+    }
+
+    async function typeMessage(text) {
+      const bubble = document.createElement("div");
+      bubble.className = "message-bubble";
+      bubble.textContent = "";
+      self.dom.messagesContainer.appendChild(bubble);
+      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+
+      await wait(250);
+
+      for (let i = 0; i <= text.length; i++) {
+        if (aborted) return;
+        bubble.textContent = text.substring(0, i);
+        await wait(35);
+      }
+
+      bubble.classList.add("pop-in");
+      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+    }
+
+    function renderAllMessagesInstant() {
+      self.dom.messagesContainer.innerHTML = "";
+      CONFIG.STORY_MESSAGES.forEach((text) => {
         const bubble = document.createElement("div");
-        bubble.classList.add("chat-bubble");
-        bubble.innerHTML = `<span class="speaker-name">${speaker}</span>${text}`;
-
-        self.dom.dialogHistory.appendChild(bubble);
-        self.dom.dialogHistory.scrollTop = self.dom.dialogHistory.scrollHeight;
-
-        setTimeout(() => {
-          bubble.classList.add("active");
-          resolve(bubble);
-        }, 10);
+        bubble.className = "message-bubble instant";
+        bubble.textContent = text;
+        self.dom.messagesContainer.appendChild(bubble);
       });
+      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      hideTyping();
     }
 
-    // 內部函數：顯示下一步並等待點擊
-    function showStepAndAwaitClick() {
-      return new Promise((resolveStep) => {
-        if (currentStepIndex >= CONFIG.DIALOG_LINES.length) {
-          finishDialog();
-          resolveStep();
-          return;
-        }
-
-        const step = CONFIG.DIALOG_LINES[currentStepIndex];
-
-        createBubble(step.speaker, step.text).then(() => {
-          const clickHandler = () => {
-            self.dom.dialogHistory.removeEventListener("click", clickHandler);
-            resolveStep();
-          };
-          self.dom.dialogHistory.addEventListener("click", clickHandler);
-        });
-      });
-    }
-
-    // 內部函數：故事結束，顯示繼續按鈕
     function finishDialog() {
-      currentStepIndex = CONFIG.DIALOG_LINES.length;
+      hideTyping();
       self.dom.continueBtn.classList.remove("hidden");
-      self.dom.dialogHistory.style.pointerEvents = "none";
+      self.dom.dialogSkipBtn.disabled = true;
     }
 
     return {
       start: () => {
         return new Promise((resolve) => {
-          currentStepIndex = 0;
+          aborted = false;
           self.dom.continueBtn.classList.add("hidden");
-          self.dom.dialogHistory.innerHTML = "";
-          self.dom.dialogHistory.style.pointerEvents = "auto";
+          self.dom.dialogSkipBtn.disabled = false;
+          self.dom.messagesContainer.innerHTML = "";
+          self.dom.messagesContainer.scrollTop = 0;
 
-          // Continue按鈕的職責：觸發轉場到選材頁 (並結束 Dialog.start Promise)
-          self.dom.continueBtn.onclick = () => {
-            self.state.isTransitioning = false;
+          const handleContinue = () => {
             resolve();
           };
 
-          // Skip按鈕的職責：直接跳到 Dialog 結束
+          self.dom.continueBtn.addEventListener("click", handleContinue, {
+            once: true,
+          });
+
           self.dom.dialogSkipBtn.onclick = () => {
-            currentStepIndex = CONFIG.DIALOG_LINES.length;
+            aborted = true;
+            renderAllMessagesInstant();
             finishDialog();
           };
 
-          let sequence = Promise.resolve();
-          for (let i = 0; i < CONFIG.DIALOG_LINES.length; i++) {
-            sequence = sequence.then(() => {
-              currentStepIndex = i;
-              return showStepAndAwaitClick();
-            });
-          }
+          (async () => {
+            for (let i = 0; i < CONFIG.STORY_MESSAGES.length; i++) {
+              if (aborted) break;
+              showTyping();
+              await wait(900 + Math.random() * 700);
+              hideTyping();
+              await typeMessage(CONFIG.STORY_MESSAGES[i]);
+            }
 
-          sequence.then(() => {
-            finishDialog();
-          });
+            if (!aborted) {
+              finishDialog();
+            }
+          })();
         });
       },
       reset: () => {
-        currentStepIndex = 0;
-        self.dom.dialogHistory.innerHTML = "";
+        aborted = false;
+        self.dom.messagesContainer.innerHTML = "";
         self.dom.continueBtn.classList.add("hidden");
-        self.dom.dialogHistory.style.pointerEvents = "none";
+        hideTyping();
       },
     };
   }
@@ -616,22 +715,70 @@ class GameController {
       });
     });
 
-    // 2. Lottie 開始遊戲按鈕 (Screen 1 Start)
-    this.dom.lottieStartBtn.addEventListener("click", () => {
-      if (this.state.isTransitioning) return;
-      this.performTransition(this.dom.lottieStartBtn.dataset.target);
+    // 2. 開始遊戲按鈕 (Screen 1 Start)
+    if (this.dom.lottieStartBtn) {
+      this.dom.lottieStartBtn.addEventListener("click", () => {
+        if (this.state.isTransitioning) return;
+        this.performTransition(this.dom.lottieStartBtn.dataset.target);
+      });
+    }
+
+    // 3. 食材選擇/拖曳
+    this.dom.ingredientTokens.forEach((card) => {
+      const ingredient = card.dataset.ingredient;
+      card.addEventListener("click", () => this.toggleIngredient(ingredient));
+      card.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("text/plain", ingredient);
+        card.classList.add("dragging");
+      });
+      card.addEventListener("dragend", () => card.classList.remove("dragging"));
     });
 
-    // 3. 食材選擇
-    this.dom.ingredientCards.forEach((card) => {
-      card.addEventListener("click", (e) => this.handleIngredientSelection(e));
-    });
+    if (this.dom.dropTarget) {
+      this.dom.dropTarget.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        this.dom.dropTarget.classList.add("drag-over");
+      });
+      this.dom.dropTarget.addEventListener("dragleave", () =>
+        this.dom.dropTarget.classList.remove("drag-over")
+      );
+      this.dom.dropTarget.addEventListener("drop", (e) => {
+        e.preventDefault();
+        this.dom.dropTarget.classList.remove("drag-over");
+        const ingredient = e.dataTransfer.getData("text/plain");
+        if (ingredient) this.toggleIngredient(ingredient);
+      });
+    }
+
+    // 3-1. 快速清除單一槽位
+    if (this.dom.selectionSlots) {
+      this.dom.selectionSlots.forEach((slot) => {
+        const clearBtn = slot.querySelector(".slot-clear");
+        if (!clearBtn) return;
+
+        clearBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const ingredient = slot.dataset.ingredient;
+          if (ingredient && this.state.selectedIngredients.has(ingredient)) {
+            this.state.selectedIngredients.delete(ingredient);
+            this.showAlert("info", `✅ ${ingredient} 已從煉金爐中移除。`);
+            this.updateIngredientStatus();
+          }
+        });
+      });
+    }
 
     // 4. 影片結束
     if (this.dom.castingVideo) {
       this.dom.castingVideo.addEventListener("ended", () =>
         this.handleVideoEnd()
       );
+    }
+
+    if (this.dom.skipVideoBtn) {
+      this.dom.skipVideoBtn.addEventListener("click", () => {
+        this.handleVideoEnd();
+      });
     }
 
     // 5. Modal 關閉/重置
@@ -652,10 +799,18 @@ class GameController {
     // 6. 永久 UI 按鈕
     this.dom.volumeBtn.addEventListener("click", () => {
       this.state.isMuted = !this.state.isMuted;
-      this.dom.volumeBtn.textContent = this.state.isMuted ? "🔇" : "🔊";
+      this.dom.volumeBtn.classList.toggle("muted", this.state.isMuted);
+      this.dom.volumeBtn.setAttribute("aria-pressed", this.state.isMuted);
+      this.dom.volumeBtn.setAttribute(
+        "aria-label",
+        this.state.isMuted ? "音量已靜音" : "音量開啟"
+      );
       this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
       if (this.dom.castingVideo) {
         this.dom.castingVideo.muted = this.state.isMuted;
+      }
+      if (this.dom.bgmAudio) {
+        this.dom.bgmAudio.muted = this.state.isMuted;
       }
     });
 
