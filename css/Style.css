@@ -1305,15 +1305,6 @@ p {
   place-items: center;
 }
 
-.shine-ring {
-  width: 480px;
-  height: 480px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 40px rgba(255, 157, 60, 0.35);
-  animation: spin 12s linear infinite;
-}
-
 .pulse-glow {
   position: absolute;
   width: 360px;
@@ -1330,7 +1321,7 @@ p {
 
 .video-shell {
   position: relative;
-  width: min(520px, 80vw);
+  width: auto;
   aspect-ratio: 16 / 9;
   border-radius: 20px;
   overflow: hidden;
