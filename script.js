@@ -92,9 +92,11 @@ class GameController {
       alertText: document.getElementById("alert-text"),
       alertIcon: document.getElementById("alert-icon"),
 
-      volumeBtn: document.getElementById("volume-btn"),
-      guideBtn: document.getElementById("guide-btn"),
-      settingsBtn: document.getElementById("settings-btn"),
+      volumeBtns: document.querySelectorAll(".volume-toggle"),
+      guideBtns: document.querySelectorAll(".guide-trigger"),
+      settingsBtns: document.querySelectorAll(
+        "#settings-btn, [data-target='screen-settings']"
+      ),
       spinnerOverlay: document.getElementById("spinner-overlay"),
       skipVideoBtn: document.getElementById("skip-video-btn"),
 
@@ -115,7 +117,7 @@ class GameController {
   }
 
   init() {
-    this.dom.persistentUI.style.display = "none";
+    this.dom.persistentUI.style.display = "flex";
     if (this.dom.curtainLayer) {
       this.dom.curtainLayer.classList.add("open");
       this.dom.curtainLayer.setAttribute("aria-hidden", "true");
@@ -156,15 +158,7 @@ class GameController {
   }
 
   updatePersistentUI(screenId) {
-    if (
-      ["screen-1", "screen-menu", "screen-gallery", "screen-settings"].includes(
-        screenId
-      )
-    ) {
-      this.dom.persistentUI.style.display = "none";
-    } else {
-      this.dom.persistentUI.style.display = "block";
-    }
+    this.dom.persistentUI.style.display = "flex";
   }
 
   /** 執行畫面切換並處理特殊流程 */
@@ -332,7 +326,8 @@ class GameController {
     this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
       const isSelected = this.state.selectedIngredients.has(ingredient);
-      const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+      const isFull =
+        this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
       card.classList.toggle("selected", isSelected);
       card.setAttribute("aria-pressed", isSelected);
       card.classList.toggle("disabled", !isSelected && isFull);
@@ -362,7 +357,8 @@ class GameController {
 
   toggleIngredient(ingredient) {
     const isSelected = this.state.selectedIngredients.has(ingredient);
-    const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+    const isFull =
+      this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
 
     if (isSelected) {
       this.state.selectedIngredients.delete(ingredient);
@@ -446,7 +442,7 @@ class GameController {
       title = "💥 究極爆臭：毀滅之蛋";
       text =
         "榴槤、TNT、魷魚完美結合，獲得了一顆可以毀滅世界的臭蛋。稀有度：SSSR";
-      image = "assets/results/egg_ultimate.png";
+      image = "assets/results/八龍珠.png";
       rarity = "SSSR";
     } else if (has香菜 && has榴槤 && has檸檬) {
       title = "💀 生化武器：廣志之襪";
@@ -459,10 +455,10 @@ class GameController {
       image = "assets/results/egg_tnt.png";
       rarity = "SR";
     } else if (count >= 1) {
-      title = "🥚 普通成功：經典煉金蛋";
+      title = "🥚 普通成功：八龍珠";
       text =
-        "你成功地用奇異的食材煉出了一顆還能吃的經典蛋。雖然無趣，但安全可靠。";
-      image = "assets/results/egg_001.png";
+        "你成功地用奇異的食材煉出了一顆口味獨特的八龍珠蛋。雖然無趣，但安全可靠。";
+      image = "assets/results/egg_fail.png";
       rarity = "R";
     } else {
       title = "💥 失敗結局：爆裂米特渣";
@@ -503,7 +499,8 @@ class GameController {
       bubble.className = "message-bubble";
       bubble.textContent = "";
       self.dom.messagesContainer.appendChild(bubble);
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
 
       await wait(250);
 
@@ -514,7 +511,8 @@ class GameController {
       }
 
       bubble.classList.add("pop-in");
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
     }
 
     function renderAllMessagesInstant() {
@@ -525,7 +523,8 @@ class GameController {
         bubble.textContent = text;
         self.dom.messagesContainer.appendChild(bubble);
       });
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
       hideTyping();
     }
 
@@ -669,10 +668,6 @@ class GameController {
     }
 
     function start() {
-      if (self.state.currentScreenId !== "screen-1") {
-        self.showAlert("info", "請先回到首頁才能啟動新手導覽。");
-        return;
-      }
       if (self.state.isTransitioning) return;
 
       self.dom.guideOverlay.classList.remove("hidden");
@@ -797,30 +792,42 @@ class GameController {
     });
 
     // 6. 永久 UI 按鈕
-    this.dom.volumeBtn.addEventListener("click", () => {
-      this.state.isMuted = !this.state.isMuted;
-      this.dom.volumeBtn.classList.toggle("muted", this.state.isMuted);
-      this.dom.volumeBtn.setAttribute("aria-pressed", this.state.isMuted);
-      this.dom.volumeBtn.setAttribute(
-        "aria-label",
-        this.state.isMuted ? "音量已靜音" : "音量開啟"
-      );
-      this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
-      if (this.dom.castingVideo) {
-        this.dom.castingVideo.muted = this.state.isMuted;
-      }
-      if (this.dom.bgmAudio) {
-        this.dom.bgmAudio.muted = this.state.isMuted;
-      }
+    this.dom.volumeBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        this.state.isMuted = !this.state.isMuted;
+        this.dom.volumeBtns.forEach((el) => {
+          el.classList.toggle("muted", this.state.isMuted);
+          el.setAttribute("aria-pressed", this.state.isMuted);
+          el.setAttribute(
+            "aria-label",
+            this.state.isMuted ? "音量已靜音" : "音量開啟"
+          );
+        });
+        this.showAlert(
+          "info",
+          this.state.isMuted ? "已關閉音效" : "已開啟音效"
+        );
+        if (this.dom.castingVideo) {
+          this.dom.castingVideo.muted = this.state.isMuted;
+        }
+        if (this.dom.bgmAudio) {
+          this.dom.bgmAudio.muted = this.state.isMuted;
+        }
+      });
     });
 
     // 7. 新手導覽按鈕 (僅點擊時啟動)
-    this.dom.guideBtn.addEventListener("click", () => this.Guide.start());
+    this.dom.guideBtns.forEach((btn) =>
+      btn.addEventListener("click", () => this.Guide.start())
+    );
 
     // 8. 設置按鈕
-    this.dom.settingsBtn.addEventListener("click", (e) => {
-      this.performTransition(e.currentTarget.dataset.target);
-    });
+    this.dom.settingsBtns.forEach((btn) =>
+      btn.addEventListener("click", (e) => {
+        if (!e.currentTarget.dataset.target) return;
+        this.performTransition(e.currentTarget.dataset.target);
+      })
+    );
 
     // 9. 施法按鈕 (Cast Spell)
     if (this.dom.castSpellBtn) {
