@@ -94,7 +94,9 @@ class GameController {
 
       volumeBtns: document.querySelectorAll(".volume-toggle"),
       guideBtns: document.querySelectorAll(".guide-trigger"),
-      settingsBtns: document.querySelectorAll("#settings-btn, [data-target='screen-settings']"),
+      settingsBtns: document.querySelectorAll(
+        "#settings-btn, [data-target='screen-settings']"
+      ),
       spinnerOverlay: document.getElementById("spinner-overlay"),
       skipVideoBtn: document.getElementById("skip-video-btn"),
 
@@ -324,7 +326,8 @@ class GameController {
     this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
       const isSelected = this.state.selectedIngredients.has(ingredient);
-      const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+      const isFull =
+        this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
       card.classList.toggle("selected", isSelected);
       card.setAttribute("aria-pressed", isSelected);
       card.classList.toggle("disabled", !isSelected && isFull);
@@ -354,7 +357,8 @@ class GameController {
 
   toggleIngredient(ingredient) {
     const isSelected = this.state.selectedIngredients.has(ingredient);
-    const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+    const isFull =
+      this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
 
     if (isSelected) {
       this.state.selectedIngredients.delete(ingredient);
@@ -438,7 +442,7 @@ class GameController {
       title = "💥 究極爆臭：毀滅之蛋";
       text =
         "榴槤、TNT、魷魚完美結合，獲得了一顆可以毀滅世界的臭蛋。稀有度：SSSR";
-      image = "assets/results/egg_ultimate.png";
+      image = "assets/results/八龍珠.png";
       rarity = "SSSR";
     } else if (has香菜 && has榴槤 && has檸檬) {
       title = "💀 生化武器：廣志之襪";
@@ -451,10 +455,10 @@ class GameController {
       image = "assets/results/egg_tnt.png";
       rarity = "SR";
     } else if (count >= 1) {
-      title = "🥚 普通成功：經典煉金蛋";
+      title = "🥚 普通成功：八龍珠";
       text =
-        "你成功地用奇異的食材煉出了一顆還能吃的經典蛋。雖然無趣，但安全可靠。";
-      image = "assets/results/egg_001.png";
+        "你成功地用奇異的食材煉出了一顆口味獨特的八龍珠蛋。雖然無趣，但安全可靠。";
+      image = "assets/results/egg_fail.png";
       rarity = "R";
     } else {
       title = "💥 失敗結局：爆裂米特渣";
@@ -495,7 +499,8 @@ class GameController {
       bubble.className = "message-bubble";
       bubble.textContent = "";
       self.dom.messagesContainer.appendChild(bubble);
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
 
       await wait(250);
 
@@ -506,7 +511,8 @@ class GameController {
       }
 
       bubble.classList.add("pop-in");
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
     }
 
     function renderAllMessagesInstant() {
@@ -517,7 +523,8 @@ class GameController {
         bubble.textContent = text;
         self.dom.messagesContainer.appendChild(bubble);
       });
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
       hideTyping();
     }
 
@@ -796,7 +803,10 @@ class GameController {
             this.state.isMuted ? "音量已靜音" : "音量開啟"
           );
         });
-        this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
+        this.showAlert(
+          "info",
+          this.state.isMuted ? "已關閉音效" : "已開啟音效"
+        );
         if (this.dom.castingVideo) {
           this.dom.castingVideo.muted = this.state.isMuted;
         }
