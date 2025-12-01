@@ -125,11 +125,15 @@
         aria-label="首頁：蛋米特 DAMN IT!"
       >
         <div class="home-top-bar">
-          <button id="volume-btn" class="icon-btn" aria-label="音量">
+          <button id="volume-btn" class="icon-btn volume-toggle" aria-label="音量">
             <img src="./img/voice_on.png" alt="音量" />
           </button>
           <div class="home-utility-group">
-            <button id="guide-btn" class="icon-btn" aria-label="新手導覽">
+            <button
+              id="guide-btn"
+              class="icon-btn guide-trigger"
+              aria-label="新手導覽"
+            >
               <img src="./img/Botton_teaching_Default.png" alt="導覽" />
             </button>
             <button
@@ -484,7 +488,49 @@
         data-index="8"
         aria-label="成果圖鑑"
       >
-        <div class="placeholder-card">成果圖鑑準備中</div>
+        <div class="gallery-wrapper">
+          <header class="gallery-header">
+            <div class="gallery-ribbon">成果圖鑑</div>
+            <p class="gallery-subtitle">往下拖移，欣賞漂浮的小卡收藏</p>
+          </header>
+          <div class="gallery-scroll" role="list">
+            <article class="gallery-card tilt-1" role="listitem">
+              <img src="./img/待機蛋 (去背) 1.png" alt="米特蛋" />
+              <div class="card-body">
+                <h3>米特蛋 #001</h3>
+                <p>基礎型態，閃著溫暖光澤的入門款。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-2" role="listitem">
+              <img src="./img/IMG_9985 1.png" alt="香草蛋糕" />
+              <div class="card-body">
+                <h3>香草綿綿蛋</h3>
+                <p>綿密口感，甜香在廚房飄蕩。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-3" role="listitem">
+              <img src="./img/IMG_9998 1.png" alt="魔法湯匙" />
+              <div class="card-body">
+                <h3>星落湯匙蛋</h3>
+                <p>攪動星辰的湯匙，讓蛋呈現夜空色澤。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-1" role="listitem">
+              <img src="./img/IMG_9999 1.png" alt="水母軟糖" />
+              <div class="card-body">
+                <h3>水母軟糖蛋</h3>
+                <p>透明的果凍層，上浮著柔軟光點。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-2" role="listitem">
+              <img src="./img/IMG_0003 1.png" alt="飛行磚塊" />
+              <div class="card-body">
+                <h3>飛行磚塊蛋</h3>
+                <p>漂浮在空中的安全磚，帶來堅固的味道。</p>
+              </div>
+            </article>
+          </div>
+        </div>
       </section>
 
       <section
@@ -498,20 +544,56 @@
     </main>
 
     <div id="persistent-ui" class="persistent-ui">
-      <button
-        id="menu-btn"
-        class="btn btn-secondary next-screen-btn"
-        data-target="screen-menu"
-      >
-        主選單
-      </button>
-      <button
-        id="gallery-btn"
-        class="btn btn-secondary next-screen-btn"
-        data-target="screen-gallery"
-      >
-        成果圖鑑
-      </button>
+      <div class="persistent-inner">
+        <div class="persistent-home">
+          <button
+            class="chip-btn next-screen-btn"
+            data-target="screen-1"
+            aria-label="回首頁"
+          >
+            ⬅ 回首頁
+          </button>
+        </div>
+        <div class="persistent-actions">
+          <button
+            class="icon-btn volume-toggle"
+            aria-label="音量"
+            aria-pressed="false"
+          >
+            <img src="./img/voice_on.png" alt="音量" />
+          </button>
+          <button class="icon-btn guide-trigger" aria-label="導覽">
+            <img src="./img/Botton_teaching_Default.png" alt="導覽" />
+          </button>
+          <button
+            class="icon-btn next-screen-btn"
+            data-target="screen-settings"
+            aria-label="設定"
+          >
+            <img src="./img/太陽.png" alt="設定" />
+          </button>
+          <button
+            class="icon-btn next-screen-btn"
+            data-target="screen-gallery"
+            aria-label="成果圖鑑"
+          >
+            <img
+              src="./img/Secondary Botton_Picture Book_Default.png"
+              alt="成果圖鑑"
+            />
+          </button>
+          <button
+            class="icon-btn next-screen-btn"
+            data-target="screen-menu"
+            aria-label="特別任務"
+          >
+            <img
+              src="./img/Secondary Botton_Magic_Default.png"
+              alt="特別任務"
+            />
+          </button>
+        </div>
+      </div>
     </div>
 
     <audio

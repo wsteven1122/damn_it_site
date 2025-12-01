@@ -92,9 +92,9 @@ class GameController {
       alertText: document.getElementById("alert-text"),
       alertIcon: document.getElementById("alert-icon"),
 
-      volumeBtn: document.getElementById("volume-btn"),
-      guideBtn: document.getElementById("guide-btn"),
-      settingsBtn: document.getElementById("settings-btn"),
+      volumeBtns: document.querySelectorAll(".volume-toggle"),
+      guideBtns: document.querySelectorAll(".guide-trigger"),
+      settingsBtns: document.querySelectorAll("#settings-btn, [data-target='screen-settings']"),
       spinnerOverlay: document.getElementById("spinner-overlay"),
       skipVideoBtn: document.getElementById("skip-video-btn"),
 
@@ -115,7 +115,7 @@ class GameController {
   }
 
   init() {
-    this.dom.persistentUI.style.display = "none";
+    this.dom.persistentUI.style.display = "flex";
     if (this.dom.curtainLayer) {
       this.dom.curtainLayer.classList.add("open");
       this.dom.curtainLayer.setAttribute("aria-hidden", "true");
@@ -156,15 +156,7 @@ class GameController {
   }
 
   updatePersistentUI(screenId) {
-    if (
-      ["screen-1", "screen-menu", "screen-gallery", "screen-settings"].includes(
-        screenId
-      )
-    ) {
-      this.dom.persistentUI.style.display = "none";
-    } else {
-      this.dom.persistentUI.style.display = "block";
-    }
+    this.dom.persistentUI.style.display = "flex";
   }
 
   /** 執行畫面切換並處理特殊流程 */
@@ -669,10 +661,6 @@ class GameController {
     }
 
     function start() {
-      if (self.state.currentScreenId !== "screen-1") {
-        self.showAlert("info", "請先回到首頁才能啟動新手導覽。");
-        return;
-      }
       if (self.state.isTransitioning) return;
 
       self.dom.guideOverlay.classList.remove("hidden");
@@ -797,30 +785,39 @@ class GameController {
     });
 
     // 6. 永久 UI 按鈕
-    this.dom.volumeBtn.addEventListener("click", () => {
-      this.state.isMuted = !this.state.isMuted;
-      this.dom.volumeBtn.classList.toggle("muted", this.state.isMuted);
-      this.dom.volumeBtn.setAttribute("aria-pressed", this.state.isMuted);
-      this.dom.volumeBtn.setAttribute(
-        "aria-label",
-        this.state.isMuted ? "音量已靜音" : "音量開啟"
-      );
-      this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
-      if (this.dom.castingVideo) {
-        this.dom.castingVideo.muted = this.state.isMuted;
-      }
-      if (this.dom.bgmAudio) {
-        this.dom.bgmAudio.muted = this.state.isMuted;
-      }
+    this.dom.volumeBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        this.state.isMuted = !this.state.isMuted;
+        this.dom.volumeBtns.forEach((el) => {
+          el.classList.toggle("muted", this.state.isMuted);
+          el.setAttribute("aria-pressed", this.state.isMuted);
+          el.setAttribute(
+            "aria-label",
+            this.state.isMuted ? "音量已靜音" : "音量開啟"
+          );
+        });
+        this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
+        if (this.dom.castingVideo) {
+          this.dom.castingVideo.muted = this.state.isMuted;
+        }
+        if (this.dom.bgmAudio) {
+          this.dom.bgmAudio.muted = this.state.isMuted;
+        }
+      });
     });
 
     // 7. 新手導覽按鈕 (僅點擊時啟動)
-    this.dom.guideBtn.addEventListener("click", () => this.Guide.start());
+    this.dom.guideBtns.forEach((btn) =>
+      btn.addEventListener("click", () => this.Guide.start())
+    );
 
     // 8. 設置按鈕
-    this.dom.settingsBtn.addEventListener("click", (e) => {
-      this.performTransition(e.currentTarget.dataset.target);
-    });
+    this.dom.settingsBtns.forEach((btn) =>
+      btn.addEventListener("click", (e) => {
+        if (!e.currentTarget.dataset.target) return;
+        this.performTransition(e.currentTarget.dataset.target);
+      })
+    );
 
     // 9. 施法按鈕 (Cast Spell)
     if (this.dom.castSpellBtn) {

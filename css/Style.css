@@ -883,11 +883,11 @@ p {
 .alchemy-workbench {
   width: 100%;
   max-width: 1080px;
-  padding: var(--spacing-l);
+  padding: 0;
   background: transparent;
   border-radius: 30px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .kitchen-top-bar {
@@ -905,28 +905,23 @@ p {
 }
 
 .selection-slot {
-  background: rgba(255, 255, 255, 0.06);
-  border: 2px dashed rgba(255, 255, 255, 0.14);
+  background: transparent;
+  border: none;
   border-radius: 12px;
   padding: var(--spacing-s);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--color-text-muted);
+  color: #ffe9c4;
   position: relative;
   min-height: 52px;
   transition: all var(--transition-fast);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .selection-slot.filled {
-  background: radial-gradient(
-      circle at 20% 20%,
-      rgba(240, 163, 10, 0.25),
-      transparent
-    ),
-    rgba(255, 255, 255, 0.08);
-  color: var(--color-text-light);
-  border-style: solid;
+  background: transparent;
+  color: #fff6d6;
 }
 
 .slot-clear {
@@ -1398,40 +1393,172 @@ p {
 
 .persistent-ui {
   position: fixed;
-  top: 0;
+  top: 10px;
   left: 0;
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: var(--z-index-mid);
-}
-
-/* UI 控制按鈕 */
-.ui-controls {
-  position: absolute;
-  top: var(--spacing-m);
-  right: var(--spacing-m);
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-s);
+  justify-content: center;
+  pointer-events: none;
+  z-index: var(--z-index-curtain);
+}
+
+.persistent-inner {
+  width: min(1120px, 96%);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
   pointer-events: auto;
+  backdrop-filter: blur(10px);
 }
 
-.ui-btn {
-  width: 40px;
-  height: 40px;
-  background-color: var(--color-background-mid);
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  font-size: 1.2rem;
+.persistent-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.persistent-home {
+  display: flex;
+  align-items: center;
+}
+
+.chip-btn {
+  border: none;
+  background: linear-gradient(135deg, #ffb703, #ffcf86);
+  color: #3b2200;
+  font-weight: 800;
+  padding: 10px 16px;
+  border-radius: 20px;
   cursor: pointer;
-  color: var(--color-primary);
-  transition: all var(--transition-fast);
-  box-shadow: 0 0 5px rgba(240, 163, 10, 0.5);
+  box-shadow: 0 10px 20px rgba(255, 183, 3, 0.3);
 }
 
-.ui-btn:hover {
-  background-color: rgba(240, 163, 10, 0.2);
+/* =========================================================================
+   9. 成果圖鑑頁面
+   ========================================================================= */
+
+#screen-gallery {
+  padding-top: 120px;
+}
+
+.gallery-wrapper {
+  width: min(1100px, 94%);
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 28px;
+  padding: 22px 20px 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-wrapper::before,
+.gallery-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255, 183, 3, 0.25), transparent 70%);
+  filter: blur(12px);
+  z-index: 1;
+}
+
+.gallery-wrapper::before {
+  top: -30px;
+  left: -24px;
+}
+
+.gallery-wrapper::after {
+  bottom: -20px;
+  right: -24px;
+}
+
+.gallery-header {
+  position: sticky;
+  top: 0;
+  padding: 12px 10px 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), transparent);
+  z-index: 2;
+}
+
+.gallery-ribbon {
+  display: inline-block;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  color: #3b2200;
+  font-weight: 900;
+  border-radius: 18px;
+  box-shadow: 0 12px 24px rgba(255, 95, 109, 0.28);
+  transform: rotate(-2deg);
+}
+
+.gallery-subtitle {
+  margin-top: 8px;
+  color: #4a3b00;
+  font-weight: 700;
+}
+
+.gallery-scroll {
+  margin-top: 10px;
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 6px;
+  display: grid;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.gallery-card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 28px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(255, 183, 3, 0.24);
+  transform: translateY(0) rotate(-1deg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.25));
+}
+
+.gallery-card .card-body h3 {
+  color: #3b2200;
+}
+
+.gallery-card .card-body p {
+  color: #5b4200;
+  font-weight: 600;
+}
+
+.gallery-card:hover {
+  transform: translateY(-6px) rotate(0deg);
+  box-shadow: 0 20px 32px rgba(0, 0, 0, 0.18);
+}
+
+.gallery-card.tilt-1 {
+  transform: translateY(0) rotate(-2.5deg);
+}
+
+.gallery-card.tilt-2 {
+  transform: translateY(0) rotate(2deg);
+}
+
+.gallery-card.tilt-3 {
+  transform: translateY(0) rotate(-1deg);
 }
 
 /* 手部裝飾 */
@@ -1919,9 +2046,30 @@ p {
 
 #curtain-transition .curtain {
   width: 50%;
-  background: url("../img/l_red.jpeg") center/cover no-repeat;
+  background: linear-gradient(180deg, #ff5f6d 0%, #d81b60 100%);
   transform: translateX(0);
   transition: transform 0.55s ease-in-out;
+  box-shadow: inset -8px 0 18px rgba(0, 0, 0, 0.25),
+    inset 8px 0 18px rgba(0, 0, 0, 0.2);
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+}
+
+#curtain-transition .curtain::before {
+  content: "";
+  position: absolute;
+  inset: -18px 0 auto 0;
+  height: 46px;
+  background: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0.18) 10px,
+      transparent 10px,
+      transparent 18px
+    ),
+    radial-gradient(circle at 16px 100%, rgba(255, 255, 255, 0.45), transparent 55%);
+  opacity: 0.75;
+  clip-path: polygon(0 0, 100% 0, 100% 65%, 0 100%);
 }
 
 #curtain-transition.active {
@@ -2030,11 +2178,11 @@ p {
 .alchemy-workbench.bright {
   width: 100%;
   max-width: 1200px;
-  background: rgba(255, 255, 255, 0.85);
+  background: transparent;
   border-radius: 32px;
-  padding: 20px 26px;
-  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.14);
-  border: 3px solid rgba(255, 255, 255, 0.7);
+  padding: 10px 14px 40px;
+  box-shadow: none;
+  border: none;
 }
 
 .kitchen-top-bar {
@@ -2052,24 +2200,26 @@ p {
 }
 
 .selection-slot {
-  background: rgba(255, 249, 237, 0.9);
-  border: 2px solid #ffd66b;
+  background: transparent;
+  border: none;
   border-radius: 18px;
   padding: 12px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 4px 6px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: none;
+  color: #ffe9c4;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .selection-slot.filled {
-  background: #fff3c4;
+  background: transparent;
 }
 
 .slot-clear {
   border: none;
-  background: rgba(0, 0, 0, 0.08);
-  color: #4a3b00;
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffe3a2;
   border-radius: 50%;
   width: 28px;
   height: 28px;
@@ -2082,40 +2232,39 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 20px;
+  justify-content: center;
+  gap: 30px;
 }
 
 .kitchen-illustration {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 50% 20%,
-    rgba(255, 255, 255, 0.6),
-    transparent 45%
-  );
+  background: url("../img/Rectangle 97.png") center/cover no-repeat;
   pointer-events: none;
+  filter: blur(0.5px);
 }
 
 .main-egg-display {
-  width: 360px;
-  height: 260px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  width: 380px;
+  height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  border: 2px solid #ffe3a2;
+  top: 0;
+  left: 0;
+  transform: none;
+  z-index: 2;
 }
 
 .egg-graphic {
-  width: 220px;
-  height: 220px;
-  background: url("../img/eggmain.jpg") center/cover no-repeat;
-  border-radius: 50%;
-  box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.16);
+  width: 260px;
+  height: 320px;
+  background: url("../img/eggmain.jpg") center/contain no-repeat;
+  border-radius: 50% 50% 46% 54%;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.24),
+    inset 0 10px 20px rgba(255, 255, 255, 0.25);
+  animation: floaty 3.2s ease-in-out infinite;
 }
 
 .drop-hint {
@@ -2127,10 +2276,10 @@ p {
 
 .ingredient-table {
   position: absolute;
-  bottom: 4%;
+  bottom: 6%;
   left: 50%;
   transform: translateX(-50%);
-  width: 92%;
+  width: 96%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -2139,6 +2288,7 @@ p {
   background: transparent;
   box-shadow: none;
   pointer-events: auto;
+  z-index: 4;
 }
 
 .ingredient-token {
@@ -2148,7 +2298,9 @@ p {
   border-radius: 18px;
   cursor: grab;
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    filter 0.12s ease;
+  z-index: 5;
 }
 
 .ingredient-token.dragging,
@@ -2200,6 +2352,8 @@ p {
   border-radius: 14px;
   cursor: pointer;
   font-size: 14px;
+  z-index: 8;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
 }
 
 .casting-footer .locked {
