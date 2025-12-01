@@ -205,6 +205,10 @@
         data-index="2"
         aria-label="故事介紹：煉金廚房的起源"
       >
+        <div class="hand-overlay story-hands" aria-hidden="true">
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手指引" class="hand-image left" />
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手指引" class="hand-image right" />
+        </div>
         <div class="story-area">
           <div class="story-bubble" aria-label="故事訊息播放區">
             <div
@@ -274,6 +278,7 @@
         <div class="alchemy-workbench bright">
           <div class="kitchen-top-bar">
             <div
+              id="selection-row"
               class="slot-row"
               role="list"
               aria-label="已放入的食材欄位 (最多 3 種)"
@@ -292,7 +297,12 @@
               </div>
             </div>
 
-            <div class="selection-status chip" role="status" aria-live="polite">
+            <div
+              id="kitchen-status-chip"
+              class="selection-status chip"
+              role="status"
+              aria-live="polite"
+            >
               已選擇：<span id="current-selection-count">0</span> /
               <span id="max-selection-count">3</span>
             </div>
@@ -301,12 +311,18 @@
           <div class="workbench-body">
             <div class="kitchen-illustration" aria-hidden="true"></div>
 
+            <div class="hand-overlay kitchen-hands" aria-hidden="true">
+              <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image left" />
+              <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image right" />
+            </div>
+
             <div class="main-egg-display drop-target" aria-label="米特蛋核心">
               <div class="egg-graphic"></div>
               <p class="drop-hint">拖曳食材到米特蛋</p>
             </div>
 
             <div
+              id="ingredient-tray"
               class="ingredient-table"
               role="group"
               aria-label="可選擇的魔法食材"
@@ -386,7 +402,7 @@
 
       <section
         id="screen-5"
-        class="screen"
+          class="screen"
         data-index="5"
         aria-label="煉金儀式進行中"
       >
@@ -498,41 +514,59 @@
             <p class="gallery-subtitle">往下拖移，欣賞漂浮的小卡收藏</p>
           </header>
           <div class="gallery-scroll" role="list">
-            <article class="gallery-card tilt-1" role="listitem">
-              <img src="./img/待機蛋 (去背) 1.png" alt="米特蛋" />
-              <div class="card-body">
-                <h3>米特蛋 #001</h3>
-                <p>基礎型態，閃著溫暖光澤的入門款。</p>
-              </div>
-            </article>
-            <article class="gallery-card tilt-2" role="listitem">
-              <img src="./img/邪惡蟲蟲蛋糕.png" alt="邪惡蟲蟲蛋糕" />
-              <div class="card-body">
-                <h3>邪惡蟲蟲蛋糕</h3>
-                <p>綿密口感，苦味在廚房飄蕩。</p>
-              </div>
-            </article>
-            <article class="gallery-card tilt-3" role="listitem">
-              <img src="./img/流星鎚 1.png" alt="流星鎚" />
-              <div class="card-body">
-                <h3>流星鎚</h3>
-                <p>攪動星辰的流星鎚，讓蛋呈現夜空色澤。</p>
-              </div>
-            </article>
-            <article class="gallery-card tilt-1" role="listitem">
-              <img src="./img/地獄跳跳糖.png" alt="地獄跳跳糖" />
-              <div class="card-body">
-                <h3>地獄跳跳糖</h3>
-                <p>透明的果凍層，上浮著撒旦光點。</p>
-              </div>
-            </article>
-            <article class="gallery-card tilt-2" role="listitem">
-              <img src="./img/防摔手機殼.png" alt="防摔手機殼" />
-              <div class="card-body">
-                <h3>防摔手機殼</h3>
-                <p>漂浮在空中的手機殼，帶來堅固的味道。</p>
-              </div>
-            </article>
+            <div class="floating-gallery" id="floating-gallery-field">
+              <article class="gallery-card tilt-1" role="listitem">
+                <img src="./img/待機蛋 (去背) 1.png" alt="米特蛋" />
+                <div class="card-body">
+                  <h3>米特蛋 #001</h3>
+                  <p>基礎型態，閃著溫暖光澤的入門款。</p>
+                </div>
+              </article>
+              <article class="gallery-card tilt-2" role="listitem">
+                <img src="./img/邪惡蟲蟲蛋糕.png" alt="邪惡蟲蟲蛋糕" />
+                <div class="card-body">
+                  <h3>邪惡蟲蟲蛋糕</h3>
+                  <p>綿密口感，苦味在廚房飄蕩。</p>
+                </div>
+              </article>
+              <article class="gallery-card tilt-3" role="listitem">
+                <img src="./img/流星鎚 1.png" alt="流星鎚" />
+                <div class="card-body">
+                  <h3>流星鎚</h3>
+                  <p>攪動星辰的流星鎚，讓蛋呈現夜空色澤。</p>
+                </div>
+              </article>
+              <article class="gallery-card tilt-1" role="listitem">
+                <img src="./img/地獄跳跳糖.png" alt="地獄跳跳糖" />
+                <div class="card-body">
+                  <h3>地獄跳跳糖</h3>
+                  <p>透明的果凍層，上浮著撒旦光點。</p>
+                </div>
+              </article>
+              <article class="gallery-card tilt-2" role="listitem">
+                <img src="./img/防摔手機殼.png" alt="防摔手機殼" />
+                <div class="card-body">
+                  <h3>防摔手機殼</h3>
+                  <p>漂浮在空中的手機殼，帶來堅固的味道。</p>
+                </div>
+              </article>
+              <article class="gallery-card tilt-3 locked" role="listitem">
+                <div class="locked-mask">未解鎖</div>
+                <img src="./img/香菜冰淇淋.png" alt="香菜冰淇淋" />
+                <div class="card-body">
+                  <h3>香菜冰淇淋</h3>
+                  <p>解鎖條件：完成三次香菜組合。</p>
+                </div>
+              </article>
+              <article class="gallery-card tilt-1 locked" role="listitem">
+                <div class="locked-mask">???</div>
+                <img src="./img/大boss.png" alt="神秘首領" />
+                <div class="card-body">
+                  <h3>神秘首領蛋</h3>
+                  <p>未知配方，等待勇者解鎖。</p>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </section>
