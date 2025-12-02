@@ -117,9 +117,10 @@ p {
 #game-container {
   width: 100%;
   max-width: 1400px;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   border: none;
   box-shadow: none;
   background-color: transparent;
@@ -141,6 +142,7 @@ p {
   pointer-events: none;
   transform: translate3d(0, 100%, 0) scale(1.02);
   z-index: var(--z-index-low);
+  overflow-y: auto;
 }
 
 .screen.active {
@@ -1019,13 +1021,14 @@ p {
   border-radius: 24px;
   padding: var(--spacing-l);
   position: relative;
-  overflow: hidden;
-  min-height: 560px;
+  overflow: visible;
+  min-height: 700px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-shadow: 0 20px 36px rgba(0, 0, 0, 0.25);
+  padding-bottom: 180px;
 }
 
 .kitchen-illustration {
@@ -1188,6 +1191,17 @@ p {
   padding-top: var(--spacing-m);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
+  position: sticky;
+  bottom: 0;
+  padding-bottom: var(--spacing-m);
+  background: linear-gradient(
+    180deg,
+    rgba(18, 18, 31, 0) 0%,
+    rgba(18, 18, 31, 0.65) 38%,
+    rgba(18, 18, 31, 0.88) 100%
+  );
+  backdrop-filter: blur(6px);
+  z-index: 10;
 }
 
 /* =========================================================================
@@ -2324,12 +2338,14 @@ p {
 
 .workbench-body {
   position: relative;
-  min-height: 560px;
+  min-height: 700px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 30px;
+  overflow: visible;
+  padding-bottom: 180px;
 }
 
 .kitchen-illustration {
@@ -2371,20 +2387,27 @@ p {
 }
 
 .ingredient-table {
-  position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 96%;
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 22px;
-  padding: 0;
-  background: transparent;
+  gap: 18px;
+  padding: 18px 12px 0;
+  margin-top: 360px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.45) 45%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
   box-shadow: none;
   pointer-events: auto;
   z-index: 7;
+  border-radius: 18px;
 }
 
 .ingredient-token {
