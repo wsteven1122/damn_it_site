@@ -2077,7 +2077,11 @@ p {
       transparent 10px,
       transparent 18px
     ),
-    radial-gradient(circle at 16px 100%, rgba(255, 255, 255, 0.45), transparent 55%);
+    radial-gradient(
+      circle at 16px 100%,
+      rgba(255, 255, 255, 0.45),
+      transparent 55%
+    );
   opacity: 0.75;
   clip-path: polygon(0 0, 100% 0, 100% 65%, 0 100%);
 }
@@ -2310,8 +2314,7 @@ p {
   border-radius: 18px;
   cursor: grab;
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.18);
-  transition: transform 0.06s ease, box-shadow 0.06s ease,
-    filter 0.06s ease;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, filter 0.06s ease;
   z-index: 8;
   will-change: transform, filter;
 }
