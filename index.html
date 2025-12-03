@@ -71,13 +71,13 @@
       <div class="modal-content">
         <button class="close-btn" aria-label="關閉結果視窗">&times;</button>
         <header class="modal-header-container">
-          <h3 id="modal-title" class="modal-header">煉金結果：未知米特蛋</h3>
+          <h3 id="modal-title" class="modal-header">煉蛋結果：未知米特蛋</h3>
         </header>
         <div class="result-display">
           <img
             id="result-image"
             src="./img/待機蛋 (去背) 1.png"
-            alt="煉金結果圖像"
+            alt="煉蛋結果圖像"
             class="result-egg-img"
           />
           <div
@@ -88,7 +88,7 @@
         </div>
         <div class="result-description-container">
           <p id="result-text" class="modal-description">
-            煉金結果的詳細說明文字。
+            煉蛋結果的詳細說明文字。
           </p>
           <p class="result-metadata">
             編號: <span id="result-number">???</span> | 稀有度:
@@ -203,9 +203,9 @@
         id="screen-2"
         class="screen"
         data-index="2"
-        aria-label="故事介紹：煉金廚房的起源"
+        aria-label="故事介紹：煉蛋廚房的起源"
       >
-        <div class="hand-overlay story-hands" aria-hidden="true">
+        <div class="hand-overlay story-hands global-hands" aria-hidden="true">
           <img src="./img/tempImagerscmfk 1.png" alt="雙手指引" class="hand-image left" />
           <img src="./img/tempImagerscmfk 1.png" alt="雙手指引" class="hand-image right" />
         </div>
@@ -232,7 +232,7 @@
             data-target="screen-3"
             aria-controls="screen-3"
           >
-            進入煉金爐 (CONTINUE)
+            進入煉蛋爐 (CONTINUE)
           </button>
           <button
             id="dialog-skip-btn"
@@ -247,11 +247,15 @@
         id="screen-3"
         class="screen"
         data-index="3"
-        aria-label="煉金爐介紹"
+        aria-label="煉蛋爐介紹"
       >
+        <div class="hand-overlay global-hands" aria-hidden="true">
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手指引" class="hand-image left" />
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手指引" class="hand-image right" />
+        </div>
         <div class="guide-panel">
           <div class="guide-bubble">
-            <h2>煉金爐操作指南</h2>
+            <h2>煉蛋爐操作指南</h2>
             <p>
               把食材拖到米特蛋上，最多三種。桌面周圍的食材都可以試試，選中後會在上方欄位顯示，點叉叉可以取消。
             </p>
@@ -273,7 +277,7 @@
         id="screen-4"
         class="screen"
         data-index="4"
-        aria-label="食材選擇"
+          aria-label="食材選擇"
       >
         <div class="alchemy-workbench bright">
           <div class="kitchen-top-bar">
@@ -309,14 +313,13 @@
           </div>
 
           <div class="workbench-body">
-            <div class="kitchen-illustration" aria-hidden="true"></div>
-
-            <div class="hand-overlay kitchen-hands" aria-hidden="true">
+            <div class="hand-overlay kitchen-hands global-hands" aria-hidden="true">
               <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image left" />
               <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image right" />
             </div>
 
             <div class="main-egg-display drop-target" aria-label="米特蛋核心">
+              <div class="absorb-glow" aria-hidden="true"></div>
               <div class="egg-graphic"></div>
               <p class="drop-hint">拖曳食材到米特蛋</p>
             </div>
@@ -404,17 +407,22 @@
         id="screen-5"
           class="screen"
         data-index="5"
-        aria-label="煉金儀式進行中"
+        aria-label="煉蛋儀式進行中"
       >
         <header class="casting-header">
           <div class="casting-title-block">
-            <h2 id="casting-title">煉金儀式啟動！</h2>
+            <h2 id="casting-title">煉蛋儀式啟動！</h2>
             <p class="casting-subtitle">空間變暗，雙手蓄能，準備進入變身特效</p>
           </div>
           <div class="casting-badge">變身模式</div>
         </header>
 
         <div class="transformation-space">
+          <div class="hand-overlay global-hands" aria-hidden="true">
+            <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image left" />
+            <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image right" />
+          </div>
+
           <div class="kitchen-scene-backdrop" aria-hidden="true"></div>
           <div class="dark-veil" aria-hidden="true"></div>
 
@@ -423,15 +431,6 @@
             <span class="sparkle s2"></span>
             <span class="sparkle s3"></span>
             <span class="sparkle s4"></span>
-          </div>
-
-          <div class="hand-gesture left" aria-hidden="true">
-            <img src="./img/Lhand.png" alt="左手施法動畫" />
-            <div class="hand-flare"></div>
-          </div>
-          <div class="hand-gesture right" aria-hidden="true">
-            <img src="./img/Rhand.png" alt="右手施法動畫" />
-            <div class="hand-flare"></div>
           </div>
 
           <div class="circle-stage" aria-label="變身影片與光暈">
@@ -446,7 +445,7 @@
                 playsinline
                 preload="auto"
                 poster="./img/桌子.mp4"
-                aria-label="煉金過程影片"
+                aria-label="煉蛋過程影片"
               ></video>
               <div class="video-placeholder">即將放入雙手變身影片</div>
               <div
@@ -478,10 +477,14 @@
         id="screen-6"
         class="screen"
         data-index="6"
-        aria-label="煉金結果"
+        aria-label="煉蛋結果"
       >
+        <div class="hand-overlay global-hands" aria-hidden="true">
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image left" />
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image right" />
+        </div>
         <div class="result-shell">
-          <h2>煉金結果</h2>
+          <h2>煉蛋結果</h2>
           <p>結果已同步到上方彈窗。</p>
           <button
             class="btn btn-primary next-screen-btn"
@@ -499,6 +502,10 @@
         data-index="7"
         aria-label="特別任務選單"
       >
+        <div class="hand-overlay global-hands" aria-hidden="true">
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image left" />
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image right" />
+        </div>
         <div class="placeholder-card">特別任務準備中</div>
       </section>
 
@@ -508,6 +515,10 @@
         data-index="8"
         aria-label="成果圖鑑"
       >
+        <div class="hand-overlay global-hands" aria-hidden="true">
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image left" />
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image right" />
+        </div>
         <div class="gallery-wrapper">
           <header class="gallery-header">
             <div class="gallery-ribbon">成果圖鑑</div>
@@ -577,6 +588,10 @@
         data-index="9"
         aria-label="設定"
       >
+        <div class="hand-overlay global-hands" aria-hidden="true">
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image left" />
+          <img src="./img/tempImagerscmfk 1.png" alt="雙手" class="hand-image right" />
+        </div>
         <div class="placeholder-card">設定頁面</div>
       </section>
     </main>
