@@ -118,6 +118,7 @@
     </div>
 
     <main id="game-container" role="application">
+      <!-- 首頁：精簡的主畫面與起始操作 -->
       <section
         id="screen-1"
         class="screen home-screen active"
@@ -125,14 +126,7 @@
         aria-label="首頁：蛋米特 DAMN IT!"
       >
         <div class="home-visual-layer" aria-hidden="true">
-          <div class="splash-blob"></div>
-          <div class="sauce-curve"></div>
-          <div class="rainbow-rays">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div class="checker-fold"></div>
+          <div class="home-white-egg" role="presentation"></div>
           <div class="floating-eggshell"></div>
           <div class="floating-durian"></div>
         </div>
@@ -212,6 +206,7 @@
         </div>
       </section>
 
+      <!-- 故事：對話播放與跳過入口 -->
       <section
         id="screen-2"
         class="screen"
@@ -219,30 +214,15 @@
         aria-label="故事介紹：煉蛋廚房的起源"
       >
         <div class="hand-overlay story-hands global-hands" aria-hidden="true">
-          <img
-            src="./img/tempImagerscmfk 1.png"
-            alt="雙手指引"
-            class="hand-image left"
-          />
-          <img
-            src="./img/tempImagerscmfk 1.png"
-            alt="雙手指引"
-            class="hand-image right"
-          />
+          <img src="./img/Lhand.png" alt="雙手指引" class="hand-image left" />
+          <img src="./img/Rhand.png" alt="雙手指引" class="hand-image right" />
         </div>
-        <div class="story-area">
-          <div class="story-bubble" aria-label="故事訊息播放區">
-            <div
-              id="messages"
-              class="messages"
-              role="log"
-              aria-live="polite"
-            ></div>
-            <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
-              <div class="typing-dot"></div>
-              <div class="typing-dot"></div>
-              <div class="typing-dot"></div>
-            </div>
+        <div class="story-stack">
+          <div id="messages" class="messages" role="log" aria-live="polite"></div>
+          <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
           </div>
         </div>
 
@@ -264,6 +244,7 @@
         </div>
       </section>
 
+      <!-- 教學：煉蛋爐說明 -->
       <section
         id="screen-3"
         class="screen"
@@ -272,12 +253,12 @@
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手指引"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手指引"
             class="hand-image right"
           />
@@ -302,6 +283,7 @@
         </div>
       </section>
 
+      <!-- 選食材：拖曳食材到米特蛋 -->
       <section
         id="screen-4"
         class="screen"
@@ -347,12 +329,12 @@
               aria-hidden="true"
             >
               <img
-                src="./img/tempImagerscmfk 1.png"
+                src="./img/Lhand.png"
                 alt="雙手"
                 class="hand-image left"
               />
               <img
-                src="./img/tempImagerscmfk 1.png"
+                src="./img/Rhand.png"
                 alt="雙手"
                 class="hand-image right"
               />
@@ -443,34 +425,14 @@
         </footer>
       </section>
 
+      <!-- 播放影片：單純呈現影片並提供跳過 -->
       <section
         id="screen-5"
         class="screen"
         data-index="5"
-        aria-label="煉蛋儀式進行中"
+        aria-label="影片播放"
       >
-        <header class="casting-header">
-          <div class="casting-title-block">
-            <h2 id="casting-title">煉蛋儀式啟動！</h2>
-            <p class="casting-subtitle">空間變暗，雙手蓄能，準備進入變身特效</p>
-          </div>
-          <div class="casting-badge">變身模式</div>
-        </header>
-
         <div class="transformation-space">
-          <div class="hand-overlay global-hands" aria-hidden="true">
-            <img
-              src="./img/tempImagerscmfk 1.png"
-              alt="雙手"
-              class="hand-image left"
-            />
-            <img
-              src="./img/tempImagerscmfk 1.png"
-              alt="雙手"
-              class="hand-image right"
-            />
-          </div>
-
           <div class="kitchen-scene-backdrop" aria-hidden="true"></div>
           <div class="dark-veil" aria-hidden="true"></div>
 
@@ -481,7 +443,7 @@
             <span class="sparkle s4"></span>
           </div>
 
-          <div class="circle-stage" aria-label="變身影片與光暈">
+          <div class="circle-stage" aria-label="影片播放區域">
             <button id="skip-video-btn" class="skip-video-btn">Skip</button>
             <div class="shine-ring"></div>
             <div class="pulse-glow"></div>
@@ -495,7 +457,6 @@
                 poster="./img/桌子.mp4"
                 aria-label="煉蛋過程影片"
               ></video>
-              <div class="video-placeholder">即將放入雙手變身影片</div>
               <div
                 id="spinner-overlay"
                 class="spinner-overlay"
@@ -509,6 +470,9 @@
         </div>
 
         <footer class="casting-footer">
+          <button id="skip-video-secondary" class="btn btn-secondary skip-video-btn">
+            Skip
+          </button>
           <button
             id="next-from-video-btn"
             class="btn btn-primary next-screen-btn locked"
@@ -521,6 +485,8 @@
         </footer>
       </section>
 
+      
+      <!-- 結果：彈窗以外的備用視圖 -->
       <section
         id="screen-6"
         class="screen"
@@ -529,12 +495,12 @@
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />
@@ -552,6 +518,8 @@
         </div>
       </section>
 
+      
+      <!-- 特別任務：預留版位 -->
       <section
         id="screen-menu"
         class="screen"
@@ -560,12 +528,12 @@
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />
@@ -573,6 +541,8 @@
         <div class="placeholder-card">特別任務準備中</div>
       </section>
 
+      
+      <!-- 圖鑑：成果瀏覽 -->
       <section
         id="screen-gallery"
         class="screen"
@@ -581,12 +551,12 @@
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />
@@ -654,6 +624,8 @@
         </div>
       </section>
 
+      
+      <!-- 設定：簡易占位元件 -->
       <section
         id="screen-settings"
         class="screen"
@@ -662,12 +634,12 @@
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />

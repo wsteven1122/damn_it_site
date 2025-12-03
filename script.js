@@ -4,6 +4,9 @@
 
 const CONFIG = {
   TRANSITION_DURATION: 900,
+  CURTAIN_CLOSE_MS: 420,
+  CURTAIN_SHAKE_MS: 200,
+  CURTAIN_OPEN_MS: 1100,
   MAX_INGREDIENTS: 3,
   // 故事訊息 (Screen 2)
   STORY_MESSAGES: [
@@ -178,7 +181,7 @@ class GameController {
       guideBtns: document.querySelectorAll(".guide-trigger"),
       settingsBtns: document.querySelectorAll("#settings-btn, [data-target='screen-settings']"),
       spinnerOverlay: document.getElementById("spinner-overlay"),
-      skipVideoBtn: document.getElementById("skip-video-btn"),
+      skipVideoBtns: document.querySelectorAll(".skip-video-btn"),
 
       // Guide Elements
       guideOverlay: document.getElementById("guide-overlay"),
@@ -208,6 +211,7 @@ class GameController {
     if (maxCountLabel) maxCountLabel.textContent = CONFIG.MAX_INGREDIENTS;
     this.initEventListeners();
     this.updateIngredientStatus();
+    this.updateHandState(this.state.currentScreenId);
   }
 
   // ---------------------- 核心流程控制 ----------------------
@@ -234,6 +238,7 @@ class GameController {
     this.state.currentScreenId = nextScreenId;
     this.updatePersistentUI(nextScreenId);
     this.updateSceneMood(nextScreenId);
+    this.updateHandState(nextScreenId);
   }
 
   updateSceneMood(screenId) {
@@ -246,6 +251,11 @@ class GameController {
 
   updatePersistentUI(screenId) {
     this.dom.persistentUI.style.display = "flex";
+  }
+
+  updateHandState(screenId) {
+    const foldHands = screenId === "screen-3";
+    document.body.classList.toggle("hands-folded", foldHands);
   }
 
   /** 執行畫面切換並處理特殊流程 */
@@ -296,23 +306,41 @@ class GameController {
         return;
       }
 
+      const closeMs = CONFIG.CURTAIN_CLOSE_MS;
+      const shakeMs = CONFIG.CURTAIN_SHAKE_MS;
+      const openMs = CONFIG.CURTAIN_OPEN_MS;
+      const totalDuration = closeMs + shakeMs + openMs;
+
+      layer.style.setProperty(
+        "--curtain-close",
+        `${closeMs}ms cubic-bezier(0.7, 0.05, 0.95, 0.25)`
+      );
+      layer.style.setProperty(
+        "--curtain-open",
+        `${openMs}ms cubic-bezier(0.18, 0.78, 0.2, 1)`
+      );
+
       layer.setAttribute("aria-hidden", "false");
       layer.classList.add("active");
-      layer.classList.remove("open");
+      layer.classList.remove("open", "shudder");
       void layer.offsetWidth;
       const midpointTimer = setTimeout(() => {
         midpointCallback?.();
+        layer.classList.add("shudder");
+      }, closeMs);
+
+      const openTimer = setTimeout(() => {
         layer.classList.add("open");
-      }, CONFIG.TRANSITION_DURATION * 0.45);
+      }, closeMs + shakeMs);
 
       const cleanupTimer = setTimeout(() => {
-        layer.classList.remove("active");
+        layer.classList.remove("active", "shudder");
         layer.classList.add("open");
         layer.setAttribute("aria-hidden", "true");
         resolve();
-      }, CONFIG.TRANSITION_DURATION);
+      }, totalDuration);
 
-      this.state.transitionTimers = [midpointTimer, cleanupTimer];
+      this.state.transitionTimers = [midpointTimer, openTimer, cleanupTimer];
     });
   }
 
@@ -441,25 +469,34 @@ class GameController {
     }
   }
 
-  toggleIngredient(ingredient) {
+  addIngredient(ingredient) {
     const isSelected = this.state.selectedIngredients.has(ingredient);
     const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
 
     if (isSelected) {
-      this.state.selectedIngredients.delete(ingredient);
-      this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
-    } else {
-      if (isFull) {
-        this.showAlert(
-          "error",
-          `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
-        );
-        return;
-      }
-      this.state.selectedIngredients.add(ingredient);
-      this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
+      this.showAlert("info", `${ingredient} 已在煉蛋爐中，換個食材試試。`);
+      return;
     }
 
+    if (isFull) {
+      this.showAlert(
+        "error",
+        `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
+      );
+      return;
+    }
+
+    this.state.selectedIngredients.add(ingredient);
+    this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
+    this.updateIngredientStatus();
+  }
+
+  removeIngredient(ingredient, { silent = false } = {}) {
+    if (!this.state.selectedIngredients.has(ingredient)) return;
+    this.state.selectedIngredients.delete(ingredient);
+    if (!silent) {
+      this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
+    }
     this.updateIngredientStatus();
   }
 
@@ -488,13 +525,18 @@ class GameController {
           setTimeout(() => {
             this.dom.spinnerOverlay.style.opacity = 0;
             this.dom.spinnerOverlay.style.display = "none";
-          }, 400);
+          }, 320);
         }
       }
     } catch (error) {
       console.warn("影片自動播放被阻止:", error);
       this.showAlert("info", "請點擊影片開始播放或按 [查看結果] 強制繼續");
-      this.dom.nextFromVideoBtn.classList.remove("hidden");
+      this.dom.nextFromVideoBtn.classList.remove("locked");
+      this.dom.nextFromVideoBtn.disabled = false;
+      if (this.dom.spinnerOverlay) {
+        this.dom.spinnerOverlay.style.opacity = 0;
+        this.dom.spinnerOverlay.style.display = "none";
+      }
       return Promise.resolve();
     }
   }
@@ -502,6 +544,7 @@ class GameController {
   handleVideoEnd() {
     if (this.dom.castingVideo) {
       this.dom.castingVideo.style.opacity = 0.5; // 播放完畢後變暗
+      this.dom.castingVideo.pause();
     }
     this.dom.transformationSpace?.classList.remove("casting-active");
     this.dom.transformationSpace?.classList.add("casting-finished");
@@ -527,28 +570,28 @@ class GameController {
       title = "💥 究極爆臭：毀滅之蛋";
       text =
         "榴槤、TNT、魷魚完美結合，獲得了一顆可以毀滅世界的臭蛋。稀有度：SSSR";
-      image = "assets/results/egg_ultimate.png";
+      image = "./img/核武器.png";
       rarity = "SSSR";
     } else if (has香菜 && has榴槤 && has檸檬) {
       title = "💀 生化武器：廣志之襪";
       text = "你複製了野原廣志的襪子！這顆蛋散發出讓魔法界聞風喪膽的氣味。";
-      image = "assets/results/egg_chemical.png";
+      image = "./img/生化武器.png";
       rarity = "SSR";
     } else if (count >= 2 && hasTNT && has隕石) {
       title = "💣 地雷系：盧媽媽炸彈";
       text = "這顆蛋看起來隨時會爆炸，充滿了危險的能量，千萬不要搖晃它。";
-      image = "assets/results/egg_tnt.png";
+      image = "./img/地雷系蛋.png";
       rarity = "SR";
     } else if (count >= 1) {
       title = "🥚 普通成功：經典煉蛋";
       text =
         "你成功地用奇異的食材煉出了一顆還能吃的經典蛋。雖然無趣，但安全可靠。";
-      image = "assets/results/egg_001.png";
+      image = "./img/吃飯蛋 1.png";
       rarity = "R";
     } else {
       title = "💥 失敗結局：爆裂米特渣";
       text = "食材太少，煉蛋爐無法啟動。您得到了一堆無法形容的殘渣。";
-      image = "assets/results/egg_fail.png";
+      image = "./img/流浪漢.png";
       rarity = "E";
     }
 
@@ -808,9 +851,9 @@ class GameController {
     // 3. 食材選擇/拖曳
     this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
-      card.addEventListener("click", () => this.toggleIngredient(ingredient));
       card.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", ingredient);
+        e.dataTransfer.effectAllowed = "copy";
         card.classList.add("dragging");
       });
       card.addEventListener("dragend", () => card.classList.remove("dragging"));
@@ -828,10 +871,13 @@ class GameController {
         e.preventDefault();
         this.dom.dropTarget.classList.remove("drag-over");
         const ingredient = e.dataTransfer.getData("text/plain");
-        if (ingredient) this.toggleIngredient(ingredient);
+        if (ingredient) this.addIngredient(ingredient);
+        this.dom.dropTarget.addEventListener(
+          "animationend",
+          () => this.dom.dropTarget.classList.remove("absorb"),
+          { once: true }
+        );
         this.dom.dropTarget.classList.add("absorb");
-        void this.dom.dropTarget.offsetWidth;
-        setTimeout(() => this.dom.dropTarget.classList.remove("absorb"), 900);
       });
     }
 
@@ -844,11 +890,7 @@ class GameController {
         clearBtn.addEventListener("click", (event) => {
           event.stopPropagation();
           const ingredient = slot.dataset.ingredient;
-          if (ingredient && this.state.selectedIngredients.has(ingredient)) {
-            this.state.selectedIngredients.delete(ingredient);
-            this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
-            this.updateIngredientStatus();
-          }
+          if (ingredient) this.removeIngredient(ingredient);
         });
       });
     }
@@ -860,10 +902,16 @@ class GameController {
       );
     }
 
-    if (this.dom.skipVideoBtn) {
-      this.dom.skipVideoBtn.addEventListener("click", () => {
-        this.handleVideoEnd();
-      });
+    if (this.dom.skipVideoBtns?.length) {
+      this.dom.skipVideoBtns.forEach((btn) =>
+        btn.addEventListener("click", () => {
+          if (this.dom.castingVideo) {
+            this.dom.castingVideo.pause();
+            this.dom.castingVideo.currentTime = this.dom.castingVideo.duration;
+          }
+          this.handleVideoEnd();
+        })
+      );
     }
 
     // 5. Modal 關閉/重置
