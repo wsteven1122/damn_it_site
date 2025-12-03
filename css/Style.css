@@ -75,8 +75,8 @@ body {
 }
 
 body.scene-kitchen {
-  background-color: #1b1f2a;
-  background-image: url("../img/Rectangle 97.png");
+  background-color: #b9d3f6;
+  background-image: url("../img/1.png");
   background-size: cover;
   background-position: center;
 }
@@ -883,8 +883,9 @@ p {
    ========================================================================= */
 
 #screen-2 {
-  padding: var(--spacing-xl) var(--spacing-m) var(--spacing-l);
+  padding: 16px var(--spacing-m) var(--spacing-l);
   justify-content: flex-start;
+  align-items: center;
 }
 
 .story-area {
@@ -917,7 +918,7 @@ p {
   padding: 0 22px 32px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   overflow-y: auto;
 }
@@ -927,25 +928,28 @@ p {
   color: #111;
   padding: 14px 18px 18px;
   border-radius: 20px;
-  max-width: 88%;
+  max-width: 92%;
   line-height: 1.6;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
   opacity: 0;
   transform: translateY(-12px) scale(0.96);
   transition: opacity 0.35s ease, transform 0.35s ease;
   position: relative;
+  text-align: center;
+  align-self: center;
 }
 
 .message-bubble::after {
   content: "";
   position: absolute;
-  left: 32px;
-  bottom: -12px;
+  left: 50%;
+  bottom: -14px;
   width: 22px;
   height: 16px;
   background: inherit;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   filter: drop-shadow(3px 6px 8px rgba(0, 0, 0, 0.08));
+  transform: translateX(-50%);
 }
 
 .message-bubble.pop-in {
@@ -1041,9 +1045,9 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .typing-bubble {
-  position: absolute;
-  top: 18px;
-  left: 22px;
+  position: relative;
+  top: 0;
+  left: 0;
   display: flex;
   gap: 5px;
   background: white;
@@ -1052,6 +1056,8 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
   opacity: 0;
   transition: opacity 0.25s ease;
+  align-self: center;
+  margin-top: 6px;
 }
 
 .typing-bubble.visible {
@@ -1099,7 +1105,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   justify-content: flex-start;
   gap: var(--spacing-m);
   padding-top: 140px;
-  background: url("../img/廚房動圖.png") center/cover no-repeat;
+  background: transparent;
 }
 
 .alchemy-workbench {
@@ -1467,7 +1473,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   justify-content: center;
   align-items: stretch;
   padding: 0;
-  background: #000;
+  background: transparent;
   overflow: hidden;
 }
 
@@ -1504,48 +1510,29 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   border-radius: 0;
   overflow: hidden;
   padding: 0;
-  background: #000;
+  background: transparent;
   box-shadow: none;
   isolation: isolate;
 }
 
 .transformation-space::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.1), transparent 45%),
-    radial-gradient(circle at 30% 70%, rgba(255, 157, 60, 0.2), transparent 50%);
-  mix-blend-mode: screen;
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 .kitchen-scene-backdrop {
-  position: absolute;
-  inset: 0;
-  background: url("../img/廚房動圖.png") center/cover no-repeat;
-  opacity: 0.24;
-  filter: blur(0px) brightness(0.95);
-  transform: scale(1.04);
+  display: none;
 }
 
 .dark-veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.88));
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  opacity: 0.9;
-  transition: opacity 0.6s ease;
+  display: none;
 }
 
 .transformation-space.casting-active .dark-veil {
-  animation: pulse 1.8s ease-in-out infinite;
-  opacity: 0.96;
+  display: none;
 }
 
 .transformation-space.casting-finished .dark-veil {
-  opacity: 0.6;
+  display: none;
 }
 
 .sparkle-field {
@@ -1792,7 +1779,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 #screen-gallery {
   padding-top: 120px;
-  background: #b9d3f6 url("../img/1.png") center/cover no-repeat;
+  background: transparent;
 }
 
 .gallery-wrapper {
@@ -2409,6 +2396,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .start-button {
 }
+/* 幕簾轉場：快關、慢開並帶有抖動感 */
 #curtain-transition {
   position: fixed;
   inset: 0;
@@ -2425,7 +2413,8 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   width: 50%;
   background: url("../img/紅布幕（關） 1.png") center/cover no-repeat;
   transform: translateX(0);
-  transition: transform 0.55s ease-in-out, background-image 0.3s ease-in-out;
+  transition: transform var(--curtain-close, 0.42s cubic-bezier(0.65, 0, 0.8, 0.4)),
+    background-image 0.3s ease-in-out;
   box-shadow: inset -8px 0 18px rgba(0, 0, 0, 0.25),
     inset 8px 0 18px rgba(0, 0, 0, 0.2);
   position: relative;
@@ -2455,46 +2444,57 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   pointer-events: auto;
 }
 
+#curtain-transition.shudder {
+  animation: curtain-shudder 0.28s ease-in-out 0.02s 2;
+}
+
 #curtain-transition.open .curtain-left {
   transform: translateX(-100%);
   background: url("../img/紅布幕（開） 1.png") center/cover no-repeat;
+  transition: transform var(--curtain-open, 1.1s cubic-bezier(0.21, 0.78, 0.24, 1));
 }
 
 #curtain-transition.open .curtain-right {
   transform: translateX(100%);
   background: url("../img/紅布幕（開） 1.png") center/cover no-repeat;
+  transition: transform var(--curtain-open, 1.1s cubic-bezier(0.21, 0.78, 0.24, 1));
 }
 
-.story-area {
-  width: 100%;
+@keyframes curtain-shudder {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-6px) rotate(-0.5deg);
+  }
+  50% {
+    transform: translateY(4px) rotate(0.6deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.story-stack {
+  width: min(1000px, 96%);
+  margin: 10px auto 0;
+  padding: 6px 0 140px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 12px 0 180px;
-}
-
-.story-bubble {
-  max-width: 760px;
-  width: 88%;
-  min-height: 340px;
-  background: linear-gradient(180deg, #fffaf0 0%, #ffecc6 70%, #ffe4a3 100%);
-  border-radius: 32px;
-  padding: 26px 0 18px;
-  position: relative;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.16);
-  z-index: 3;
-  margin-top: 12px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .messages {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   gap: 16px;
-  overflow-y: auto;
-  max-height: 360px;
-  padding: 12px 22px 42px 22px;
+  overflow: visible;
+  max-height: none;
+  padding: 4px 18px 0;
   color: #5a4100;
 }
 
@@ -2506,12 +2506,14 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   box-shadow: 4px 8px 0 rgba(0, 0, 0, 0.08);
   line-height: 1.6;
   position: relative;
+  text-align: center;
+  align-self: center;
 }
 
 .typing-bubble {
-  position: absolute;
-  top: 14px;
-  left: 22px;
+  position: relative;
+  top: 0;
+  left: 0;
   display: flex;
   gap: 6px;
   background: #fffaf0;
@@ -2520,6 +2522,8 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   opacity: 0;
   transition: opacity 0.2s ease;
   border: 2px solid #ffd66b;
+  align-self: center;
+  margin-top: 4px;
 }
 
 .typing-bubble.visible {
