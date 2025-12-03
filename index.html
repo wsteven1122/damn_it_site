@@ -118,6 +118,7 @@
     </div>
 
     <main id="game-container" role="application">
+      <!-- 首頁：精簡的主畫面與起始操作 -->
       <section
         id="screen-1"
         class="screen home-screen active"
@@ -125,14 +126,7 @@
         aria-label="首頁：蛋米特 DAMN IT!"
       >
         <div class="home-visual-layer" aria-hidden="true">
-          <div class="splash-blob"></div>
-          <div class="sauce-curve"></div>
-          <div class="rainbow-rays">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div class="checker-fold"></div>
+          <div class="home-white-egg" role="presentation"></div>
           <div class="floating-eggshell"></div>
           <div class="floating-durian"></div>
         </div>
@@ -212,6 +206,7 @@
         </div>
       </section>
 
+      <!-- 故事：對話播放與跳過入口 -->
       <section
         id="screen-2"
         class="screen"
@@ -219,30 +214,15 @@
         aria-label="故事介紹：煉蛋廚房的起源"
       >
         <div class="hand-overlay story-hands global-hands" aria-hidden="true">
-          <img
-            src="./img/tempImagerscmfk 1.png"
-            alt="雙手指引"
-            class="hand-image left"
-          />
-          <img
-            src="./img/tempImagerscmfk 1.png"
-            alt="雙手指引"
-            class="hand-image right"
-          />
+          <img src="./img/Lhand.png" alt="雙手指引" class="hand-image left" />
+          <img src="./img/Rhand.png" alt="雙手指引" class="hand-image right" />
         </div>
-        <div class="story-area">
-          <div class="story-bubble" aria-label="故事訊息播放區">
-            <div
-              id="messages"
-              class="messages"
-              role="log"
-              aria-live="polite"
-            ></div>
-            <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
-              <div class="typing-dot"></div>
-              <div class="typing-dot"></div>
-              <div class="typing-dot"></div>
-            </div>
+        <div class="story-stack">
+          <div id="messages" class="messages" role="log" aria-live="polite"></div>
+          <div id="typingIndicator" class="typing-bubble" aria-hidden="true">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
           </div>
         </div>
 
@@ -264,20 +244,124 @@
         </div>
       </section>
 
+      <!-- 選蛋：主食蛋選擇 -->
       <section
         id="screen-3"
-        class="screen"
+        class="screen egg-choice-screen"
         data-index="3"
+        aria-label="選擇主食蛋"
+      >
+        <header class="egg-choice-header">
+          <p class="egg-choice-kicker">選擇主食蛋</p>
+          <h2>只有米特蛋可以免費體驗</h2>
+          <p class="egg-choice-subtitle">
+            其餘蛋品需付費解鎖，米特蛋會帶你直接進入煉蛋指南。
+          </p>
+        </header>
+
+        <div class="egg-card-grid" role="list" aria-label="蛋品清單">
+          <article class="egg-card locked" data-egg="黃金蛋" role="listitem">
+            <div class="egg-ribbon">需付費</div>
+            <div class="egg-illustration">
+              <img src="./img/台指數蛋.png" alt="黃金蛋" />
+            </div>
+            <div class="egg-info">
+              <h3>黃金蛋</h3>
+              <p class="egg-meta">價格：1450 金幣 | 熱量：132 kcal</p>
+              <p class="egg-desc">金黃的蛋殼閃閃發光，散發奢華氣息。</p>
+            </div>
+            <button class="choose-egg-btn" aria-disabled="true" disabled>
+              付費解鎖
+            </button>
+          </article>
+
+          <article class="egg-card locked" data-egg="辣椒蛋" role="listitem">
+            <div class="egg-ribbon">需付費</div>
+            <div class="egg-illustration">
+              <img src="./img/地雷系蛋.png" alt="辣椒蛋" />
+            </div>
+            <div class="egg-info">
+              <h3>辣椒蛋</h3>
+              <p class="egg-meta">價格：1580 金幣 | 熱量：165 kcal</p>
+              <p class="egg-desc">紅彤彤的外殼噴著火，帶來辛辣熱浪。</p>
+            </div>
+            <button class="choose-egg-btn" aria-disabled="true" disabled>
+              付費解鎖
+            </button>
+          </article>
+
+          <article class="egg-card unlocked" data-egg="米特蛋" role="listitem">
+            <div class="egg-ribbon free">免費</div>
+            <div class="egg-illustration">
+              <img src="./img/待機蛋 (去背) 1.png" alt="米特蛋" />
+            </div>
+            <div class="egg-info">
+              <h3>米特蛋</h3>
+              <p class="egg-meta">價格：10 金幣 | 熱量：100 kcal</p>
+              <p class="egg-desc">基礎且純粹的米特蛋，最適合新手練功。</p>
+            </div>
+            <button class="choose-egg-btn">選擇米特蛋</button>
+          </article>
+
+          <article class="egg-card locked" data-egg="邪惡蛋" role="listitem">
+            <div class="egg-ribbon">需付費</div>
+            <div class="egg-illustration">
+              <img src="./img/邪惡蟲蟲蛋糕.png" alt="邪惡蛋" />
+            </div>
+            <div class="egg-info">
+              <h3>邪惡蛋</h3>
+              <p class="egg-meta">價格：1880 金幣 | 熱量：175 kcal</p>
+              <p class="egg-desc">看似甜美，卻潛藏邪惡力量的禁忌蛋種。</p>
+            </div>
+            <button class="choose-egg-btn" aria-disabled="true" disabled>
+              付費解鎖
+            </button>
+          </article>
+
+          <article class="egg-card locked" data-egg="黑幫蛋" role="listitem">
+            <div class="egg-ribbon">需付費</div>
+            <div class="egg-illustration">
+              <img src="./img/防毒面具.png" alt="黑幫蛋" />
+            </div>
+            <div class="egg-info">
+              <h3>黑幫蛋</h3>
+              <p class="egg-meta">價格：2200 金幣 | 熱量：162 kcal</p>
+              <p class="egg-desc">戴著面具的神秘蛋，據說掌握地下勢力。</p>
+            </div>
+            <button class="choose-egg-btn" aria-disabled="true" disabled>
+              付費解鎖
+            </button>
+          </article>
+        </div>
+
+        <footer class="egg-choice-footer">
+          <button
+            id="confirm-egg-btn"
+            class="btn btn-primary next-screen-btn"
+            data-target="screen-4"
+            aria-controls="screen-4"
+          >
+            前往煉蛋指南
+          </button>
+          <p class="egg-hint">目前僅米特蛋可免費體驗，其餘將開放購買。</p>
+        </footer>
+      </section>
+
+      <!-- 教學：煉蛋爐說明 -->
+      <section
+        id="screen-4"
+        class="screen"
+        data-index="4"
         aria-label="煉蛋爐介紹"
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手指引"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手指引"
             class="hand-image right"
           />
@@ -293,8 +377,8 @@
           <div class="guide-panel-footer">
             <button
               class="btn btn-primary next-screen-btn"
-              data-target="screen-4"
-              aria-controls="screen-4"
+              data-target="screen-5"
+              aria-controls="screen-5"
             >
               準備好了，選擇食材！
             </button>
@@ -302,10 +386,11 @@
         </div>
       </section>
 
+      <!-- 選食材：拖曳食材到米特蛋 -->
       <section
-        id="screen-4"
+        id="screen-5"
         class="screen"
-        data-index="4"
+        data-index="5"
         aria-label="食材選擇"
       >
         <div class="alchemy-workbench bright">
@@ -347,12 +432,12 @@
               aria-hidden="true"
             >
               <img
-                src="./img/tempImagerscmfk 1.png"
+                src="./img/Lhand.png"
                 alt="雙手"
                 class="hand-image left"
               />
               <img
-                src="./img/tempImagerscmfk 1.png"
+                src="./img/Rhand.png"
                 alt="雙手"
                 class="hand-image right"
               />
@@ -434,8 +519,8 @@
           <button
             id="cast-spell-btn"
             class="btn btn-primary next-screen-btn"
-            data-target="screen-5"
-            aria-controls="screen-5"
+            data-target="screen-6"
+            aria-controls="screen-6"
             disabled
           >
             開始唸咒！
@@ -443,34 +528,14 @@
         </footer>
       </section>
 
+      <!-- 播放影片：單純呈現影片並提供跳過 -->
       <section
-        id="screen-5"
+        id="screen-6"
         class="screen"
-        data-index="5"
-        aria-label="煉蛋儀式進行中"
+        data-index="6"
+        aria-label="影片播放"
       >
-        <header class="casting-header">
-          <div class="casting-title-block">
-            <h2 id="casting-title">煉蛋儀式啟動！</h2>
-            <p class="casting-subtitle">空間變暗，雙手蓄能，準備進入變身特效</p>
-          </div>
-          <div class="casting-badge">變身模式</div>
-        </header>
-
         <div class="transformation-space">
-          <div class="hand-overlay global-hands" aria-hidden="true">
-            <img
-              src="./img/tempImagerscmfk 1.png"
-              alt="雙手"
-              class="hand-image left"
-            />
-            <img
-              src="./img/tempImagerscmfk 1.png"
-              alt="雙手"
-              class="hand-image right"
-            />
-          </div>
-
           <div class="kitchen-scene-backdrop" aria-hidden="true"></div>
           <div class="dark-veil" aria-hidden="true"></div>
 
@@ -481,7 +546,7 @@
             <span class="sparkle s4"></span>
           </div>
 
-          <div class="circle-stage" aria-label="變身影片與光暈">
+          <div class="circle-stage" aria-label="影片播放區域">
             <button id="skip-video-btn" class="skip-video-btn">Skip</button>
             <div class="shine-ring"></div>
             <div class="pulse-glow"></div>
@@ -495,7 +560,6 @@
                 poster="./img/桌子.mp4"
                 aria-label="煉蛋過程影片"
               ></video>
-              <div class="video-placeholder">即將放入雙手變身影片</div>
               <div
                 id="spinner-overlay"
                 class="spinner-overlay"
@@ -509,11 +573,14 @@
         </div>
 
         <footer class="casting-footer">
+          <button id="skip-video-secondary" class="btn btn-secondary skip-video-btn">
+            Skip
+          </button>
           <button
             id="next-from-video-btn"
             class="btn btn-primary next-screen-btn locked"
-            data-target="screen-6"
-            aria-controls="screen-6"
+            data-target="screen-7"
+            aria-controls="screen-7"
             disabled
           >
             查看結果
@@ -521,20 +588,22 @@
         </footer>
       </section>
 
+      
+      <!-- 結果：彈窗以外的備用視圖 -->
       <section
-        id="screen-6"
+        id="screen-7"
         class="screen"
-        data-index="6"
+        data-index="7"
         aria-label="煉蛋結果"
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />
@@ -552,20 +621,22 @@
         </div>
       </section>
 
+      
+      <!-- 特別任務：預留版位 -->
       <section
         id="screen-menu"
         class="screen"
-        data-index="7"
+        data-index="8"
         aria-label="特別任務選單"
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />
@@ -573,20 +644,22 @@
         <div class="placeholder-card">特別任務準備中</div>
       </section>
 
+      
+      <!-- 圖鑑：成果瀏覽 -->
       <section
         id="screen-gallery"
         class="screen"
-        data-index="8"
+        data-index="9"
         aria-label="成果圖鑑"
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />
@@ -654,20 +727,22 @@
         </div>
       </section>
 
+      
+      <!-- 設定：簡易占位元件 -->
       <section
         id="screen-settings"
         class="screen"
-        data-index="9"
+        data-index="10"
         aria-label="設定"
       >
         <div class="hand-overlay global-hands" aria-hidden="true">
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Lhand.png"
             alt="雙手"
             class="hand-image left"
           />
           <img
-            src="./img/tempImagerscmfk 1.png"
+            src="./img/Rhand.png"
             alt="雙手"
             class="hand-image right"
           />
