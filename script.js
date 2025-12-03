@@ -3,7 +3,7 @@
 // =========================================================================
 
 const CONFIG = {
-  TRANSITION_DURATION: 700,
+  TRANSITION_DURATION: 900,
   MAX_INGREDIENTS: 3,
   // 故事訊息 (Screen 2)
   STORY_MESSAGES: [
@@ -18,7 +18,7 @@ const CONFIG = {
   GUIDE_STEPS: [
     {
       targetId: "lottie-start-btn",
-      text: "點擊這個【開始遊戲】按鈕，即可展開你的煉金廚房之旅！",
+      text: "點擊這個【開始遊戲】按鈕，即可展開你的煉蛋廚房之旅！",
       position: "right",
     },
     {
@@ -37,6 +37,88 @@ const CONFIG = {
       position: "top",
     },
   ],
+  GUIDE_FLOWS: {
+    "screen-1": [
+      {
+        targetId: "lottie-start-btn",
+        text: "點擊【開始遊戲】啟動冒險，畫面上的雙手也會跟著前往廚房！",
+        position: "right",
+      },
+      {
+        targetId: "menu-btn",
+        text: "需要跳轉嗎？【成果圖鑑】和【特別任務】在這裡切換。",
+        position: "top",
+      },
+      {
+        targetId: "guide-btn",
+        text: "任何時候想再看教學，點擊這顆【導覽】按鈕即可。",
+        position: "left",
+      },
+    ],
+    "screen-2": [
+      {
+        targetId: "messages",
+        text: "這裡播放故事對話，搭配雙手框住情境，請慢慢閱讀。",
+        position: "right",
+      },
+      {
+        targetId: "dialog-skip-btn",
+        text: "想直接進入遊戲可以按【跳過故事】。",
+        position: "top",
+      },
+      {
+        targetId: "continue-btn",
+        text: "看完後點【進入煉蛋爐】繼續。",
+        position: "top",
+      },
+    ],
+    "screen-4": [
+      {
+        targetId: "selection-row",
+        text: "這些欄位顯示已放入的食材，按叉叉可清除。",
+        position: "bottom",
+      },
+      {
+        targetId: "kitchen-status-chip",
+        text: "綠色提示列會計算目前選擇的數量，避免被上方選單遮住。",
+        position: "left",
+      },
+      {
+        targetId: "ingredient-tray",
+        text: "直接拖曳原始圖片食材到米特蛋上方，最多三種。",
+        position: "top",
+      },
+      {
+        targetId: "cast-spell-btn",
+        text: "選好後按【開始唸咒】進入變身影片。",
+        position: "top",
+      },
+    ],
+    "screen-5": [
+      {
+        targetId: "casting-video",
+        text: "影片全幅鋪滿舞台，搭配光暈讓變身效果更明顯。",
+        position: "right",
+      },
+      {
+        targetId: "skip-video-btn",
+        text: "右下角有【Skip】可以提前結束。",
+        position: "left",
+      },
+      {
+        targetId: "next-from-video-btn",
+        text: "完成後點擊【查看結果】繼續。",
+        position: "top",
+      },
+    ],
+    "screen-gallery": [
+      {
+        targetId: "floating-gallery-field",
+        text: "卡片在空間中漂浮，鎖定的成品會呈現半透明覆蓋。",
+        position: "left",
+      },
+    ],
+  },
 };
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -145,8 +227,9 @@ class GameController {
 
     if (nextScreen) {
       nextScreen.classList.add("incoming");
-      nextScreen.classList.add("active");
+      nextScreen.classList.add("active", "wave-enter");
       requestAnimationFrame(() => nextScreen.classList.remove("incoming"));
+      setTimeout(() => nextScreen.classList.remove("wave-enter"), CONFIG.TRANSITION_DURATION + 180);
     }
     this.state.currentScreenId = nextScreenId;
     this.updatePersistentUI(nextScreenId);
@@ -364,12 +447,12 @@ class GameController {
 
     if (isSelected) {
       this.state.selectedIngredients.delete(ingredient);
-      this.showAlert("info", `✅ ${ingredient} 已從煉金爐中移除。`);
+      this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
     } else {
       if (isFull) {
         this.showAlert(
           "error",
-          `煉金爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
+          `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
         );
         return;
       }
@@ -457,14 +540,14 @@ class GameController {
       image = "assets/results/egg_tnt.png";
       rarity = "SR";
     } else if (count >= 1) {
-      title = "🥚 普通成功：經典煉金蛋";
+      title = "🥚 普通成功：經典煉蛋";
       text =
         "你成功地用奇異的食材煉出了一顆還能吃的經典蛋。雖然無趣，但安全可靠。";
       image = "assets/results/egg_001.png";
       rarity = "R";
     } else {
       title = "💥 失敗結局：爆裂米特渣";
-      text = "食材太少，煉金爐無法啟動。您得到了一堆無法形容的殘渣。";
+      text = "食材太少，煉蛋爐無法啟動。您得到了一堆無法形容的殘渣。";
       image = "assets/results/egg_fail.png";
       rarity = "E";
     }
@@ -584,6 +667,7 @@ class GameController {
 
   createGuideModule() {
     let currentStep = 0;
+    let activeSteps = CONFIG.GUIDE_STEPS;
     const self = this;
 
     // 輔助函數：取得目標元素範圍
@@ -614,6 +698,9 @@ class GameController {
       } else if (position === "top") {
         top = targetRect.y - tooltip.offsetHeight - 30;
         left = targetRect.x + targetRect.width / 2 - tooltip.offsetWidth / 2;
+      } else if (position === "bottom") {
+        top = targetRect.y + targetRect.height + 30;
+        left = targetRect.x + targetRect.width / 2 - tooltip.offsetWidth / 2;
       }
 
       left = Math.max(
@@ -630,12 +717,12 @@ class GameController {
     }
 
     function showStep() {
-      if (currentStep >= CONFIG.GUIDE_STEPS.length) {
+      if (currentStep >= activeSteps.length) {
         exit();
         return;
       }
 
-      const step = CONFIG.GUIDE_STEPS[currentStep];
+      const step = activeSteps[currentStep];
       const targetElement = document.getElementById(step.targetId);
 
       if (!targetElement || targetElement.offsetParent === null) {
@@ -659,15 +746,16 @@ class GameController {
 
       self.dom.guideTooltip.classList.add("active");
       self.dom.tipNextBtn.textContent =
-        currentStep === CONFIG.GUIDE_STEPS.length - 1 ? "完成指引" : "下一步";
+        currentStep === activeSteps.length - 1 ? "完成指引" : "下一步";
 
       document.getElementById("tip-current-step").textContent = currentStep + 1;
-      document.getElementById("tip-total-steps").textContent =
-        CONFIG.GUIDE_STEPS.length;
+      document.getElementById("tip-total-steps").textContent = activeSteps.length;
     }
 
-    function start() {
+    function start(screenId = self.state.currentScreenId) {
       if (self.state.isTransitioning) return;
+
+      activeSteps = CONFIG.GUIDE_FLOWS[screenId] || CONFIG.GUIDE_STEPS;
 
       self.dom.guideOverlay.classList.remove("hidden");
       self.dom.guideTooltip.classList.add("active");
@@ -741,6 +829,9 @@ class GameController {
         this.dom.dropTarget.classList.remove("drag-over");
         const ingredient = e.dataTransfer.getData("text/plain");
         if (ingredient) this.toggleIngredient(ingredient);
+        this.dom.dropTarget.classList.add("absorb");
+        void this.dom.dropTarget.offsetWidth;
+        setTimeout(() => this.dom.dropTarget.classList.remove("absorb"), 900);
       });
     }
 
@@ -755,7 +846,7 @@ class GameController {
           const ingredient = slot.dataset.ingredient;
           if (ingredient && this.state.selectedIngredients.has(ingredient)) {
             this.state.selectedIngredients.delete(ingredient);
-            this.showAlert("info", `✅ ${ingredient} 已從煉金爐中移除。`);
+            this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
             this.updateIngredientStatus();
           }
         });
@@ -814,7 +905,7 @@ class GameController {
 
     // 7. 新手導覽按鈕 (僅點擊時啟動)
     this.dom.guideBtns.forEach((btn) =>
-      btn.addEventListener("click", () => this.Guide.start())
+      btn.addEventListener("click", () => this.Guide.start(this.state.currentScreenId))
     );
 
     // 8. 設置按鈕
