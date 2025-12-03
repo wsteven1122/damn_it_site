@@ -18,7 +18,7 @@ const CONFIG = {
   GUIDE_STEPS: [
     {
       targetId: "lottie-start-btn",
-      text: "點擊這個【開始遊戲】按鈕，即可展開你的煉金廚房之旅！",
+      text: "點擊這個【開始遊戲】按鈕，即可展開你的煉蛋廚房之旅！",
       position: "right",
     },
     {
@@ -68,7 +68,7 @@ const CONFIG = {
       },
       {
         targetId: "continue-btn",
-        text: "看完後點【進入煉金爐】繼續。",
+        text: "看完後點【進入煉蛋爐】繼續。",
         position: "top",
       },
     ],
@@ -446,12 +446,12 @@ class GameController {
 
     if (isSelected) {
       this.state.selectedIngredients.delete(ingredient);
-      this.showAlert("info", `✅ ${ingredient} 已從煉金爐中移除。`);
+      this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
     } else {
       if (isFull) {
         this.showAlert(
           "error",
-          `煉金爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
+          `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
         );
         return;
       }
@@ -539,14 +539,14 @@ class GameController {
       image = "assets/results/egg_tnt.png";
       rarity = "SR";
     } else if (count >= 1) {
-      title = "🥚 普通成功：經典煉金蛋";
+      title = "🥚 普通成功：經典煉蛋";
       text =
         "你成功地用奇異的食材煉出了一顆還能吃的經典蛋。雖然無趣，但安全可靠。";
       image = "assets/results/egg_001.png";
       rarity = "R";
     } else {
       title = "💥 失敗結局：爆裂米特渣";
-      text = "食材太少，煉金爐無法啟動。您得到了一堆無法形容的殘渣。";
+      text = "食材太少，煉蛋爐無法啟動。您得到了一堆無法形容的殘渣。";
       image = "assets/results/egg_fail.png";
       rarity = "E";
     }
@@ -828,6 +828,9 @@ class GameController {
         this.dom.dropTarget.classList.remove("drag-over");
         const ingredient = e.dataTransfer.getData("text/plain");
         if (ingredient) this.toggleIngredient(ingredient);
+        this.dom.dropTarget.classList.add("absorb");
+        void this.dom.dropTarget.offsetWidth;
+        setTimeout(() => this.dom.dropTarget.classList.remove("absorb"), 900);
       });
     }
 
@@ -842,7 +845,7 @@ class GameController {
           const ingredient = slot.dataset.ingredient;
           if (ingredient && this.state.selectedIngredients.has(ingredient)) {
             this.state.selectedIngredients.delete(ingredient);
-            this.showAlert("info", `✅ ${ingredient} 已從煉金爐中移除。`);
+            this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
             this.updateIngredientStatus();
           }
         });
