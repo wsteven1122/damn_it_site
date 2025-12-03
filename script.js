@@ -208,6 +208,7 @@ class GameController {
     if (maxCountLabel) maxCountLabel.textContent = CONFIG.MAX_INGREDIENTS;
     this.initEventListeners();
     this.updateIngredientStatus();
+    this.updateHandState(this.state.currentScreenId);
   }
 
   // ---------------------- 核心流程控制 ----------------------
@@ -234,6 +235,7 @@ class GameController {
     this.state.currentScreenId = nextScreenId;
     this.updatePersistentUI(nextScreenId);
     this.updateSceneMood(nextScreenId);
+    this.updateHandState(nextScreenId);
   }
 
   updateSceneMood(screenId) {
@@ -246,6 +248,11 @@ class GameController {
 
   updatePersistentUI(screenId) {
     this.dom.persistentUI.style.display = "flex";
+  }
+
+  updateHandState(screenId) {
+    const foldHands = screenId === "screen-3";
+    document.body.classList.toggle("hands-folded", foldHands);
   }
 
   /** 執行畫面切換並處理特殊流程 */
