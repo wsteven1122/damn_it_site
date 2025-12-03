@@ -71,13 +71,13 @@
       <div class="modal-content">
         <button class="close-btn" aria-label="關閉結果視窗">&times;</button>
         <header class="modal-header-container">
-          <h3 id="modal-title" class="modal-header">煉金結果：未知米特蛋</h3>
+          <h3 id="modal-title" class="modal-header">煉蛋結果：未知米特蛋</h3>
         </header>
         <div class="result-display">
           <img
             id="result-image"
             src="./img/待機蛋 (去背) 1.png"
-            alt="煉金結果圖像"
+            alt="煉蛋結果圖像"
             class="result-egg-img"
           />
           <div
@@ -88,7 +88,7 @@
         </div>
         <div class="result-description-container">
           <p id="result-text" class="modal-description">
-            煉金結果的詳細說明文字。
+            煉蛋結果的詳細說明文字。
           </p>
           <p class="result-metadata">
             編號: <span id="result-number">???</span> | 稀有度:
@@ -125,11 +125,19 @@
         aria-label="首頁：蛋米特 DAMN IT!"
       >
         <div class="home-top-bar">
-          <button id="volume-btn" class="icon-btn" aria-label="音量">
+          <button
+            id="volume-btn"
+            class="icon-btn volume-toggle"
+            aria-label="音量"
+          >
             <img src="./img/voice_on.png" alt="音量" />
           </button>
           <div class="home-utility-group">
-            <button id="guide-btn" class="icon-btn" aria-label="新手導覽">
+            <button
+              id="guide-btn"
+              class="icon-btn guide-trigger"
+              aria-label="新手導覽"
+            >
               <img src="./img/Botton_teaching_Default.png" alt="導覽" />
             </button>
             <button
@@ -195,7 +203,7 @@
         id="screen-2"
         class="screen"
         data-index="2"
-        aria-label="故事介紹：煉金廚房的起源"
+        aria-label="故事介紹：廚房的起源"
       >
         <div class="story-area">
           <div class="story-bubble" aria-label="故事訊息播放區">
@@ -220,7 +228,7 @@
             data-target="screen-3"
             aria-controls="screen-3"
           >
-            進入煉金爐 (CONTINUE)
+            進入廚房 (CONTINUE)
           </button>
           <button
             id="dialog-skip-btn"
@@ -235,11 +243,11 @@
         id="screen-3"
         class="screen"
         data-index="3"
-        aria-label="煉金爐介紹"
+        aria-label="煉蛋介紹"
       >
         <div class="guide-panel">
           <div class="guide-bubble">
-            <h2>煉金爐操作指南</h2>
+            <h2>煉蛋操作指南</h2>
             <p>
               把食材拖到米特蛋上，最多三種。桌面周圍的食材都可以試試，選中後會在上方欄位顯示，點叉叉可以取消。
             </p>
@@ -380,7 +388,7 @@
         id="screen-5"
         class="screen"
         data-index="5"
-        aria-label="煉金儀式進行中"
+        aria-label="煉蛋儀式進行中"
       >
         <header class="casting-header">
           <div class="casting-title-block">
@@ -422,7 +430,7 @@
                 playsinline
                 preload="auto"
                 poster="./img/桌子.mp4"
-                aria-label="煉金過程影片"
+                aria-label="煉蛋過程影片"
               ></video>
               <div class="video-placeholder">即將放入雙手變身影片</div>
               <div
@@ -454,10 +462,10 @@
         id="screen-6"
         class="screen"
         data-index="6"
-        aria-label="煉金結果"
+        aria-label="煉蛋結果"
       >
         <div class="result-shell">
-          <h2>煉金結果</h2>
+          <h2>煉蛋結果</h2>
           <p>結果已同步到上方彈窗。</p>
           <button
             class="btn btn-primary next-screen-btn"
@@ -484,7 +492,49 @@
         data-index="8"
         aria-label="成果圖鑑"
       >
-        <div class="placeholder-card">成果圖鑑準備中</div>
+        <div class="gallery-wrapper">
+          <header class="gallery-header">
+            <div class="gallery-ribbon">成果圖鑑</div>
+            <p class="gallery-subtitle">往下拖移，欣賞漂浮的小卡收藏</p>
+          </header>
+          <div class="gallery-scroll" role="list">
+            <article class="gallery-card tilt-1" role="listitem">
+              <img src="./img/待機蛋 (去背) 1.png" alt="米特蛋" />
+              <div class="card-body">
+                <h3>米特蛋 #001</h3>
+                <p>基礎型態，閃著溫暖光澤的入門款。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-2" role="listitem">
+              <img src="./img/邪惡蟲蟲蛋糕.png" alt="邪惡蟲蟲蛋糕" />
+              <div class="card-body">
+                <h3>邪惡蟲蟲蛋糕</h3>
+                <p>綿密口感，苦味在廚房飄蕩。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-3" role="listitem">
+              <img src="./img/流星鎚 1.png" alt="流星鎚" />
+              <div class="card-body">
+                <h3>流星鎚</h3>
+                <p>攪動星辰的流星鎚，讓蛋呈現夜空色澤。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-1" role="listitem">
+              <img src="./img/地獄跳跳糖.png" alt="地獄跳跳糖" />
+              <div class="card-body">
+                <h3>地獄跳跳糖</h3>
+                <p>透明的果凍層，上浮著撒旦光點。</p>
+              </div>
+            </article>
+            <article class="gallery-card tilt-2" role="listitem">
+              <img src="./img/防摔手機殼.png" alt="防摔手機殼" />
+              <div class="card-body">
+                <h3>防摔手機殼</h3>
+                <p>漂浮在空中的手機殼，帶來堅固的味道。</p>
+              </div>
+            </article>
+          </div>
+        </div>
       </section>
 
       <section
@@ -498,25 +548,61 @@
     </main>
 
     <div id="persistent-ui" class="persistent-ui">
-      <button
-        id="menu-btn"
-        class="btn btn-secondary next-screen-btn"
-        data-target="screen-menu"
-      >
-        主選單
-      </button>
-      <button
-        id="gallery-btn"
-        class="btn btn-secondary next-screen-btn"
-        data-target="screen-gallery"
-      >
-        成果圖鑑
-      </button>
+      <div class="persistent-inner">
+        <div class="persistent-home">
+          <button
+            class="chip-btn next-screen-btn"
+            data-target="screen-1"
+            aria-label="回首頁"
+          >
+            ⬅ 回首頁
+          </button>
+        </div>
+        <div class="persistent-actions">
+          <button
+            class="icon-btn volume-toggle"
+            aria-label="音量"
+            aria-pressed="false"
+          >
+            <img src="./img/voice_on.png" alt="音量" />
+          </button>
+          <button class="icon-btn guide-trigger" aria-label="導覽">
+            <img src="./img/Botton_teaching_Default.png" alt="導覽" />
+          </button>
+          <button
+            class="icon-btn next-screen-btn"
+            data-target="screen-settings"
+            aria-label="設定"
+          >
+            <img src="./img/太陽.png" alt="設定" />
+          </button>
+          <button
+            class="icon-btn next-screen-btn"
+            data-target="screen-gallery"
+            aria-label="成果圖鑑"
+          >
+            <img
+              src="./img/Secondary Botton_Picture Book_Default.png"
+              alt="成果圖鑑"
+            />
+          </button>
+          <button
+            class="icon-btn next-screen-btn"
+            data-target="screen-menu"
+            aria-label="特別任務"
+          >
+            <img
+              src="./img/Secondary Botton_Magic_Default.png"
+              alt="特別任務"
+            />
+          </button>
+        </div>
+      </div>
     </div>
 
     <audio
       id="bgm-audio"
-      src="./img/784908236.063573.mp4"
+      src="./img/おもしろすぎてどっかん @ フリーBGM DOVA-SYNDROME OFFICIAL YouTube CHANNEL.mp3"
       preload="auto"
       loop
     ></audio>
