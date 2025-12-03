@@ -402,15 +402,33 @@
               aria-label="已放入的食材欄位 (最多 3 種)"
             >
               <div class="selection-slot" data-slot-index="1" role="listitem">
-                <span class="slot-label">空槽</span>
+                <div class="slot-visual">
+                  <img class="slot-thumb" alt="已選食材縮圖" />
+                </div>
+                <div class="slot-text">
+                  <span class="slot-label">空槽</span>
+                  <span class="slot-hint">拖曳食材進入</span>
+                </div>
                 <button class="slot-clear" aria-label="移除這個食材">✕</button>
               </div>
               <div class="selection-slot" data-slot-index="2" role="listitem">
-                <span class="slot-label">空槽</span>
+                <div class="slot-visual">
+                  <img class="slot-thumb" alt="已選食材縮圖" />
+                </div>
+                <div class="slot-text">
+                  <span class="slot-label">空槽</span>
+                  <span class="slot-hint">拖曳食材進入</span>
+                </div>
                 <button class="slot-clear" aria-label="移除這個食材">✕</button>
               </div>
               <div class="selection-slot" data-slot-index="3" role="listitem">
-                <span class="slot-label">空槽</span>
+                <div class="slot-visual">
+                  <img class="slot-thumb" alt="已選食材縮圖" />
+                </div>
+                <div class="slot-text">
+                  <span class="slot-label">空槽</span>
+                  <span class="slot-hint">拖曳食材進入</span>
+                </div>
                 <button class="slot-clear" aria-label="移除這個食材">✕</button>
               </div>
             </div>
@@ -753,13 +771,16 @@
 
     <div id="persistent-ui" class="persistent-ui">
       <div class="persistent-inner">
-        <div class="persistent-home">
+        <div class="persistent-actions">
           <button
-            class="chip-btn next-screen-btn"
-            data-target="screen-1"
-            aria-label="回首頁"
+            class="icon-btn volume-toggle"
+            aria-label="音量"
+            aria-pressed="false"
           >
-            ⬅ 回首頁
+            <img src="./img/voice_on.png" alt="音量" />
+          </button>
+          <button class="icon-btn guide-trigger" aria-label="新手導覽">
+            <img src="./img/Botton_teaching_Default.png" alt="導覽" />
           </button>
         </div>
       </div>

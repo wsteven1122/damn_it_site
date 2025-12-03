@@ -8,6 +8,24 @@ const CONFIG = {
   CURTAIN_SHAKE_MS: 200,
   CURTAIN_OPEN_MS: 1100,
   MAX_INGREDIENTS: 3,
+  INGREDIENT_IMAGES: {
+    榴槤: "./img/榴槤.png",
+    魷魚: "./img/魷魚.png",
+    檸檬: "./img/檸檬.png",
+    手機: "./img/手機.png",
+    TNT: "./img/炸彈.png",
+    香菜: "./img/香菜.png",
+    隕石: "./img/石頭.png",
+    服裝: "./img/褲子.png",
+  },
+  SFX_PROFILE: {
+    uiTap: 520,
+    drag: 420,
+    drop: 620,
+    success: 760,
+    error: 280,
+    tick: 180,
+  },
   // 故事訊息 (Screen 2)
   STORY_MESSAGES: [
     "我是一位廚師，因為到了30歲依舊母胎單身，因此獲得魔法成為了魔法廚師。",
@@ -211,6 +229,7 @@ class GameController {
     }
     this.loadLottieAnimations();
     this.setupBackgroundMusic();
+    this.setupSoundBoard();
     const maxCountLabel = document.getElementById("max-selection-count");
     if (maxCountLabel) maxCountLabel.textContent = CONFIG.MAX_INGREDIENTS;
     this.initEventListeners();
@@ -260,6 +279,15 @@ class GameController {
   updateHandState(screenId) {
     const foldHands = screenId === "screen-4";
     document.body.classList.toggle("hands-folded", foldHands);
+  }
+
+  setHandCursor(side = "left") {
+    document.body.classList.toggle("hand-cursor-left", side === "left");
+    document.body.classList.toggle("hand-cursor-right", side === "right");
+  }
+
+  clearHandCursor() {
+    document.body.classList.remove("hand-cursor-left", "hand-cursor-right");
   }
 
   /** 執行畫面切換並處理特殊流程 */
@@ -447,6 +475,42 @@ class GameController {
     document.addEventListener("touchstart", unlockAudio);
   }
 
+  setupSoundBoard() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+
+    this.audioCtx = new AudioContext();
+    this.sfxProfile = CONFIG.SFX_PROFILE;
+
+    const unlock = () => {
+      this.audioCtx.resume();
+      document.removeEventListener("pointerdown", unlock);
+      document.removeEventListener("touchstart", unlock);
+    };
+
+    document.addEventListener("pointerdown", unlock);
+    document.addEventListener("touchstart", unlock);
+  }
+
+  playTone(name, { volume = 0.22, duration = 0.18 } = {}) {
+    if (!this.audioCtx || this.state.isMuted) return;
+    const freq = this.sfxProfile?.[name];
+    if (!freq) return;
+
+    const now = this.audioCtx.currentTime;
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    osc.connect(gain).connect(this.audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + duration);
+  }
+
   // ---------------------- 食材選擇邏輯 ----------------------
 
   updateIngredientStatus() {
@@ -476,17 +540,38 @@ class GameController {
       this.dom.selectionSlots.forEach((slot, index) => {
         const label = slot.querySelector(".slot-label");
         const clearBtn = slot.querySelector(".slot-clear");
+        const hint = slot.querySelector(".slot-hint");
+        const thumb = slot.querySelector(".slot-thumb");
+        const prevIngredient = slot.dataset.ingredient;
         const ingredient = selectedArr[index];
 
         if (ingredient) {
           slot.classList.add("filled");
           slot.dataset.ingredient = ingredient;
           if (label) label.textContent = ingredient;
+          if (hint) hint.textContent = "已放入";
+          if (thumb) {
+            thumb.src = CONFIG.INGREDIENT_IMAGES[ingredient] || "";
+            thumb.alt = `${ingredient} 圖片`;
+          }
           if (clearBtn) clearBtn.disabled = false;
+          if (prevIngredient !== ingredient) {
+            slot.classList.add("pop");
+            slot.addEventListener(
+              "animationend",
+              () => slot.classList.remove("pop"),
+              { once: true }
+            );
+          }
         } else {
           slot.classList.remove("filled");
           slot.dataset.ingredient = "";
           if (label) label.textContent = "空槽";
+          if (hint) hint.textContent = "拖曳食材進入";
+          if (thumb) {
+            thumb.removeAttribute("src");
+            thumb.alt = "已選食材縮圖";
+          }
           if (clearBtn) clearBtn.disabled = true;
         }
       });
@@ -499,6 +584,7 @@ class GameController {
 
     if (isSelected) {
       this.showAlert("info", `${ingredient} 已在煉蛋爐中，換個食材試試。`);
+      this.playTone("error");
       return;
     }
 
@@ -507,11 +593,14 @@ class GameController {
         "error",
         `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
       );
+      this.playTone("error");
       return;
     }
 
     this.state.selectedIngredients.add(ingredient);
     this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
+    this.playTone("success");
+    this.triggerEggReact();
     this.updateIngredientStatus();
   }
 
@@ -520,8 +609,28 @@ class GameController {
     this.state.selectedIngredients.delete(ingredient);
     if (!silent) {
       this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
+      this.playTone("tick");
     }
     this.updateIngredientStatus();
+  }
+
+  triggerEggReact() {
+    if (!this.dom.dropTarget) return;
+
+    this.dom.dropTarget.classList.add("absorb", "feed-react");
+    const egg = this.dom.dropTarget.querySelector(".egg-graphic");
+    if (egg) {
+      egg.classList.add("react");
+      egg.addEventListener("animationend", () => egg.classList.remove("react"), {
+        once: true,
+      });
+    }
+
+    this.dom.dropTarget.addEventListener(
+      "animationend",
+      () => this.dom.dropTarget.classList.remove("feed-react", "absorb"),
+      { once: true }
+    );
   }
 
   // ---------------------- 影片與結果處理 ----------------------
@@ -860,6 +969,7 @@ class GameController {
       btn.addEventListener("click", (e) => {
         if (this.state.isTransitioning) return;
         const targetId = e.currentTarget.dataset.target;
+        this.playTone("uiTap");
         this.performTransition(targetId);
       });
     });
@@ -868,6 +978,7 @@ class GameController {
     if (this.dom.lottieStartBtn) {
       this.dom.lottieStartBtn.addEventListener("click", () => {
         if (this.state.isTransitioning) return;
+        this.playTone("uiTap");
         this.performTransition(this.dom.lottieStartBtn.dataset.target);
       });
     }
@@ -879,8 +990,14 @@ class GameController {
         e.dataTransfer.setData("text/plain", ingredient);
         e.dataTransfer.effectAllowed = "copy";
         card.classList.add("dragging");
+        const side = e.clientX < window.innerWidth / 2 ? "left" : "right";
+        this.setHandCursor(side);
+        this.playTone("drag");
       });
-      card.addEventListener("dragend", () => card.classList.remove("dragging"));
+      card.addEventListener("dragend", () => {
+        card.classList.remove("dragging");
+        this.clearHandCursor();
+      });
     });
 
     if (this.dom.dropTarget) {
@@ -895,13 +1012,11 @@ class GameController {
         e.preventDefault();
         this.dom.dropTarget.classList.remove("drag-over");
         const ingredient = e.dataTransfer.getData("text/plain");
-        if (ingredient) this.addIngredient(ingredient);
-        this.dom.dropTarget.addEventListener(
-          "animationend",
-          () => this.dom.dropTarget.classList.remove("absorb"),
-          { once: true }
-        );
-        this.dom.dropTarget.classList.add("absorb");
+        if (ingredient) {
+          this.playTone("drop");
+          this.addIngredient(ingredient);
+        }
+        this.clearHandCursor();
       });
     }
 
@@ -929,6 +1044,7 @@ class GameController {
     if (this.dom.skipVideoBtns?.length) {
       this.dom.skipVideoBtns.forEach((btn) =>
         btn.addEventListener("click", () => {
+          this.playTone("uiTap");
           if (this.dom.castingVideo) {
             this.dom.castingVideo.pause();
             this.dom.castingVideo.currentTime = this.dom.castingVideo.duration;
@@ -956,6 +1072,7 @@ class GameController {
     // 6. 永久 UI 按鈕
     this.dom.volumeBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
+        this.playTone("uiTap");
         this.state.isMuted = !this.state.isMuted;
         this.dom.volumeBtns.forEach((el) => {
           el.classList.toggle("muted", this.state.isMuted);
@@ -972,12 +1089,18 @@ class GameController {
         if (this.dom.bgmAudio) {
           this.dom.bgmAudio.muted = this.state.isMuted;
         }
+        if (this.audioCtx) {
+          this.state.isMuted ? this.audioCtx.suspend() : this.audioCtx.resume();
+        }
       });
     });
 
     // 7. 新手導覽按鈕 (僅點擊時啟動)
     this.dom.guideBtns.forEach((btn) =>
-      btn.addEventListener("click", () => this.Guide.start(this.state.currentScreenId))
+      btn.addEventListener("click", () => {
+        this.playTone("uiTap");
+        this.Guide.start(this.state.currentScreenId);
+      })
     );
 
     // 8. 設置按鈕
