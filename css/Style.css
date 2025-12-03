@@ -65,13 +65,14 @@ body {
   background-position: center;
   color: var(--color-text-light);
   min-height: 100vh;
-  overflow: hidden; /* 確保沒有滾動條 */
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
   touch-action: manipulation;
-  overscroll-behavior: none;
+  overscroll-behavior: contain;
 }
 
 body.scene-kitchen {
@@ -129,12 +130,12 @@ body.hand-cursor-right {
   max-width: 1400px;
   min-height: 100vh;
   position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
+  margin: 0 auto;
   border: none;
   box-shadow: none;
   background-color: transparent;
-  z-index: 1;
+  z-index: var(--z-index-mid);
 }
 
 .screen {
@@ -144,7 +145,7 @@ body.hand-cursor-right {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: transparent;
   transition: opacity var(--transition-medium),
     transform var(--transition-medium);
@@ -973,7 +974,7 @@ body.hand-cursor-right {
   align-items: flex-end;
   padding: 18px 26px;
   pointer-events: none;
-  z-index: 6;
+  z-index: var(--z-index-high);
   transform: translateY(2%);
   transition: opacity 0.45s ease, transform 0.9s cubic-bezier(0.34, 1.4, 0.42, 1);
 }
