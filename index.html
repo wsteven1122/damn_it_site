@@ -61,57 +61,6 @@
       <div class="guide-click-prompt">點擊任意處或按 [下一步] 繼續</div>
     </div>
 
-    <div
-      id="result-modal"
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
-      <div class="modal-content">
-        <button class="close-btn" aria-label="關閉結果視窗">&times;</button>
-        <header class="modal-header-container">
-          <h3 id="modal-title" class="modal-header">煉蛋結果：未知米特蛋</h3>
-        </header>
-        <div class="result-display">
-          <img
-            id="result-image"
-            src="./img/待機蛋 (去背) 1.png"
-            alt="煉蛋結果圖像"
-            class="result-egg-img"
-          />
-          <div
-            id="result-lottie-effect"
-            class="result-lottie-effect"
-            aria-hidden="true"
-          ></div>
-        </div>
-        <div class="result-description-container">
-          <p id="result-text" class="modal-description">
-            煉蛋結果的詳細說明文字。
-          </p>
-          <p class="result-metadata">
-            編號: <span id="result-number">???</span> | 稀有度:
-            <span id="result-rarity">E</span>
-          </p>
-        </div>
-        <footer class="modal-footer">
-          <button
-            class="btn btn-primary next-screen-btn"
-            data-target="screen-1"
-            aria-controls="screen-1"
-          >
-            再次挑戰 (RETRY)
-          </button>
-          <button id="save-to-gallery-btn" class="btn btn-secondary">
-            儲存到圖鑑
-          </button>
-        </footer>
-      </div>
-      <div class="modal-decoration-top"></div>
-      <div class="modal-decoration-bottom"></div>
-    </div>
-
     <div id="curtain-transition" aria-hidden="true">
       <div class="curtain curtain-left"></div>
       <div class="curtain curtain-right"></div>
@@ -607,10 +556,10 @@
       </section>
 
       
-      <!-- 結果：彈窗以外的備用視圖 -->
+      <!-- 結果：全頁展示 -->
       <section
         id="screen-7"
-        class="screen"
+        class="screen result-screen"
         data-index="7"
         aria-label="煉蛋結果"
       >
@@ -626,16 +575,55 @@
             class="hand-image right"
           />
         </div>
-        <div class="result-shell">
-          <h2>煉蛋結果</h2>
-          <p>結果已同步到上方彈窗。</p>
-          <button
-            class="btn btn-primary next-screen-btn"
-            data-target="screen-1"
-            aria-controls="screen-1"
-          >
-            返回首頁
-          </button>
+
+        <div class="result-stage">
+          <div class="result-stars" aria-hidden="true">
+            <span class="star s1"></span>
+            <span class="star s2"></span>
+            <span class="star s3"></span>
+            <span class="star s4"></span>
+            <span class="star s5"></span>
+          </div>
+
+          <div class="result-plate">
+            <div class="result-spotlight"></div>
+            <img
+              id="result-main-image"
+              src="./img/待機蛋 (去背) 1.png"
+              alt="煉蛋成果"
+              class="result-egg"
+            />
+            <div class="result-shadow"></div>
+          </div>
+
+          <div class="result-copy">
+            <p class="result-kicker">煉蛋完成</p>
+            <h2 id="result-title">未知米特蛋</h2>
+            <p id="result-description" class="result-description">
+              你的創作完成了，看看這顆米特蛋展現出來的形態吧！
+            </p>
+            <p class="result-rarity">稀有度：<span id="result-rarity">R</span></p>
+          </div>
+
+          <div class="result-actions">
+            <button
+              id="result-retry"
+              class="menu-image-btn next-screen-btn"
+              data-target="screen-1"
+            >
+              <img src="./img/Secondary Botton_Try Again_Default.png" alt="再次挑戰" />
+            </button>
+            <button
+              id="result-gallery"
+              class="menu-image-btn next-screen-btn"
+              data-target="screen-gallery"
+            >
+              <img
+                src="./img/Secondary Botton_Picture Book_Default.png"
+                alt="查看圖鑑"
+              />
+            </button>
+          </div>
         </div>
       </section>
 
@@ -666,7 +654,7 @@
       <!-- 圖鑑：成果瀏覽 -->
       <section
         id="screen-gallery"
-        class="screen"
+        class="screen gallery-screen"
         data-index="9"
         aria-label="成果圖鑑"
       >

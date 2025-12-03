@@ -141,7 +141,7 @@ body.hand-cursor-right {
 .screen {
   position: absolute;
   inset: 0;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-l) var(--spacing-xl);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -153,8 +153,26 @@ body.hand-cursor-right {
   pointer-events: none;
   transform: translate3d(0, 8%, 0) scale(1.01);
   z-index: var(--z-index-low);
-  overflow-y: auto;
+  overflow: hidden;
+  min-height: 100vh;
+  max-height: 100vh;
   will-change: transform, opacity;
+  gap: var(--spacing-l);
+}
+
+.screen .screen-body {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gallery-screen {
+  overflow-y: auto;
+  justify-content: flex-start;
 }
 
 .screen.active {
@@ -805,6 +823,167 @@ body.hand-cursor-right {
   margin-top: var(--spacing-s);
 }
 
+/* 結果頁 */
+.result-screen {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.result-stage {
+  position: relative;
+  width: min(1100px, 96vw);
+  height: min(680px, 88vh);
+  padding: 32px 26px 16px;
+  border-radius: 32px;
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0.16)
+    ),
+    radial-gradient(circle at 40% 20%, rgba(255, 232, 162, 0.4), transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(255, 157, 60, 0.25), transparent 42%);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.16),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.2);
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.result-stars .star {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #fffcba;
+  border-radius: 50% 50% 45% 55%;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 186, 0.7));
+  animation: twinkle 2.8s ease-in-out infinite;
+}
+
+.result-stars .s1 {
+  top: 8%;
+  left: 8%;
+}
+.result-stars .s2 {
+  top: 16%;
+  right: 12%;
+  animation-delay: 0.4s;
+}
+.result-stars .s3 {
+  bottom: 18%;
+  left: 10%;
+  animation-delay: 0.8s;
+}
+.result-stars .s4 {
+  bottom: 10%;
+  right: 8%;
+  animation-delay: 1.2s;
+}
+.result-stars .s5 {
+  top: 32%;
+  left: 46%;
+  animation-delay: 1.6s;
+}
+
+.result-plate {
+  position: relative;
+  width: min(520px, 72vw);
+  height: min(420px, 58vh);
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.18));
+}
+
+.result-spotlight {
+  position: absolute;
+  inset: 8% 4% 10% 4%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.96),
+    rgba(255, 255, 255, 0.1)
+  );
+  border-radius: 50% 50% 48% 52%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.result-egg {
+  position: relative;
+  width: 70%;
+  max-width: 360px;
+  object-fit: contain;
+  z-index: 2;
+  animation: wobble 2.8s ease-in-out infinite;
+}
+
+.result-shadow {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  width: 64%;
+  height: 16%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.18), transparent 65%);
+  filter: blur(12px);
+  z-index: 1;
+}
+
+.result-copy {
+  max-width: 680px;
+  margin: 0 auto;
+  color: #3c2600;
+}
+
+.result-kicker {
+  font-weight: 800;
+  color: #ff7a12;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.result-copy h2 {
+  color: #ff4f6e;
+  font-size: clamp(28px, 4vw, 42px);
+  margin-bottom: 6px;
+}
+
+.result-description {
+  color: #3c2600;
+  font-weight: 600;
+}
+
+.result-rarity {
+  margin-top: 8px;
+  font-weight: 800;
+  color: #ff9d3c;
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 6px;
+}
+
+.result-actions .menu-image-btn img {
+  width: clamp(160px, 28vw, 220px);
+  height: auto;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(0.8) rotate(4deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.12) rotate(-6deg);
+    opacity: 1;
+  }
+}
+
 .modal-footer {
   display: flex;
   justify-content: space-around;
@@ -980,8 +1159,8 @@ body.hand-cursor-right {
 }
 
 .hand-overlay .hand-image {
-  width: clamp(200px, 28vw, 420px);
-  max-height: 38vh;
+  width: clamp(180px, 24vw, 360px);
+  max-height: 32vh;
   object-fit: contain;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.38));
   opacity: 0.95;
@@ -2533,11 +2712,13 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 .story-stack {
   width: min(1000px, 96%);
   margin: 10px auto 0;
-  padding: 6px 0 140px;
+  padding: 6px 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  max-height: 74vh;
+  overflow: hidden;
 }
 
 .messages {
@@ -2547,8 +2728,8 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   align-items: center;
   justify-content: flex-start;
   gap: 16px;
-  overflow: visible;
-  max-height: none;
+  overflow-y: auto;
+  max-height: 68vh;
   padding: 4px 18px 0;
   color: #5a4100;
 }
@@ -2894,15 +3075,14 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .workbench-body {
   position: relative;
-  min-height: 760px;
+  min-height: clamp(520px, 72vh, 760px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 30px;
-  overflow: visible;
-  padding-bottom: 200px;
-  padding-top: 20px;
+  gap: 26px;
+  overflow: hidden;
+  padding: 20px 18px 120px;
   background: url("../img/廚房動圖.png") center/cover no-repeat;
   box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.22);
   border-radius: 24px;

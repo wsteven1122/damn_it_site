@@ -187,10 +187,10 @@ class GameController {
 
       castingVideo: document.getElementById("casting-video"),
       nextFromVideoBtn: document.getElementById("next-from-video-btn"),
-
-      resultModal: document.getElementById("result-modal"),
-      modalCloseBtn: document.querySelector("#result-modal .close-btn"),
-      saveToGalleryBtn: document.getElementById("save-to-gallery-btn"),
+      resultTitle: document.getElementById("result-title"),
+      resultDescription: document.getElementById("result-description"),
+      resultImage: document.getElementById("result-main-image"),
+      resultRarity: document.getElementById("result-rarity"),
 
       alertBox: document.getElementById("alert-message"),
       alertText: document.getElementById("alert-text"),
@@ -209,9 +209,6 @@ class GameController {
       tipText: document.getElementById("tip-text"),
       tipNextBtn: document.getElementById("tip-next-btn"),
 
-      modalTitle: document.getElementById("modal-title"),
-      resultText: document.getElementById("result-text"),
-      resultImage: document.getElementById("result-image"),
       selectionStatus: document.getElementById("current-selection-count"),
       selectionSlots: document.querySelectorAll(".selection-slot"),
       castSpellBtn: document.getElementById("cast-spell-btn"),
@@ -295,8 +292,6 @@ class GameController {
     if (this.state.isTransitioning) return;
 
     this.state.isTransitioning = true;
-    this.dom.resultModal.classList.remove("active");
-    this.dom.resultModal.style.display = "none";
 
     try {
       await this.playCurtainTransition(() => this.switchScreens(nextScreenId));
@@ -311,10 +306,10 @@ class GameController {
         // 影片播放流程
         await this.handleVideoTransition();
       } else if (nextScreenId === "screen-7") {
-        // 結果生成與彈窗
+        // 結果生成頁
         this.generateResult();
-        this.dom.resultModal.classList.add("active");
-        this.dom.resultModal.style.display = "flex";
+        this.renderResultPage();
+        this.playSfxGroup("result");
       }
 
       // 額外處理：回到首頁時重置遊戲
@@ -342,6 +337,8 @@ class GameController {
       const shakeMs = CONFIG.CURTAIN_SHAKE_MS;
       const openMs = CONFIG.CURTAIN_OPEN_MS;
       const totalDuration = closeMs + shakeMs + openMs;
+
+      this.playSfxGroup("transition");
 
       layer.style.setProperty(
         "--curtain-close",
@@ -481,6 +478,18 @@ class GameController {
 
     this.audioCtx = new AudioContext();
     this.sfxProfile = CONFIG.SFX_PROFILE;
+    this.sfxSets = {
+      transition: [
+        () => this.playSweep(680, 160, 0.6, 0.3),
+        () => this.playBubbleChord([620, 520, 420], 0.08, 0.22),
+        () => this.playSweep(180, 520, 0.55, 0.26, "triangle"),
+      ],
+      result: [
+        () => this.playBurst([320, 540, 760], 0.06, 0.4),
+        () => this.playSweep(420, 120, 0.5, 0.34, "sine", true),
+        () => this.playBurst([260, 420, 260, 820], 0.05, 0.36),
+      ],
+    };
 
     const unlock = () => {
       this.audioCtx.resume();
@@ -509,6 +518,70 @@ class GameController {
     osc.connect(gain).connect(this.audioCtx.destination);
     osc.start(now);
     osc.stop(now + duration);
+  }
+
+  playSweep(startFreq, endFreq, duration = 0.6, volume = 0.22, type = "sine", reverse = false) {
+    if (!this.audioCtx || this.state.isMuted) return;
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+    const now = this.audioCtx.currentTime;
+
+    osc.type = type;
+    gain.gain.setValueAtTime(volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    if (reverse) {
+      osc.frequency.setValueAtTime(endFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(startFreq, now + duration);
+    } else {
+      osc.frequency.setValueAtTime(startFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+    }
+
+    osc.connect(gain).connect(this.audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + duration);
+  }
+
+  playBurst(frequencies = [], spacing = 0.06, volume = 0.28) {
+    if (!this.audioCtx || this.state.isMuted) return;
+    const now = this.audioCtx.currentTime;
+    frequencies.forEach((freq, index) => {
+      const start = now + index * spacing;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(volume, start);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.2);
+      osc.connect(gain).connect(this.audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + 0.22);
+    });
+  }
+
+  playBubbleChord(frequencies = [], spacing = 0.1, volume = 0.22) {
+    if (!this.audioCtx || this.state.isMuted) return;
+    const now = this.audioCtx.currentTime;
+    frequencies.forEach((freq, index) => {
+      const start = now + index * spacing;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(volume, start);
+      gain.gain.linearRampToValueAtTime(0.0001, start + 0.4);
+      osc.connect(gain).connect(this.audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + 0.42);
+    });
+  }
+
+  playSfxGroup(groupName) {
+    if (!this.sfxSets?.[groupName]) return;
+    const pool = this.sfxSets[groupName];
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    pick?.();
   }
 
   // ---------------------- 食材選擇邏輯 ----------------------
@@ -728,10 +801,17 @@ class GameController {
       rarity = "E";
     }
 
-    this.dom.modalTitle.textContent = title;
-    this.dom.resultText.textContent = text;
-    this.dom.resultImage.src = image;
-    document.getElementById("result-rarity").textContent = rarity;
+    this.state.resultPayload = { title, text, image, rarity };
+  }
+
+  renderResultPage() {
+    const payload = this.state.resultPayload;
+    if (!payload) return;
+    if (this.dom.resultTitle) this.dom.resultTitle.textContent = payload.title;
+    if (this.dom.resultDescription)
+      this.dom.resultDescription.textContent = payload.text;
+    if (this.dom.resultImage) this.dom.resultImage.src = payload.image;
+    if (this.dom.resultRarity) this.dom.resultRarity.textContent = payload.rarity;
   }
 
   // ---------------------- 模塊加載 ----------------------
@@ -1054,22 +1134,7 @@ class GameController {
       );
     }
 
-    // 5. Modal 關閉/重置
-    const resetHandler = () => {
-      this.dom.resultModal.classList.remove("active");
-      this.dom.resultModal.style.display = "none";
-      this.performTransition("screen-1");
-    };
-
-    this.dom.modalCloseBtn.addEventListener("click", resetHandler);
-    this.dom.saveToGalleryBtn.addEventListener("click", () => {
-      this.dom.resultModal.classList.remove("active");
-      this.dom.resultModal.style.display = "none";
-      this.performTransition("screen-gallery");
-      this.showAlert("success", "結果已儲存到圖鑑！");
-    });
-
-    // 6. 永久 UI 按鈕
+    // 5. 永久 UI 按鈕
     this.dom.volumeBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
         this.playTone("uiTap");
@@ -1095,7 +1160,7 @@ class GameController {
       });
     });
 
-    // 7. 新手導覽按鈕 (僅點擊時啟動)
+    // 6. 新手導覽按鈕 (僅點擊時啟動)
     this.dom.guideBtns.forEach((btn) =>
       btn.addEventListener("click", () => {
         this.playTone("uiTap");
@@ -1103,7 +1168,7 @@ class GameController {
       })
     );
 
-    // 8. 設置按鈕
+    // 7. 設置按鈕
     this.dom.settingsBtns.forEach((btn) =>
       btn.addEventListener("click", (e) => {
         if (!e.currentTarget.dataset.target) return;
@@ -1111,7 +1176,7 @@ class GameController {
       })
     );
 
-    // 9. 施法按鈕 (Cast Spell)
+    // 8. 施法按鈕 (Cast Spell)
     if (this.dom.castSpellBtn) {
       this.dom.castSpellBtn.addEventListener("click", () => {
         if (!this.dom.castSpellBtn.disabled) {
