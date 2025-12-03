@@ -1,0 +1,15 @@
+<svg width="640" height="640" viewBox="0 0 640 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="yolk" x1="160" y1="200" x2="520" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.68" stop-color="#fffbe6"/>
+      <stop offset="1" stop-color="#ffd84a"/>
+    </linearGradient>
+    <filter id="drop" x="0" y="0" width="640" height="640" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <path filter="url(#drop)" fill="url(#yolk)" d="M144 292c-28-64 18-150 94-172 56-16 114 4 172 26 64 24 132 57 140 108 7 45-48 86-90 118-44 33-71 73-116 83-48 10-110-11-154-50-45-38-18-78-46-113z"/>
+  <path fill="url(#yolk)" opacity="0.86" d="M216 458c-10-18 22-32 48-26 22 5 36 26 26 38-12 14-60 6-74-12z"/>
+  <path fill="url(#yolk)" opacity="0.82" d="M154 196c-18-10 8-40 28-34 13 4 12 27 2 36-9 8-23 8-30-2z"/>
+</svg>
