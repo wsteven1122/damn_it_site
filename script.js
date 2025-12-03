@@ -4,6 +4,9 @@
 
 const CONFIG = {
   TRANSITION_DURATION: 900,
+  CURTAIN_CLOSE_MS: 420,
+  CURTAIN_SHAKE_MS: 200,
+  CURTAIN_OPEN_MS: 1100,
   MAX_INGREDIENTS: 3,
   // 故事訊息 (Screen 2)
   STORY_MESSAGES: [
@@ -303,23 +306,41 @@ class GameController {
         return;
       }
 
+      const closeMs = CONFIG.CURTAIN_CLOSE_MS;
+      const shakeMs = CONFIG.CURTAIN_SHAKE_MS;
+      const openMs = CONFIG.CURTAIN_OPEN_MS;
+      const totalDuration = closeMs + shakeMs + openMs;
+
+      layer.style.setProperty(
+        "--curtain-close",
+        `${closeMs}ms cubic-bezier(0.7, 0.05, 0.95, 0.25)`
+      );
+      layer.style.setProperty(
+        "--curtain-open",
+        `${openMs}ms cubic-bezier(0.18, 0.78, 0.2, 1)`
+      );
+
       layer.setAttribute("aria-hidden", "false");
       layer.classList.add("active");
-      layer.classList.remove("open");
+      layer.classList.remove("open", "shudder");
       void layer.offsetWidth;
       const midpointTimer = setTimeout(() => {
         midpointCallback?.();
+        layer.classList.add("shudder");
+      }, closeMs);
+
+      const openTimer = setTimeout(() => {
         layer.classList.add("open");
-      }, CONFIG.TRANSITION_DURATION * 0.45);
+      }, closeMs + shakeMs);
 
       const cleanupTimer = setTimeout(() => {
-        layer.classList.remove("active");
+        layer.classList.remove("active", "shudder");
         layer.classList.add("open");
         layer.setAttribute("aria-hidden", "true");
         resolve();
-      }, CONFIG.TRANSITION_DURATION);
+      }, totalDuration);
 
-      this.state.transitionTimers = [midpointTimer, cleanupTimer];
+      this.state.transitionTimers = [midpointTimer, openTimer, cleanupTimer];
     });
   }
 
@@ -549,28 +570,28 @@ class GameController {
       title = "💥 究極爆臭：毀滅之蛋";
       text =
         "榴槤、TNT、魷魚完美結合，獲得了一顆可以毀滅世界的臭蛋。稀有度：SSSR";
-      image = "assets/results/egg_ultimate.png";
+      image = "./img/核武器.png";
       rarity = "SSSR";
     } else if (has香菜 && has榴槤 && has檸檬) {
       title = "💀 生化武器：廣志之襪";
       text = "你複製了野原廣志的襪子！這顆蛋散發出讓魔法界聞風喪膽的氣味。";
-      image = "assets/results/egg_chemical.png";
+      image = "./img/生化武器.png";
       rarity = "SSR";
     } else if (count >= 2 && hasTNT && has隕石) {
       title = "💣 地雷系：盧媽媽炸彈";
       text = "這顆蛋看起來隨時會爆炸，充滿了危險的能量，千萬不要搖晃它。";
-      image = "assets/results/egg_tnt.png";
+      image = "./img/地雷系蛋.png";
       rarity = "SR";
     } else if (count >= 1) {
       title = "🥚 普通成功：經典煉蛋";
       text =
         "你成功地用奇異的食材煉出了一顆還能吃的經典蛋。雖然無趣，但安全可靠。";
-      image = "assets/results/egg_001.png";
+      image = "./img/吃飯蛋 1.png";
       rarity = "R";
     } else {
       title = "💥 失敗結局：爆裂米特渣";
       text = "食材太少，煉蛋爐無法啟動。您得到了一堆無法形容的殘渣。";
-      image = "assets/results/egg_fail.png";
+      image = "./img/流浪漢.png";
       rarity = "E";
     }
 
