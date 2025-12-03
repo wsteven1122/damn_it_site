@@ -963,7 +963,6 @@ p {
 }
 
 .hand-overlay .hand-image.right {
-  transform: scaleX(-1);
   animation-name: hand-sway-right;
 }
 
@@ -1005,13 +1004,13 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 @keyframes hand-sway-right {
   0% {
-    transform: scaleX(-1) translate3d(6px, 2px, 0) rotate(1.4deg) scale(1);
+    transform: translate3d(6px, 2px, 0) rotate(2deg) scale(1);
   }
   50% {
-    transform: scaleX(-1) translate3d(-6px, -6px, 0) rotate(-1.4deg) scale(1.02);
+    transform: translate3d(-6px, -6px, 0) rotate(-2deg) scale(1.02);
   }
   100% {
-    transform: scaleX(-1) translate3d(8px, 6px, 0) rotate(0.4deg) scale(1.01);
+    transform: translate3d(8px, 6px, 0) rotate(0.5deg) scale(1.01);
   }
 }
 

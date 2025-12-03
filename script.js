@@ -448,25 +448,34 @@ class GameController {
     }
   }
 
-  toggleIngredient(ingredient) {
+  addIngredient(ingredient) {
     const isSelected = this.state.selectedIngredients.has(ingredient);
     const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
 
     if (isSelected) {
-      this.state.selectedIngredients.delete(ingredient);
-      this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
-    } else {
-      if (isFull) {
-        this.showAlert(
-          "error",
-          `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
-        );
-        return;
-      }
-      this.state.selectedIngredients.add(ingredient);
-      this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
+      this.showAlert("info", `${ingredient} 已在煉蛋爐中，換個食材試試。`);
+      return;
     }
 
+    if (isFull) {
+      this.showAlert(
+        "error",
+        `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
+      );
+      return;
+    }
+
+    this.state.selectedIngredients.add(ingredient);
+    this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
+    this.updateIngredientStatus();
+  }
+
+  removeIngredient(ingredient, { silent = false } = {}) {
+    if (!this.state.selectedIngredients.has(ingredient)) return;
+    this.state.selectedIngredients.delete(ingredient);
+    if (!silent) {
+      this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
+    }
     this.updateIngredientStatus();
   }
 
@@ -821,9 +830,9 @@ class GameController {
     // 3. 食材選擇/拖曳
     this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
-      card.addEventListener("click", () => this.toggleIngredient(ingredient));
       card.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", ingredient);
+        e.dataTransfer.effectAllowed = "copy";
         card.classList.add("dragging");
       });
       card.addEventListener("dragend", () => card.classList.remove("dragging"));
@@ -841,10 +850,13 @@ class GameController {
         e.preventDefault();
         this.dom.dropTarget.classList.remove("drag-over");
         const ingredient = e.dataTransfer.getData("text/plain");
-        if (ingredient) this.toggleIngredient(ingredient);
+        if (ingredient) this.addIngredient(ingredient);
+        this.dom.dropTarget.addEventListener(
+          "animationend",
+          () => this.dom.dropTarget.classList.remove("absorb"),
+          { once: true }
+        );
         this.dom.dropTarget.classList.add("absorb");
-        void this.dom.dropTarget.offsetWidth;
-        setTimeout(() => this.dom.dropTarget.classList.remove("absorb"), 900);
       });
     }
 
@@ -857,11 +869,7 @@ class GameController {
         clearBtn.addEventListener("click", (event) => {
           event.stopPropagation();
           const ingredient = slot.dataset.ingredient;
-          if (ingredient && this.state.selectedIngredients.has(ingredient)) {
-            this.state.selectedIngredients.delete(ingredient);
-            this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
-            this.updateIngredientStatus();
-          }
+          if (ingredient) this.removeIngredient(ingredient);
         });
       });
     }
