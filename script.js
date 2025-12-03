@@ -488,13 +488,18 @@ class GameController {
           setTimeout(() => {
             this.dom.spinnerOverlay.style.opacity = 0;
             this.dom.spinnerOverlay.style.display = "none";
-          }, 400);
+          }, 320);
         }
       }
     } catch (error) {
       console.warn("影片自動播放被阻止:", error);
       this.showAlert("info", "請點擊影片開始播放或按 [查看結果] 強制繼續");
-      this.dom.nextFromVideoBtn.classList.remove("hidden");
+      this.dom.nextFromVideoBtn.classList.remove("locked");
+      this.dom.nextFromVideoBtn.disabled = false;
+      if (this.dom.spinnerOverlay) {
+        this.dom.spinnerOverlay.style.opacity = 0;
+        this.dom.spinnerOverlay.style.display = "none";
+      }
       return Promise.resolve();
     }
   }
@@ -502,6 +507,7 @@ class GameController {
   handleVideoEnd() {
     if (this.dom.castingVideo) {
       this.dom.castingVideo.style.opacity = 0.5; // 播放完畢後變暗
+      this.dom.castingVideo.pause();
     }
     this.dom.transformationSpace?.classList.remove("casting-active");
     this.dom.transformationSpace?.classList.add("casting-finished");
@@ -862,6 +868,10 @@ class GameController {
 
     if (this.dom.skipVideoBtn) {
       this.dom.skipVideoBtn.addEventListener("click", () => {
+        if (this.dom.castingVideo) {
+          this.dom.castingVideo.pause();
+          this.dom.castingVideo.currentTime = this.dom.castingVideo.duration;
+        }
         this.handleVideoEnd();
       });
     }
