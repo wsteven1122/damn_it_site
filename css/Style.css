@@ -35,8 +35,8 @@
 
   /* 過渡效果 */
   --transition-fast: 0.2s ease-out;
-  --transition-medium: 0.82s cubic-bezier(0.33, 1, 0.68, 1);
-  --transition-slow: 1.15s cubic-bezier(0.25, 0.8, 0.35, 1);
+  --transition-medium: 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  --transition-slow: 1.2s cubic-bezier(0.2, 0.75, 0.35, 1);
   --wave-duration: 0.95s;
   --wave-ease: cubic-bezier(0.22, 0.72, 0.32, 1);
 
@@ -142,7 +142,7 @@ p {
     transform var(--transition-medium);
   opacity: 0;
   pointer-events: none;
-  transform: translate3d(0, 12%, 0) scale(1.02);
+  transform: translate3d(0, 8%, 0) scale(1.01);
   z-index: var(--z-index-low);
   overflow-y: auto;
   will-change: transform, opacity;
@@ -157,13 +157,13 @@ p {
 
 .screen.exiting {
   opacity: 0;
-  transform: translate3d(0, -12%, 0) scale(0.96);
+  transform: translate3d(0, -8%, 0) scale(0.97);
   pointer-events: none;
 }
 
 .screen.incoming {
   opacity: 0;
-  transform: translate3d(0, 14%, 0) scale(1.01);
+  transform: translate3d(0, 12%, 0) scale(1.008);
 }
 
 .screen.wave-enter {
@@ -1475,39 +1475,49 @@ p {
    ========================================================================= */
 
 #screen-5 {
-  justify-content: space-between;
+  position: relative;
+  justify-content: center;
+  align-items: stretch;
+  padding: 0;
+  background: #000;
+  overflow: hidden;
 }
 
 .casting-header {
-  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-s) var(--spacing-m);
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2));
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--spacing-m) var(--spacing-xl);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.65), transparent 100%);
+  border: none;
+  z-index: 6;
+  backdrop-filter: blur(6px);
 }
 
 .casting-badge {
-  padding: 8px 14px;
-  background: rgba(255, 157, 60, 0.2);
-  border: 1px solid rgba(255, 157, 60, 0.6);
-  border-radius: 14px;
+  padding: 10px 16px;
+  background: rgba(255, 157, 60, 0.32);
+  border: 1px solid rgba(255, 157, 60, 0.7);
+  border-radius: 18px;
   color: #ffcf86;
   font-weight: 800;
   letter-spacing: 1px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
 }
 
 .transformation-space {
   position: relative;
   width: 100%;
-  min-height: calc(100vh - 140px);
-  border-radius: 20px;
+  min-height: 100vh;
+  border-radius: 0;
   overflow: hidden;
   padding: 0;
   background: #000;
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6), 0 20px 36px rgba(0, 0, 0, 0.32);
+  box-shadow: none;
   isolation: isolate;
 }
 
@@ -1526,22 +1536,24 @@ p {
   position: absolute;
   inset: 0;
   background: url("../img/廚房動圖.png") center/cover no-repeat;
-  opacity: 0.15;
-  filter: blur(1px) brightness(0.9);
+  opacity: 0.24;
+  filter: blur(0px) brightness(0.95);
+  transform: scale(1.04);
 }
 
 .dark-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.88));
   mix-blend-mode: multiply;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.9;
+  transition: opacity 0.6s ease;
 }
 
 .transformation-space.casting-active .dark-veil {
-  animation: pulse 1.6s ease-in-out infinite;
-  opacity: 0.95;
+  animation: pulse 1.8s ease-in-out infinite;
+  opacity: 0.96;
 }
 
 .transformation-space.casting-finished .dark-veil {
@@ -1634,34 +1646,35 @@ p {
   inset: 0;
   display: grid;
   place-items: center;
+  z-index: 2;
 }
 
 .pulse-glow {
   position: absolute;
-  inset: 8%;
-  border-radius: 26px;
-  background: radial-gradient(circle, rgba(255, 157, 60, 0.18), transparent 62%);
-  filter: blur(14px);
-  animation: pulse 2.2s ease-in-out infinite;
+  inset: 5%;
+  border-radius: 32px;
+  background: radial-gradient(circle, rgba(255, 157, 60, 0.24), transparent 70%);
+  filter: blur(20px);
+  animation: pulse 2.4s ease-in-out infinite;
 }
 
 .video-shell {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   border-radius: 0;
   overflow: hidden;
   box-shadow: none;
   background: #000;
-  z-index: 3;
+  z-index: 1;
 }
 
 #casting-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.5s ease, transform 1.2s ease;
-  opacity: 0.92;
+  transition: opacity 0.7s ease, transform 1.25s ease;
+  opacity: 0.96;
+  filter: saturate(1.05);
 }
 
 .transformation-space.casting-active #casting-video {
@@ -1692,6 +1705,8 @@ p {
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
 
 .loading-spinner {
@@ -1719,7 +1734,16 @@ p {
 }
 
 .casting-footer {
-  padding-top: var(--spacing-m);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--spacing-m) var(--spacing-xl) var(--spacing-xl);
+  display: flex;
+  justify-content: flex-end;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.78), transparent 70%);
+  backdrop-filter: blur(6px);
+  z-index: 6;
 }
 
 /* =========================================================================
