@@ -1,0 +1,25 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="White egg splatter">
+  <defs>
+    <radialGradient id="yolkGlow" cx="72%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#fff9c4" stop-opacity="0.95" />
+      <stop offset="42%" stop-color="#ffe86a" stop-opacity="0.92" />
+      <stop offset="78%" stop-color="#ffd84a" stop-opacity="0.74" />
+      <stop offset="100%" stop-color="#fffef7" stop-opacity="0.6" />
+    </radialGradient>
+    <filter id="gooShadow" x="-8%" y="-10%" width="120%" height="128%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000000" flood-opacity="0.28" />
+    </filter>
+  </defs>
+  <g filter="url(#gooShadow)">
+    <path fill="#fffef7" d="M262 520c-46-96-7-214 96-272 76-44 181-58 278-36 96 22 196 78 231 156 28 64-11 130-64 184-52 53-118 95-190 114-84 22-184 10-254-38-70-50-40-114-97-108z"/>
+    <path fill="#fffef7" d="M392 704c-18-30 46-68 96-64 44 4 84 44 68 74-18 32-146 20-164-10z"/>
+    <path fill="#fffef7" d="M254 322c-26-18 12-78 52-74 30 3 42 46 16 68-20 18-48 20-68-6z"/>
+    <path fill="#fffef7" d="M566 708c-6-42 86-60 126-22 22 20 10 50-22 62-46 16-98-6-104-40z"/>
+    <path fill="#fffef7" d="M686 548c-10-38 44-62 90-48 28 8 54 36 46 58-12 36-122 26-136-10z"/>
+    <path fill="#fffef7" d="M196 586c-42 4-90 18-116 54-22 32 12 60 66 48 52-10 108-52 102-74-6-20-28-30-52-28z"/>
+    <path fill="#fffef7" d="M878 452c12-42 64-68 136-68 52 0 80 28 64 58-16 28-76 48-130 44-42-4-74-16-70-34z"/>
+    <path fill="url(#yolkGlow)" d="M262 520c-46-96-7-214 96-272 76-44 181-58 278-36 96 22 196 78 231 156 28 64-11 130-64 184-52 53-118 95-190 114-84 22-184 10-254-38-70-50-40-114-97-108z"/>
+    <path fill="url(#yolkGlow)" opacity="0.88" d="M392 704c-18-30 46-68 96-64 44 4 84 44 68 74-18 32-146 20-164-10z"/>
+    <path fill="url(#yolkGlow)" opacity="0.86" d="M254 322c-26-18 12-78 52-74 30 3 42 46 16 68-20 18-48 20-68-6z"/>
+  </g>
+</svg>
