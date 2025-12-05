@@ -66,8 +66,10 @@
       <div class="curtain curtain-right"></div>
     </div>
 
+    <!-- World / Gameplay Layer：可捲動的世界內容 -->
     <div id="world-layer" class="world-layer" role="presentation">
-      <main id="game-container" role="application">
+      <div id="world-scroll" class="world-scroll" aria-label="World Layer">
+        <main id="game-container" role="application">
       <!-- 首頁：精簡的主畫面與起始操作 -->
       <section
         id="screen-1"
@@ -683,7 +685,8 @@
         </div>
         <div class="placeholder-card">設定頁面</div>
       </section>
-      </main>
+        </main>
+      </div>
     </div>
 
     <!-- Screen UI Overlay：在遊戲畫面固定位置的操作層 -->
