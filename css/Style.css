@@ -517,6 +517,21 @@ body.hand-cursor-right {
   outline: none;
 }
 
+.home-secondary-actions {
+  position: absolute;
+  right: -24px;
+  bottom: -32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.home-secondary-actions .menu-image-btn {
+  width: 170px;
+  aspect-ratio: 3 / 1;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.28));
+}
+
 .floating-ingredients {
   position: absolute;
   inset: 0;
@@ -1320,6 +1335,16 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.alchemy-workbench::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../img/廚房動圖.png") center/cover no-repeat;
+  border-radius: 28px;
+  z-index: 0;
+  filter: saturate(1.05);
 }
 
 .kitchen-top-bar {
@@ -2602,10 +2627,11 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .hero-actions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(140px, 180px));
-  gap: 22px;
-  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 8px;
 }
 
 .menu-image-btn {
@@ -3092,10 +3118,30 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   background: transparent;
   box-shadow: none;
   border-radius: 0;
+  z-index: 1;
+}
+
+.workbench-body::after {
+  content: "";
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  max-width: 1600px;
+  height: clamp(220px, 35vh, 320px);
+  background: url("../img/vector-1.svg") center/contain no-repeat;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .kitchen-illustration {
   display: none;
+}
+
+.workbench-body > * {
+  position: relative;
+  z-index: 2;
 }
 
 .main-egg-display {

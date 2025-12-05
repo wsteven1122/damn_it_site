@@ -52,11 +52,6 @@ const CONFIG = {
       text: "這是【指引按鈕】，可以隨時點擊它來重新查看本教學。",
       position: "left",
     },
-    {
-      targetId: "menu-btn",
-      text: "這是【主食選單】，旁邊是【成果圖鑑】，可以稍後再探索。",
-      position: "top",
-    },
   ],
   GUIDE_FLOWS: {
     "screen-1": [
@@ -64,11 +59,6 @@ const CONFIG = {
         targetId: "lottie-start-btn",
         text: "點擊【開始遊戲】啟動冒險，畫面上的雙手也會跟著前往廚房！",
         position: "right",
-      },
-      {
-        targetId: "menu-btn",
-        text: "需要跳轉嗎？【成果圖鑑】和【特別任務】在這裡切換。",
-        position: "top",
       },
       {
         targetId: "global-guide-btn",
