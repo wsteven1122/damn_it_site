@@ -7,7 +7,7 @@ const CONFIG = {
   CURTAIN_CLOSE_MS: 420,
   CURTAIN_SHAKE_MS: 200,
   CURTAIN_OPEN_MS: 1100,
-  MAX_INGREDIENTS: 4,
+  MAX_INGREDIENTS: 3,
   INGREDIENT_IMAGES: {
     榴槤: "./img/榴槤.png",
     魷魚: "./img/魷魚.png",
@@ -91,7 +91,7 @@ const CONFIG = {
       },
       {
         targetId: "ingredient-tray",
-        text: "直接拖曳原始圖片食材到米特蛋上方，最多四種。",
+        text: "直接拖曳原始圖片食材到米特蛋上方，最多三種。",
         position: "top",
       },
       {
@@ -1115,9 +1115,58 @@ class GameController {
       });
     }
 
+    const attachMouseDragFallback = (card, ingredient) => {
+      card.addEventListener("pointerdown", (e) => {
+        if (e.pointerType && e.pointerType !== "mouse") return;
+        if (typeof e.button === "number" && e.button !== 0) return;
+        e.preventDefault();
+
+        const cardRect = card.getBoundingClientRect();
+        const offsetX = cardRect.width / 2;
+        const offsetY = cardRect.height / 2;
+        const ghost = card.cloneNode(true);
+        ghost.classList.add("manual-drag-ghost");
+        ghost.style.width = `${cardRect.width}px`;
+        ghost.style.height = `${cardRect.height}px`;
+        ghost.style.transform = `translate(${e.clientX - offsetX}px, ${e.clientY - offsetY}px)`;
+        document.body.appendChild(ghost);
+
+        const side = e.clientX < window.innerWidth / 2 ? "left" : "right";
+        this.setHandCursor(side);
+        card.classList.add("dragging");
+
+        const handleMove = (moveEvent) => {
+          ghost.style.transform = `translate(${moveEvent.clientX - offsetX}px, ${moveEvent.clientY - offsetY}px)`;
+        };
+
+        const handleUp = (upEvent) => {
+          window.removeEventListener("pointermove", handleMove);
+          ghost.remove();
+          card.classList.remove("dragging");
+          this.clearHandCursor();
+
+          const dropRect = this.dom.dropTarget?.getBoundingClientRect();
+          if (
+            dropRect &&
+            upEvent.clientX >= dropRect.left &&
+            upEvent.clientX <= dropRect.right &&
+            upEvent.clientY >= dropRect.top &&
+            upEvent.clientY <= dropRect.bottom
+          ) {
+            this.playTone("drop");
+            this.addIngredient(ingredient);
+          }
+        };
+
+        window.addEventListener("pointermove", handleMove);
+        window.addEventListener("pointerup", handleUp, { once: true });
+      });
+    };
+
     // 3. 食材選擇/拖曳
     this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
+      attachMouseDragFallback(card, ingredient);
       card.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", ingredient);
         e.dataTransfer.effectAllowed = "copy";
