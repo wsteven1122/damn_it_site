@@ -859,7 +859,9 @@ class GameController {
       self.dom.messagesContainer.appendChild(bubble);
       self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
 
+
       await wait(250);
+      bubble.classList.add("pop-in");
 
       for (let i = 0; i <= text.length; i++) {
         if (aborted) return;
@@ -867,7 +869,6 @@ class GameController {
         await wait(35);
       }
 
-      bubble.classList.add("pop-in");
       self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
     }
 
