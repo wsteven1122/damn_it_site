@@ -2306,6 +2306,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 .guide-overlay.hidden {
   opacity: 0;
   pointer-events: none;
+  z-index: -1;
 }
 
 .guide-focus-ring {
