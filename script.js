@@ -186,7 +186,9 @@ class GameController {
 
       volumeBtns: document.querySelectorAll(".volume-toggle"),
       guideBtns: document.querySelectorAll(".guide-trigger"),
-      settingsBtns: document.querySelectorAll("#settings-btn, [data-target='screen-settings']"),
+      settingsBtns: document.querySelectorAll(
+        "#settings-btn, [data-target='screen-settings']"
+      ),
       spinnerOverlay: document.getElementById("spinner-overlay"),
       skipVideoBtns: document.querySelectorAll(".skip-video-btn"),
 
@@ -246,7 +248,10 @@ class GameController {
       nextScreen.classList.add("incoming");
       nextScreen.classList.add("active", "wave-enter");
       requestAnimationFrame(() => nextScreen.classList.remove("incoming"));
-      setTimeout(() => nextScreen.classList.remove("wave-enter"), CONFIG.TRANSITION_DURATION + 180);
+      setTimeout(
+        () => nextScreen.classList.remove("wave-enter"),
+        CONFIG.TRANSITION_DURATION + 180
+      );
     }
     this.state.currentScreenId = nextScreenId;
     document.body.dataset.activeScreen = nextScreenId;
@@ -288,7 +293,10 @@ class GameController {
 
     if (this.dom.screenOverlay) {
       this.dom.screenOverlay.classList.toggle("active", anyActive);
-      this.dom.screenOverlay.setAttribute("aria-hidden", anyActive ? "false" : "true");
+      this.dom.screenOverlay.setAttribute(
+        "aria-hidden",
+        anyActive ? "false" : "true"
+      );
     }
   }
 
@@ -496,10 +504,10 @@ class GameController {
     if (!starField) return;
 
     const starSprites = [
-      "./img/HomePage.png",
-      "./img/Frame 64.png",
-      "./img/Frame 100.png",
-      "./img/Frame 215.png",
+      "./img/星星黃_画板 1 1.png",
+      "./img/星星黃_画板 1 2.png",
+      "./img/星星黃_画板 1 3.png",
+      "./img/星星黃_画板 1 4.png",
     ];
 
     starField.innerHTML = "";
@@ -573,7 +581,14 @@ class GameController {
     osc.stop(now + duration);
   }
 
-  playSweep(startFreq, endFreq, duration = 0.6, volume = 0.22, type = "sine", reverse = false) {
+  playSweep(
+    startFreq,
+    endFreq,
+    duration = 0.6,
+    volume = 0.22,
+    type = "sine",
+    reverse = false
+  ) {
     if (!this.audioCtx || this.state.isMuted) return;
     const osc = this.audioCtx.createOscillator();
     const gain = this.audioCtx.createGain();
@@ -816,9 +831,13 @@ class GameController {
     const egg = this.dom.dropTarget.querySelector(".egg-graphic");
     if (egg) {
       egg.classList.add("react");
-      egg.addEventListener("animationend", () => egg.classList.remove("react"), {
-        once: true,
-      });
+      egg.addEventListener(
+        "animationend",
+        () => egg.classList.remove("react"),
+        {
+          once: true,
+        }
+      );
     }
 
     this.dom.dropTarget.addEventListener(
@@ -830,14 +849,19 @@ class GameController {
 
   resolveDropZone(x, y) {
     const zones = [];
-    if (this.dom.dropTarget) zones.push({ type: "pot", element: this.dom.dropTarget });
+    if (this.dom.dropTarget)
+      zones.push({ type: "pot", element: this.dom.dropTarget });
     if (this.dom.selectionSlots?.length) {
-      this.dom.selectionSlots.forEach((slot) => zones.push({ type: "slot", element: slot }));
+      this.dom.selectionSlots.forEach((slot) =>
+        zones.push({ type: "slot", element: slot })
+      );
     }
 
     return zones.find(({ element }) => {
       const rect = element.getBoundingClientRect();
-      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+      return (
+        x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+      );
     });
   }
 
@@ -884,10 +908,14 @@ class GameController {
     const cardRect = card.getBoundingClientRect();
     const targetRect = targetElement?.getBoundingClientRect();
     const dx = targetRect
-      ? targetRect.left + targetRect.width / 2 - (cardRect.left + cardRect.width / 2)
+      ? targetRect.left +
+        targetRect.width / 2 -
+        (cardRect.left + cardRect.width / 2)
       : 0;
     const dy = targetRect
-      ? targetRect.top + targetRect.height / 2 - (cardRect.top + cardRect.height / 2)
+      ? targetRect.top +
+        targetRect.height / 2 -
+        (cardRect.top + cardRect.height / 2)
       : 0;
 
     card.style.transition = "transform 0.26s ease, opacity 0.26s ease";
@@ -1034,7 +1062,8 @@ class GameController {
     if (this.dom.resultDescription)
       this.dom.resultDescription.textContent = payload.text;
     if (this.dom.resultImage) this.dom.resultImage.src = payload.image;
-    if (this.dom.resultRarity) this.dom.resultRarity.textContent = payload.rarity;
+    if (this.dom.resultRarity)
+      this.dom.resultRarity.textContent = payload.rarity;
   }
 
   // ---------------------- 模塊加載 ----------------------
@@ -1063,7 +1092,8 @@ class GameController {
       bubble.className = "message-bubble";
       bubble.textContent = "";
       self.dom.messagesContainer.appendChild(bubble);
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
 
       await wait(250);
 
@@ -1074,7 +1104,8 @@ class GameController {
       }
 
       bubble.classList.add("pop-in");
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
     }
 
     function renderAllMessagesInstant() {
@@ -1085,7 +1116,8 @@ class GameController {
         bubble.textContent = text;
         self.dom.messagesContainer.appendChild(bubble);
       });
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+      self.dom.messagesContainer.scrollTop =
+        self.dom.messagesContainer.scrollHeight;
       hideTyping();
     }
 
@@ -1228,7 +1260,8 @@ class GameController {
         currentStep === activeSteps.length - 1 ? "完成指引" : "下一步";
 
       document.getElementById("tip-current-step").textContent = currentStep + 1;
-      document.getElementById("tip-total-steps").textContent = activeSteps.length;
+      document.getElementById("tip-total-steps").textContent =
+        activeSteps.length;
     }
 
     function start(screenId = self.state.currentScreenId) {
@@ -1314,7 +1347,10 @@ class GameController {
           window.removeEventListener("pointermove", handleMove);
           window.removeEventListener("pointerup", handleUp);
 
-          const dropZone = this.resolveDropZone(upEvent.clientX, upEvent.clientY);
+          const dropZone = this.resolveDropZone(
+            upEvent.clientX,
+            upEvent.clientY
+          );
 
           const resetCard = () => {
             card.classList.remove("drag-active", "dragging", "drag-revert");
@@ -1415,7 +1451,10 @@ class GameController {
             this.state.isMuted ? "音量已靜音" : "音量開啟"
           );
         });
-        this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
+        this.showAlert(
+          "info",
+          this.state.isMuted ? "已關閉音效" : "已開啟音效"
+        );
         if (this.dom.castingVideo) {
           this.dom.castingVideo.muted = this.state.isMuted;
         }
