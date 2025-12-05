@@ -66,7 +66,8 @@
       <div class="curtain curtain-right"></div>
     </div>
 
-    <main id="game-container" role="application">
+    <div id="world-layer" class="world-layer" role="presentation">
+      <main id="game-container" role="application">
       <!-- 首頁：精簡的主畫面與起始操作 -->
       <section
         id="screen-1"
@@ -323,56 +324,6 @@
         aria-label="食材選擇"
       >
         <div class="alchemy-workbench bright">
-          <div class="kitchen-top-bar">
-            <div
-              id="selection-row"
-              class="slot-row"
-              role="list"
-              aria-label="已放入的食材欄位 (最多 3 種)"
-            >
-              <div class="selection-slot" data-slot-index="1" role="listitem">
-                <div class="slot-visual">
-                  <img class="slot-thumb" alt="已選食材縮圖" />
-                </div>
-                <div class="slot-text">
-                  <span class="slot-label">空槽</span>
-                  <span class="slot-hint">拖曳食材進入</span>
-                </div>
-                <button class="slot-clear" aria-label="移除這個食材">✕</button>
-              </div>
-              <div class="selection-slot" data-slot-index="2" role="listitem">
-                <div class="slot-visual">
-                  <img class="slot-thumb" alt="已選食材縮圖" />
-                </div>
-                <div class="slot-text">
-                  <span class="slot-label">空槽</span>
-                  <span class="slot-hint">拖曳食材進入</span>
-                </div>
-                <button class="slot-clear" aria-label="移除這個食材">✕</button>
-              </div>
-              <div class="selection-slot" data-slot-index="3" role="listitem">
-                <div class="slot-visual">
-                  <img class="slot-thumb" alt="已選食材縮圖" />
-                </div>
-                <div class="slot-text">
-                  <span class="slot-label">空槽</span>
-                  <span class="slot-hint">拖曳食材進入</span>
-                </div>
-                <button class="slot-clear" aria-label="移除這個食材">✕</button>
-              </div>
-            </div>
-
-            <div
-              id="kitchen-status-chip"
-              class="selection-status chip"
-              role="status"
-              aria-live="polite"
-            >
-              已選擇：<span id="current-selection-count">0</span> /
-              <span id="max-selection-count">3</span>
-            </div>
-          </div>
-
           <div class="workbench-body">
             <div
               class="hand-overlay kitchen-hands global-hands"
@@ -470,17 +421,6 @@
           </div>
         </div>
 
-        <footer class="selection-footer">
-          <button
-            id="cast-spell-btn"
-            class="btn btn-primary next-screen-btn"
-            data-target="screen-6"
-            aria-controls="screen-6"
-            disabled
-          >
-            開始唸咒！
-          </button>
-        </footer>
       </section>
 
       <!-- 播放影片：單純呈現影片並提供跳過 -->
@@ -743,7 +683,81 @@
         </div>
         <div class="placeholder-card">設定頁面</div>
       </section>
-    </main>
+      </main>
+    </div>
+
+    <!-- Screen UI Overlay：在遊戲畫面固定位置的操作層 -->
+    <div id="screen-ui-overlay" class="screen-ui-overlay" aria-hidden="true">
+      <div
+        class="overlay-layer overlay-ingredients"
+        data-screen="screen-5"
+        aria-hidden="true"
+      >
+        <div class="overlay-ingredients-inner">
+          <div class="overlay-selection-bar">
+            <div
+              id="selection-row"
+              class="slot-row"
+              role="list"
+              aria-label="已放入的食材欄位 (最多 3 種)"
+            >
+              <div class="selection-slot" data-slot-index="1" role="listitem">
+                <div class="slot-visual">
+                  <img class="slot-thumb" alt="已選食材縮圖" />
+                </div>
+                <div class="slot-text">
+                  <span class="slot-label">空槽</span>
+                  <span class="slot-hint">拖曳食材進入</span>
+                </div>
+                <button class="slot-clear" aria-label="移除這個食材">✕</button>
+              </div>
+              <div class="selection-slot" data-slot-index="2" role="listitem">
+                <div class="slot-visual">
+                  <img class="slot-thumb" alt="已選食材縮圖" />
+                </div>
+                <div class="slot-text">
+                  <span class="slot-label">空槽</span>
+                  <span class="slot-hint">拖曳食材進入</span>
+                </div>
+                <button class="slot-clear" aria-label="移除這個食材">✕</button>
+              </div>
+              <div class="selection-slot" data-slot-index="3" role="listitem">
+                <div class="slot-visual">
+                  <img class="slot-thumb" alt="已選食材縮圖" />
+                </div>
+                <div class="slot-text">
+                  <span class="slot-label">空槽</span>
+                  <span class="slot-hint">拖曳食材進入</span>
+                </div>
+                <button class="slot-clear" aria-label="移除這個食材">✕</button>
+              </div>
+            </div>
+
+            <div
+              id="kitchen-status-chip"
+              class="selection-status chip"
+              role="status"
+              aria-live="polite"
+            >
+              已選擇：<span id="current-selection-count">0</span> /
+              <span id="max-selection-count">3</span>
+            </div>
+          </div>
+
+          <footer class="selection-footer">
+            <button
+              id="cast-spell-btn"
+              class="btn btn-primary next-screen-btn"
+              data-target="screen-6"
+              aria-controls="screen-6"
+              disabled
+            >
+              開始唸咒！
+            </button>
+          </footer>
+        </div>
+      </div>
+    </div>
 
     <div id="persistent-ui" class="persistent-ui">
       <div class="persistent-inner">

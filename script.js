@@ -159,6 +159,8 @@ class GameController {
     // 集中查詢所有需要的 DOM 元素
     return {
       persistentUI: document.getElementById("persistent-ui"),
+      screenOverlay: document.getElementById("screen-ui-overlay"),
+      overlayLayers: document.querySelectorAll(".overlay-layer"),
       nextScreenBtns: document.querySelectorAll(".next-screen-btn"),
       ingredientTokens: document.querySelectorAll(".ingredient-token"),
       dropTarget: document.querySelector(".drop-target"),
@@ -222,6 +224,7 @@ class GameController {
     this.initEventListeners();
     this.updateIngredientStatus();
     this.updateHandState(this.state.currentScreenId);
+    this.updateOverlayLayers(this.state.currentScreenId);
   }
 
   // ---------------------- 核心流程控制 ----------------------
@@ -249,6 +252,7 @@ class GameController {
     this.updatePersistentUI(nextScreenId);
     this.updateSceneMood(nextScreenId);
     this.updateHandState(nextScreenId);
+    this.updateOverlayLayers(nextScreenId);
   }
 
   updateSceneMood(screenId) {
@@ -266,6 +270,23 @@ class GameController {
   updateHandState(screenId) {
     const foldHands = screenId === "screen-4";
     document.body.classList.toggle("hands-folded", foldHands);
+  }
+
+  updateOverlayLayers(screenId) {
+    if (!this.dom.overlayLayers?.length) return;
+
+    let anyActive = false;
+    this.dom.overlayLayers.forEach((layer) => {
+      const shouldShow = layer.dataset.screen === screenId;
+      layer.classList.toggle("active", shouldShow);
+      layer.setAttribute("aria-hidden", shouldShow ? "false" : "true");
+      if (shouldShow) anyActive = true;
+    });
+
+    if (this.dom.screenOverlay) {
+      this.dom.screenOverlay.classList.toggle("active", anyActive);
+      this.dom.screenOverlay.setAttribute("aria-hidden", anyActive ? "false" : "true");
+    }
   }
 
   setHandCursor(side = "left") {
