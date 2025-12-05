@@ -241,10 +241,11 @@ class GameController {
     if (currentScreen && currentScreen.id !== nextScreenId) {
       currentScreen.classList.remove("active");
       currentScreen.classList.add("exiting");
-      setTimeout(
-        () => currentScreen.classList.remove("exiting"),
-        CONFIG.TRANSITION_DURATION
-      );
+      // FIXME: exiting has extreme performance issue
+      // setTimeout(
+      //   () => currentScreen.classList.remove("exiting"),
+      //   CONFIG.TRANSITION_DURATION
+      // );
     }
 
     if (nextScreen) {
