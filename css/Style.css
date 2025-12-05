@@ -3389,33 +3389,42 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     bottom: auto;
     left: auto;
     transform: none;
-    width: min(960px, 100%);
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-  align-items: flex-end;
-  gap: 16px 18px;
-  padding: 0 12px;
-  background: transparent;
-  box-shadow: none;
-  pointer-events: auto;
-  z-index: 4;
-  border-radius: 0;
-}
+    align-items: flex-end;
+    gap: 20px 22px;
+    padding: 0 24px 12px;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: auto;
+    z-index: 4;
+    border-radius: 0;
+  }
 
-.ingredient-token {
-  background: transparent;
-  border: none;
-  padding: 0;
-  border-radius: 0;
-  cursor: grab;
-  box-shadow: none;
-  transition: transform var(--transition-fast), filter var(--transition-fast);
-  z-index: 8;
-  will-change: transform, filter;
-  transform: translate(0, 0) rotate(0deg);
-}
+  .ingredient-token {
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: element;
+    box-shadow: none;
+    transition: transform var(--transition-fast), filter var(--transition-fast);
+    z-index: 8;
+    will-change: transform, filter;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  .ingredient-token:active {
+    cursor: grabbing;
+    transform: scale(1.06);
+  }
 
 .ingredient-token.dragging,
 .ingredient-token:hover {
