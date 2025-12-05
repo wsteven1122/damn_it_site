@@ -507,30 +507,38 @@ class GameController {
       "./img/星星黃_画板 1 1.png",
       "./img/星星黃_画板 1 2.png",
       "./img/星星黃_画板 1 3.png",
-      "./img/星星黃_画板 1 4.png",
+    ];
+
+    const starLayout = [
+      { left: 14, top: 18, rotation: -8, scale: 1.12, delay: 0.3 },
+      { left: 26, top: 10, rotation: 6, scale: 0.94, delay: 1.4 },
+      { left: 36, top: 20, rotation: -4, scale: 1.06, delay: 0.8 },
+      { left: 48, top: 12, rotation: 12, scale: 0.92, delay: 1.1 },
+      { left: 60, top: 18, rotation: -6, scale: 1.08, delay: 0.6 },
+      { left: 70, top: 8, rotation: 10, scale: 0.9, delay: 1.6 },
+      { left: 82, top: 18, rotation: -10, scale: 1.02, delay: 0.5 },
+      { left: 18, top: 32, rotation: 6, scale: 0.9, delay: 1.2 },
+      { left: 30, top: 40, rotation: -12, scale: 1.04, delay: 0.4 },
+      { left: 42, top: 34, rotation: 8, scale: 0.96, delay: 1.0 },
+      { left: 54, top: 42, rotation: -5, scale: 1.1, delay: 0.7 },
+      { left: 66, top: 36, rotation: 9, scale: 0.88, delay: 1.3 },
+      { left: 76, top: 44, rotation: -7, scale: 0.98, delay: 0.9 },
+      { left: 58, top: 52, rotation: 4, scale: 1.06, delay: 1.7 },
     ];
 
     starField.innerHTML = "";
-    const starCount = 14;
 
-    for (let i = 0; i < starCount; i += 1) {
+    starLayout.forEach((pos, index) => {
       const star = document.createElement("img");
-      const left = 8 + Math.random() * 76;
-      const top = 6 + Math.random() * 38;
-      const rotation = (Math.random() * 20 - 10).toFixed(2);
-      const scale = (0.82 + Math.random() * 0.35).toFixed(2);
-      const delay = (Math.random() * 4).toFixed(2);
-
-      star.src = starSprites[i % starSprites.length];
+      star.src = starSprites[index % starSprites.length];
       star.alt = "裝飾星星";
-      star.style.left = `${left}%`;
-      star.style.top = `${top}%`;
-      star.style.setProperty("--star-rotation", `${rotation}deg`);
-      star.style.setProperty("--star-scale", scale);
-      star.style.animationDelay = `${delay}s`;
-
+      star.style.left = `${pos.left}%`;
+      star.style.top = `${pos.top}%`;
+      star.style.setProperty("--star-rotation", `${pos.rotation}deg`);
+      star.style.setProperty("--star-scale", pos.scale);
+      star.style.animationDelay = `${pos.delay}s`;
       starField.appendChild(star);
-    }
+    });
   }
 
   setupSoundBoard() {

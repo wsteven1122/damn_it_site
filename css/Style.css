@@ -67,10 +67,6 @@
 body {
   font-family: "AlchemyFont", "Noto Sans TC", sans-serif;
   background-color: #b9d3f6;
-  background-image: url("../img/1.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
   color: var(--color-text-light);
   min-height: 100vh;
   overflow-x: hidden;
@@ -85,9 +81,6 @@ body {
 
 body.scene-kitchen {
   background-color: #b9d3f6;
-  background-image: url("../img/1.png");
-  background-size: cover;
-  background-position: center;
 }
 
 h1,
