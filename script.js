@@ -168,7 +168,6 @@ class GameController {
   getDOMElements() {
     // 集中查詢所有需要的 DOM 元素
     return {
-      persistentUI: document.getElementById("persistent-ui"),
       nextScreenBtns: document.querySelectorAll(".next-screen-btn"),
       ingredientTokens: document.querySelectorAll(".ingredient-token"),
       dropTarget: document.querySelector(".drop-target"),
@@ -219,7 +218,6 @@ class GameController {
   }
 
   init() {
-    this.dom.persistentUI.style.display = "flex";
     if (this.dom.curtainLayer) {
       this.dom.curtainLayer.classList.add("open");
       this.dom.curtainLayer.setAttribute("aria-hidden", "true");
@@ -243,10 +241,11 @@ class GameController {
     if (currentScreen && currentScreen.id !== nextScreenId) {
       currentScreen.classList.remove("active");
       currentScreen.classList.add("exiting");
-      setTimeout(
-        () => currentScreen.classList.remove("exiting"),
-        CONFIG.TRANSITION_DURATION
-      );
+      // FIXME: exiting has extreme performance issue
+      // setTimeout(
+      //   () => currentScreen.classList.remove("exiting"),
+      //   CONFIG.TRANSITION_DURATION
+      // );
     }
 
     if (nextScreen) {
@@ -256,7 +255,6 @@ class GameController {
       setTimeout(() => nextScreen.classList.remove("wave-enter"), CONFIG.TRANSITION_DURATION + 180);
     }
     this.state.currentScreenId = nextScreenId;
-    this.updatePersistentUI(nextScreenId);
     this.updateSceneMood(nextScreenId);
     this.updateHandState(nextScreenId);
   }
@@ -267,10 +265,6 @@ class GameController {
       "scene-kitchen",
       kitchenScreens.includes(screenId)
     );
-  }
-
-  updatePersistentUI(screenId) {
-    this.dom.persistentUI.style.display = "flex";
   }
 
   updateHandState(screenId) {
@@ -294,6 +288,7 @@ class GameController {
     this.state.isTransitioning = true;
 
     try {
+      await this.loadNextScreenAssets(nextScreenId);
       await this.playCurtainTransition(() => this.switchScreens(nextScreenId));
 
       if (nextScreenId === "screen-2") {
@@ -322,6 +317,22 @@ class GameController {
     } finally {
       this.state.isTransitioning = false;
     }
+  }
+
+  async loadNextScreenAssets(nextScreenId) {
+    const resources = [
+      "img/紅布幕（關） 1.png",
+      "img/紅布幕（開） 1.png",
+    ];
+    const promises = resources.map((src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => resolve();
+        img.onerror = () => reject(`Failed to load image: ${src}`);
+      });
+    });
+    await Promise.all(promises);
   }
 
   playCurtainTransition(midpointCallback) {
@@ -842,16 +853,26 @@ class GameController {
       self.dom.messagesContainer.appendChild(bubble);
       self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
 
+
       await wait(250);
+      if (aborted) {
+        bubble.remove();
+        return;
+      }
+      bubble.classList.add("pop-in");
 
       for (let i = 0; i <= text.length; i++) {
-        if (aborted) return;
+        if (aborted) {
+          bubble.remove();
+          return;
+        }
         bubble.textContent = text.substring(0, i);
+        if (i === 1) {
+          void self.dom.messagesContainer.offsetHeight;
+          self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+        }
         await wait(35);
       }
-
-      bubble.classList.add("pop-in");
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
     }
 
     function renderAllMessagesInstant() {
@@ -1055,13 +1076,14 @@ class GameController {
     });
 
     // 2. 開始遊戲按鈕 (Screen 1 Start)
-    if (this.dom.lottieStartBtn) {
-      this.dom.lottieStartBtn.addEventListener("click", () => {
-        if (this.state.isTransitioning) return;
-        this.playTone("uiTap");
-        this.performTransition(this.dom.lottieStartBtn.dataset.target);
-      });
-    }
+    // FIXME: already handled in nextScreenBtns
+    // if (this.dom.lottieStartBtn) {
+    //   this.dom.lottieStartBtn.addEventListener("click", () => {
+    //     if (this.state.isTransitioning) return;
+    //     this.playTone("uiTap");
+    //     this.performTransition(this.dom.lottieStartBtn.dataset.target);
+    //   });
+    // }
 
     // 3. 食材選擇/拖曳
     this.dom.ingredientTokens.forEach((card) => {
@@ -1069,6 +1091,7 @@ class GameController {
       card.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", ingredient);
         e.dataTransfer.effectAllowed = "copy";
+        e.dataTransfer.setDragImage(card, card.offsetWidth / 2, card.offsetHeight / 2);
         card.classList.add("dragging");
         const side = e.clientX < window.innerWidth / 2 ? "left" : "right";
         this.setHandCursor(side);
@@ -1228,5 +1251,5 @@ class GameController {
 // =========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  new GameController();
+  window.gc = new GameController();
 });

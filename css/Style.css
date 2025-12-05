@@ -1320,31 +1320,18 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   grid-template-columns: 1fr auto auto;
   align-items: center;
   gap: var(--spacing-m);
-  margin-bottom: var(--spacing-l);
-  margin-top: var(--spacing-m);
-  position: relative;
+  position: absolute;
   z-index: 8;
+  top: 50px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 
 .slot-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-s);
-}
-
-.selection-slot {
-  background: transparent;
-  border: none;
-  border-radius: 12px;
-  padding: var(--spacing-s);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #ffe9c4;
-  position: relative;
-  min-height: 52px;
-  transition: all var(--transition-fast);
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .selection-slot.filled {
@@ -1655,13 +1642,14 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .selection-footer {
-  width: min(1080px, calc(100% - 32px));
-  margin: 0 auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
   padding: var(--spacing-m) var(--spacing-l);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   text-align: center;
-  position: sticky;
-  bottom: 0;
   background: linear-gradient(
     180deg,
     rgba(18, 18, 31, 0) 0%,
@@ -1687,7 +1675,8 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   position: relative;
   justify-content: flex-start;
   align-items: stretch;
-  padding: var(--spacing-l) var(--spacing-xl) 140px;
+  /* padding: var(--spacing-l) var(--spacing-xl) 140px; */
+  overflow: hidden;
   background: transparent;
   overflow-y: auto;
   overflow-x: hidden;
@@ -1941,57 +1930,6 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.78), transparent 70%);
   backdrop-filter: blur(6px);
   z-index: 6;
-}
-
-/* =========================================================================
-   8. 持久性 UI (Persistent UI)
-   ========================================================================= */
-
-.persistent-ui {
-  position: fixed;
-  top: 10px;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-  z-index: var(--z-index-curtain);
-}
-
-.persistent-inner {
-  width: min(1120px, 96%);
-  background: transparent;
-  border-radius: 0;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  box-shadow: none;
-  pointer-events: auto;
-  backdrop-filter: none;
-}
-
-.persistent-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.persistent-home {
-  display: flex;
-  align-items: center;
-}
-
-.chip-btn {
-  border: none;
-  background: linear-gradient(135deg, #ffb703, #ffcf86);
-  color: #3b2200;
-  font-weight: 800;
-  padding: 10px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  box-shadow: 0 10px 20px rgba(255, 183, 3, 0.3);
 }
 
 /* =========================================================================
@@ -2369,6 +2307,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 .guide-overlay.hidden {
   opacity: 0;
   pointer-events: none;
+  z-index: -1;
 }
 
 .guide-focus-ring {
@@ -2658,7 +2597,6 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   pointer-events: none;
   z-index: var(--z-index-curtain);
   opacity: 0;
-  visibility: hidden;
   transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
 }
 
@@ -2770,6 +2708,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   position: relative;
   text-align: center;
   align-self: center;
+  margin: 0 0 18px; /* for the triangle pointer */
 }
 
 .typing-bubble {
@@ -2979,14 +2918,21 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .selection-slot {
-  background: rgba(255, 255, 255, 0.08);
+}
+
+.selection-slot {
+  /* use opacity black background */
+  background: rgba(0, 0, 0, 0.58);
   border: 2px dashed rgba(255, 183, 3, 0.65);
   border-radius: 18px;
   padding: 12px 14px;
   display: grid;
+  justify-content: space-between;
   grid-template-columns: 64px 1fr auto;
   align-items: center;
   gap: 12px;
+  min-height: 52px;
+  transition: all var(--transition-fast);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   color: #ffe9c4;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
@@ -3242,6 +3188,15 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     rotate(var(--rot)) scale(1.05);
   box-shadow: none;
   filter: saturate(1.12);
+}
+
+.ingredient-token.dragging {
+  position: relative;
+  top: -9999px;
+  left: -9999px;
+}
+.ingredient-token.selected {
+  opacity: 0;
 }
 
 .ingredient-token img {
