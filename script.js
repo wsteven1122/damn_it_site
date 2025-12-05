@@ -168,7 +168,6 @@ class GameController {
   getDOMElements() {
     // 集中查詢所有需要的 DOM 元素
     return {
-      persistentUI: document.getElementById("persistent-ui"),
       nextScreenBtns: document.querySelectorAll(".next-screen-btn"),
       ingredientTokens: document.querySelectorAll(".ingredient-token"),
       dropTarget: document.querySelector(".drop-target"),
@@ -219,7 +218,6 @@ class GameController {
   }
 
   init() {
-    this.dom.persistentUI.style.display = "flex";
     if (this.dom.curtainLayer) {
       this.dom.curtainLayer.classList.add("open");
       this.dom.curtainLayer.setAttribute("aria-hidden", "true");
@@ -256,7 +254,6 @@ class GameController {
       setTimeout(() => nextScreen.classList.remove("wave-enter"), CONFIG.TRANSITION_DURATION + 180);
     }
     this.state.currentScreenId = nextScreenId;
-    this.updatePersistentUI(nextScreenId);
     this.updateSceneMood(nextScreenId);
     this.updateHandState(nextScreenId);
   }
@@ -267,10 +264,6 @@ class GameController {
       "scene-kitchen",
       kitchenScreens.includes(screenId)
     );
-  }
-
-  updatePersistentUI(screenId) {
-    this.dom.persistentUI.style.display = "flex";
   }
 
   updateHandState(screenId) {
