@@ -344,7 +344,6 @@
             </div>
 
             <div class="main-egg-display drop-target" aria-label="米特蛋核心">
-              <div class="absorb-glow" aria-hidden="true"></div>
               <div class="egg-graphic"></div>
               <p class="drop-hint">拖曳食材到米特蛋</p>
             </div>
@@ -778,8 +777,20 @@
           >
             <img src="./img/Botton_teaching_Default.png" alt="導覽" />
           </button>
+          <button id="sun-easter-btn" class="icon-btn sun-egg-btn" aria-label="太陽彩蛋">
+            <img src="./img/太陽.png" alt="太陽彩蛋" />
+          </button>
         </div>
       </div>
+    </div>
+
+    <div id="sun-hatch-popover" class="sun-hatch-popover" hidden role="dialog" aria-label="彩蛋：小雞孵化動畫">
+      <div class="sun-hatch-stage">
+        <div class="sun-egg-shell"></div>
+        <div class="sun-chick"></div>
+        <div class="sun-hatch-light"></div>
+      </div>
+      <button id="sun-hatch-close" class="sun-hatch-close" aria-label="關閉彩蛋">✕</button>
     </div>
 
     <audio

@@ -201,6 +201,10 @@ class GameController {
 
       eggCards: document.querySelectorAll(".egg-card"),
       confirmEggBtn: document.getElementById("confirm-egg-btn"),
+
+      sunEasterBtn: document.getElementById("sun-easter-btn"),
+      sunHatchPopover: document.getElementById("sun-hatch-popover"),
+      sunHatchClose: document.getElementById("sun-hatch-close"),
     };
   }
 
@@ -214,6 +218,7 @@ class GameController {
     this.loadLottieAnimations();
     this.setupBackgroundMusic();
     this.setupSoundBoard();
+    this.setupSunEasterEgg();
     this.initEventListeners();
     this.updateIngredientStatus();
     this.updateHandState(this.state.currentScreenId);
@@ -259,7 +264,7 @@ class GameController {
 
   updatePersistentUI(screenId) {
     this.dom.persistentUI.style.display = "flex";
-    const hideToolbar = screenId === "screen-5";
+    const hideToolbar = false;
     this.dom.persistentUI.classList.toggle("hidden", hideToolbar);
   }
 
@@ -710,7 +715,7 @@ class GameController {
   triggerEggReact() {
     if (!this.dom.dropTarget) return;
 
-    this.dom.dropTarget.classList.add("absorb", "feed-react");
+    this.dom.dropTarget.classList.add("feed-react");
     const egg = this.dom.dropTarget.querySelector(".egg-graphic");
     if (egg) {
       egg.classList.add("react");
@@ -721,9 +726,36 @@ class GameController {
 
     this.dom.dropTarget.addEventListener(
       "animationend",
-      () => this.dom.dropTarget.classList.remove("feed-react", "absorb"),
+      () => this.dom.dropTarget.classList.remove("feed-react"),
       { once: true }
     );
+  }
+
+  setupSunEasterEgg() {
+    if (!this.dom.sunEasterBtn || !this.dom.sunHatchPopover) return;
+
+    const openPopover = () => {
+      this.dom.sunHatchPopover.hidden = false;
+      this.dom.sunHatchPopover.classList.remove("show");
+      void this.dom.sunHatchPopover.offsetWidth;
+      this.dom.sunHatchPopover.classList.add("show");
+      this.playTone("success");
+    };
+
+    const closePopover = () => {
+      this.dom.sunHatchPopover.classList.remove("show");
+      this.dom.sunHatchPopover.hidden = true;
+    };
+
+    this.dom.sunEasterBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openPopover();
+    });
+
+    this.dom.sunHatchClose?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      closePopover();
+    });
   }
 
   // ---------------------- 影片與結果處理 ----------------------
