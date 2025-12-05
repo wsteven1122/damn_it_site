@@ -7,7 +7,7 @@ const CONFIG = {
   CURTAIN_CLOSE_MS: 420,
   CURTAIN_SHAKE_MS: 200,
   CURTAIN_OPEN_MS: 1100,
-  MAX_INGREDIENTS: 4,
+  MAX_INGREDIENTS: 3,
   INGREDIENT_IMAGES: {
     榴槤: "./img/榴槤.png",
     魷魚: "./img/魷魚.png",
@@ -91,7 +91,7 @@ const CONFIG = {
       },
       {
         targetId: "ingredient-tray",
-        text: "直接拖曳原始圖片食材到米特蛋上方，最多四種。",
+        text: "直接拖曳原始圖片食材到米特蛋上方，最多三種。",
         position: "top",
       },
       {
@@ -140,6 +140,7 @@ class GameController {
       isTransitioning: false,
       currentScreenId: "screen-1",
       selectedIngredients: new Set(),
+      slotOrder: Array(CONFIG.MAX_INGREDIENTS).fill(null),
       selectedEgg: "米特蛋",
       isMuted: false,
       lottieInstances: {},
@@ -217,6 +218,7 @@ class GameController {
     }
     this.loadLottieAnimations();
     this.setupBackgroundMusic();
+    this.seedHomeStars();
     this.setupSoundBoard();
     this.setupSunEasterEgg();
     this.initEventListeners();
@@ -391,6 +393,7 @@ class GameController {
 
   resetGame() {
     this.state.selectedIngredients.clear();
+    this.state.slotOrder = Array(CONFIG.MAX_INGREDIENTS).fill(null);
     this.state.selectedEgg = "米特蛋";
     this.updateIngredientStatus();
     this.highlightEggChoice("米特蛋");
@@ -486,6 +489,40 @@ class GameController {
 
     document.addEventListener("pointerdown", unlockAudio);
     document.addEventListener("touchstart", unlockAudio);
+  }
+
+  seedHomeStars() {
+    const starField = document.getElementById("star-field");
+    if (!starField) return;
+
+    const starSprites = [
+      "./img/HomePage.png",
+      "./img/Frame 64.png",
+      "./img/Frame 100.png",
+      "./img/Frame 215.png",
+    ];
+
+    starField.innerHTML = "";
+    const starCount = 14;
+
+    for (let i = 0; i < starCount; i += 1) {
+      const star = document.createElement("img");
+      const left = 8 + Math.random() * 76;
+      const top = 6 + Math.random() * 38;
+      const rotation = (Math.random() * 20 - 10).toFixed(2);
+      const scale = (0.82 + Math.random() * 0.35).toFixed(2);
+      const delay = (Math.random() * 4).toFixed(2);
+
+      star.src = starSprites[i % starSprites.length];
+      star.alt = "裝飾星星";
+      star.style.left = `${left}%`;
+      star.style.top = `${top}%`;
+      star.style.setProperty("--star-rotation", `${rotation}deg`);
+      star.style.setProperty("--star-scale", scale);
+      star.style.animationDelay = `${delay}s`;
+
+      starField.appendChild(star);
+    }
   }
 
   setupSoundBoard() {
@@ -616,10 +653,48 @@ class GameController {
 
   // ---------------------- 食材選擇邏輯 ----------------------
 
+  getFilledSlotCount() {
+    return this.state.slotOrder.filter(Boolean).length;
+  }
+
+  syncSelectedIngredientsFromSlots() {
+    this.state.selectedIngredients = new Set(
+      this.state.slotOrder.filter(Boolean)
+    );
+  }
+
+  assignIngredientToFirstOpenSlot(ingredient) {
+    const emptyIndex = this.state.slotOrder.findIndex((value) => !value);
+    if (emptyIndex !== -1) {
+      this.state.slotOrder[emptyIndex] = ingredient;
+    }
+    this.syncSelectedIngredientsFromSlots();
+    return emptyIndex;
+  }
+
+  assignIngredientToSlot(slotEl, ingredient) {
+    const slotIndex = parseInt(slotEl?.dataset.slotIndex, 10) - 1;
+    if (Number.isNaN(slotIndex) || slotIndex < 0) return -1;
+
+    const previous = this.state.slotOrder[slotIndex];
+    this.state.slotOrder = this.state.slotOrder.map((value, index) => {
+      if (index === slotIndex) return ingredient;
+      if (value === ingredient) return null;
+      return value;
+    });
+
+    if (previous && !this.state.slotOrder.includes(previous)) {
+      this.state.selectedIngredients.delete(previous);
+    }
+
+    this.syncSelectedIngredientsFromSlots();
+    return slotIndex;
+  }
+
   updateIngredientStatus() {
+    const filledCount = this.getFilledSlotCount();
     const isCastDisabled =
-      this.state.selectedIngredients.size === 0 ||
-      this.state.selectedIngredients.size > CONFIG.MAX_INGREDIENTS;
+      filledCount === 0 || filledCount > CONFIG.MAX_INGREDIENTS;
     if (this.dom.castSpellBtn) {
       this.dom.castSpellBtn.disabled = isCastDisabled;
     }
@@ -627,13 +702,13 @@ class GameController {
     this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
       const isSelected = this.state.selectedIngredients.has(ingredient);
-      const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+      const isFull = filledCount >= CONFIG.MAX_INGREDIENTS;
       card.classList.toggle("selected", isSelected);
       card.setAttribute("aria-pressed", isSelected);
       card.classList.toggle("disabled", !isSelected && isFull);
     });
 
-    const selectedArr = Array.from(this.state.selectedIngredients);
+    const selectedArr = this.state.slotOrder;
     if (this.dom.selectionSlots) {
       this.dom.selectionSlots.forEach((slot, index) => {
         const label = slot.querySelector(".slot-label");
@@ -676,14 +751,22 @@ class GameController {
     }
   }
 
-  addIngredient(ingredient) {
+  addIngredient(ingredient, { preferredSlot = null, silent = false } = {}) {
     const isSelected = this.state.selectedIngredients.has(ingredient);
-    const isFull = this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+    if (preferredSlot) {
+      const existing = preferredSlot.dataset.ingredient;
+      if (existing && existing !== ingredient) {
+        this.removeIngredient(existing, { silent: true });
+      }
+    }
+
+    const filledCount = this.getFilledSlotCount();
+    const isFull = filledCount >= CONFIG.MAX_INGREDIENTS;
 
     if (isSelected) {
       this.showAlert("info", `${ingredient} 已在煉蛋爐中，換個食材試試。`);
       this.playTone("error");
-      return;
+      return false;
     }
 
     if (isFull) {
@@ -692,19 +775,33 @@ class GameController {
         `煉蛋爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
       );
       this.playTone("error");
-      return;
+      return false;
     }
 
-    this.state.selectedIngredients.add(ingredient);
-    this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
-    this.playTone("success");
+    if (preferredSlot) {
+      this.assignIngredientToSlot(preferredSlot, ingredient);
+    } else {
+      this.assignIngredientToFirstOpenSlot(ingredient);
+    }
+
+    if (!silent) {
+      this.showAlert("success", `✨ ${ingredient} 已成功加入米特蛋！`);
+      this.playTone("success");
+    }
     this.triggerEggReact();
     this.updateIngredientStatus();
+    return true;
   }
 
   removeIngredient(ingredient, { silent = false } = {}) {
-    if (!this.state.selectedIngredients.has(ingredient)) return;
-    this.state.selectedIngredients.delete(ingredient);
+    const existed =
+      this.state.selectedIngredients.has(ingredient) ||
+      this.state.slotOrder.includes(ingredient);
+    if (!existed) return;
+    this.state.slotOrder = this.state.slotOrder.map((value) =>
+      value === ingredient ? null : value
+    );
+    this.syncSelectedIngredientsFromSlots();
     if (!silent) {
       this.showAlert("info", `✅ ${ingredient} 已從煉蛋爐中移除。`);
       this.playTone("tick");
@@ -729,6 +826,80 @@ class GameController {
       () => this.dom.dropTarget.classList.remove("feed-react"),
       { once: true }
     );
+  }
+
+  resolveDropZone(x, y) {
+    const zones = [];
+    if (this.dom.dropTarget) zones.push({ type: "pot", element: this.dom.dropTarget });
+    if (this.dom.selectionSlots?.length) {
+      this.dom.selectionSlots.forEach((slot) => zones.push({ type: "slot", element: slot }));
+    }
+
+    return zones.find(({ element }) => {
+      const rect = element.getBoundingClientRect();
+      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    });
+  }
+
+  animateBounceBack(card, onDone) {
+    card.classList.add("drag-revert");
+    requestAnimationFrame(() => {
+      card.style.transform = "translate(0, 0)";
+    });
+
+    let handleEnd;
+    const cleanup = () => {
+      card.classList.remove("drag-active", "drag-revert", "dragging");
+      card.style.transition = "";
+      card.style.transform = "";
+      this.clearHandCursor();
+      card.removeEventListener("transitionend", handleEnd);
+      onDone?.();
+    };
+
+    const fallback = setTimeout(cleanup, 360);
+    handleEnd = () => {
+      clearTimeout(fallback);
+      cleanup();
+    };
+
+    card.addEventListener("transitionend", handleEnd, { once: true });
+  }
+
+  spawnFlash(target, className = "drop-flare") {
+    if (!target) return;
+    const flare = document.createElement("div");
+    flare.className = className;
+    target.appendChild(flare);
+    setTimeout(() => flare.remove(), 500);
+  }
+
+  pulseTarget(target) {
+    if (!target) return;
+    target.classList.add("hit-success");
+    setTimeout(() => target.classList.remove("hit-success"), 520);
+  }
+
+  consumeToken(card, targetElement) {
+    const cardRect = card.getBoundingClientRect();
+    const targetRect = targetElement?.getBoundingClientRect();
+    const dx = targetRect
+      ? targetRect.left + targetRect.width / 2 - (cardRect.left + cardRect.width / 2)
+      : 0;
+    const dy = targetRect
+      ? targetRect.top + targetRect.height / 2 - (cardRect.top + cardRect.height / 2)
+      : 0;
+
+    card.style.transition = "transform 0.26s ease, opacity 0.26s ease";
+    card.style.transform = `translate(${dx}px, ${dy}px) scale(0.88)`;
+    requestAnimationFrame(() => card.classList.add("consumed"));
+    setTimeout(() => {
+      card.classList.remove("consumed", "drag-active", "dragging");
+      card.style.transition = "";
+      card.style.transform = "";
+      card.style.opacity = "";
+      this.clearHandCursor();
+    }, 360);
   }
 
   setupSunEasterEgg() {
@@ -1118,18 +1289,70 @@ class GameController {
     // 3. 食材選擇/拖曳
     this.dom.ingredientTokens.forEach((card) => {
       const ingredient = card.dataset.ingredient;
-      card.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text/plain", ingredient);
-        e.dataTransfer.effectAllowed = "copy";
-        card.classList.add("dragging");
-        const side = e.clientX < window.innerWidth / 2 ? "left" : "right";
+      card.addEventListener("dragstart", (e) => e.preventDefault());
+
+      const startPointerDrag = (event) => {
+        if (event.pointerType && event.pointerType !== "mouse") return;
+        if (typeof event.button === "number" && event.button !== 0) return;
+        event.preventDefault();
+
+        const side = event.clientX < window.innerWidth / 2 ? "left" : "right";
         this.setHandCursor(side);
-        this.playTone("drag");
-      });
-      card.addEventListener("dragend", () => {
-        card.classList.remove("dragging");
-        this.clearHandCursor();
-      });
+        card.classList.add("drag-active");
+        card.style.transition = "none";
+
+        const startX = event.clientX;
+        const startY = event.clientY;
+
+        const handleMove = (moveEvent) => {
+          const dx = moveEvent.clientX - startX;
+          const dy = moveEvent.clientY - startY;
+          card.style.transform = `translate(${dx}px, ${dy}px)`;
+        };
+
+        const handleUp = (upEvent) => {
+          window.removeEventListener("pointermove", handleMove);
+          window.removeEventListener("pointerup", handleUp);
+
+          const dropZone = this.resolveDropZone(upEvent.clientX, upEvent.clientY);
+
+          const resetCard = () => {
+            card.classList.remove("drag-active", "dragging", "drag-revert");
+            card.style.transition = "";
+            card.style.transform = "";
+            this.clearHandCursor();
+          };
+
+          if (dropZone?.type === "pot") {
+            const added = this.addIngredient(ingredient);
+            if (added) {
+              this.playTone("drop");
+              this.spawnFlash(dropZone.element);
+              this.pulseTarget(dropZone.element);
+              this.consumeToken(card, dropZone.element);
+              return;
+            }
+          } else if (dropZone?.type === "slot") {
+            const added = this.addIngredient(ingredient, {
+              preferredSlot: dropZone.element,
+            });
+            if (added) {
+              this.playTone("drop");
+              this.spawnFlash(dropZone.element, "slot-flash");
+              this.pulseTarget(dropZone.element);
+              this.animateBounceBack(card, resetCard);
+              return;
+            }
+          }
+
+          this.animateBounceBack(card, resetCard);
+        };
+
+        window.addEventListener("pointermove", handleMove);
+        window.addEventListener("pointerup", handleUp, { once: true });
+      };
+
+      card.addEventListener("pointerdown", startPointerDrag);
 
       // 提供點擊/鍵盤選取以確保行動裝置也能玩
       card.addEventListener("click", () => {
@@ -1144,26 +1367,6 @@ class GameController {
         }
       });
     });
-
-    if (this.dom.dropTarget) {
-      this.dom.dropTarget.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        this.dom.dropTarget.classList.add("drag-over");
-      });
-      this.dom.dropTarget.addEventListener("dragleave", () =>
-        this.dom.dropTarget.classList.remove("drag-over")
-      );
-      this.dom.dropTarget.addEventListener("drop", (e) => {
-        e.preventDefault();
-        this.dom.dropTarget.classList.remove("drag-over");
-        const ingredient = e.dataTransfer.getData("text/plain");
-        if (ingredient) {
-          this.playTone("drop");
-          this.addIngredient(ingredient);
-        }
-        this.clearHandCursor();
-      });
-    }
 
     // 3-1. 快速清除單一槽位
     if (this.dom.selectionSlots) {

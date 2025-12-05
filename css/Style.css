@@ -33,6 +33,14 @@
   --z-index-high: 1000; /* Modals, Alerts, Guide */
   --z-index-curtain: 9999;
 
+  /* 分層：背景 / 桌面 / 道具 / 主角 / 特效 / UI */
+  --z-bg: 0;
+  --z-table: 6;
+  --z-item: 12;
+  --z-player: 16;
+  --z-effect: 20;
+  --z-ui: 32;
+
   /* 過渡效果 */
   --transition-fast: 0.2s ease-out;
   --transition-medium: 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -194,9 +202,10 @@ body.hand-cursor-right {
 .overlay-ingredients-inner {
   width: min(1160px, 96%);
   margin: 0 auto;
-  padding: 18px 14px 32px;
+  padding: 32px 14px 32px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
   pointer-events: none;
 }
@@ -207,6 +216,7 @@ body.hand-cursor-right {
 
 .overlay-selection-bar {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 18px;
   justify-content: center;
@@ -215,6 +225,8 @@ body.hand-cursor-right {
   border-radius: 0;
   box-shadow: none;
   backdrop-filter: none;
+  position: relative;
+  z-index: var(--z-ui);
 }
 
 .magic-cloud {
@@ -549,207 +561,231 @@ body.hand-cursor-right {
 }
 
 .home-screen {
-  justify-content: center;
-  align-items: center;
+  position: relative;
   padding: 0;
+  min-height: 100vh;
+  display: block;
+  align-items: initial;
+  justify-content: initial;
+  gap: 0;
 }
 
-/* 首頁背景：保留主視覺蛋與簡潔配件 */
-.home-visual-layer {
+.home-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.home-stage img,
+.home-stage button {
+  position: absolute;
+  user-select: none;
+}
+
+.radiation-lines {
+  width: 52vw;
+  max-width: 760px;
+  top: 18vh;
+  left: -6vw;
+  transform: rotate(-4deg);
+  z-index: 2;
+  animation: radiation-float 18s ease-in-out infinite alternate;
+}
+
+.egg-liquid {
+  width: 78vw;
+  max-width: 1160px;
+  top: 18vh;
+  right: -6vw;
+  z-index: 3;
+  animation: egg-sway 15s ease-in-out infinite alternate;
+}
+
+.egg-gloss {
+  width: 62vw;
+  max-width: 980px;
+  top: 26vh;
+  right: 4vw;
+  z-index: 4;
+  opacity: 0.9;
+  animation: gloss-breathe 12s ease-in-out infinite;
+}
+
+.logo-layer {
+  position: absolute;
+  top: 34vh;
+  left: 43%;
+  transform: translateX(-45%);
+  z-index: 5;
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
+}
+
+.logo-layer .hero-logo {
+  width: clamp(420px, 48vw, 620px);
+  height: auto;
+  animation: logo-lift 10s ease-in-out infinite;
+}
+
+.floating-stars {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  z-index: 6;
   pointer-events: none;
-  z-index: 0;
 }
 
-.home-visual-layer .home-white-egg {
+.floating-stars img {
   position: absolute;
-  top: 4%;
-  left: 50%;
-  width: clamp(760px, 84vw, 1200px);
-  height: clamp(540px, 62vw, 820px);
-  transform: translateX(-50%) rotate(-8deg);
-  background: url("../img/whiteegg.svg") no-repeat center / contain;
-  filter: drop-shadow(0 24px 38px rgba(0, 0, 0, 0.3));
-  opacity: 0.98;
-  animation: soft-drift 18s ease-in-out infinite alternate;
+  width: 82px;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  animation: star-drift 8s ease-in-out infinite;
+  transform-origin: center;
+  --star-rotation: 0deg;
+  --star-scale: 1;
+  transform: translateY(0) rotate(var(--star-rotation))
+    scale(var(--star-scale));
 }
 
-.home-visual-layer .floating-eggshell {
-  position: absolute;
-  width: 220px;
-  height: 180px;
-  background-image: url("../img/待機蛋 (去背) 1.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  top: 8%;
-  right: 34%;
-  transform: rotate(8deg);
-  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.25));
-  animation: soft-drift 14s ease-in-out infinite;
-}
-
-.home-visual-layer .floating-durian {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  background-image: url("../img/榴槤.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  bottom: 12%;
-  left: 12%;
-  transform: rotate(-10deg);
-  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28));
-  animation: soft-drift 16s ease-in-out infinite;
-}
-
-.home-hero {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-}
-
-.hero-logo {
-  width: min(80vw, 600px);
-  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.35));
+.checkered-cloth {
+  width: 52vw;
+  max-width: 760px;
+  bottom: -2vh;
+  right: -8vw;
+  z-index: 7;
+  animation: cloth-wave 16s ease-in-out infinite;
 }
 
 .start-button {
-  width: 240px;
-  height: 120px;
-  background-image: url("../img/botton_Start_.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  width: 220px;
+  height: 122px;
+  bottom: 20vh;
+  left: 52%;
+  transform: translateX(-50%);
+  z-index: 8;
+  background: none;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s ease, filter 0.2s ease;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+  transition: transform 0.28s ease, filter 0.28s ease;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+}
+
+.start-button img {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .start-button:hover,
-.start-button:focus {
-  transform: translateY(-4px) scale(1.02);
-  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+.start-button:focus-visible {
+  transform: translateX(-50%) scale(1.06);
+  filter: drop-shadow(0 18px 38px rgba(255, 191, 60, 0.9));
   outline: none;
 }
 
-.home-secondary-actions {
-  position: absolute;
-  right: -24px;
-  bottom: -32px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+.start-button:active {
+  transform: translateX(-50%) scale(0.98);
 }
 
-.home-secondary-actions .menu-image-btn {
-  width: 170px;
-  aspect-ratio: 3 / 1;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.28));
+.home-settings-btn {
+  width: 60px;
+  height: 60px;
+  top: 26px;
+  right: 28px;
+  z-index: 9;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  transition: transform 0.2s ease;
 }
 
-.floating-ingredients {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
+.home-settings-btn:hover,
+.home-settings-btn:focus-visible {
+  transform: scale(1.08);
+  outline: none;
 }
 
-.float-item {
-  position: absolute;
-  animation: drift 18s var(--wave-ease) infinite;
-  opacity: 0.9;
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.35));
-}
-
-.float-item.item-1 {
-  width: 160px;
-  top: 10%;
-  left: 6%;
-  animation-delay: -2s;
-  animation-duration: 19s;
-}
-
-.float-item.item-2 {
-  width: 120px;
-  top: 18%;
-  right: 12%;
-  animation-delay: -6s;
-  animation-duration: 23s;
-}
-
-.float-item.item-3 {
-  width: 140px;
-  bottom: 12%;
-  left: 18%;
-  animation-delay: -3s;
-  animation-duration: 21s;
-}
-
-.float-item.item-4 {
-  width: 120px;
-  bottom: 16%;
-  right: 20%;
-  animation-duration: 20s;
-}
-
-.float-item.item-5 {
-  width: 110px;
-  top: 30%;
-  left: 32%;
-  animation-delay: -8s;
-  animation-duration: 22s;
-}
-
-.float-item.item-6 {
-  width: 150px;
-  top: 6%;
-  right: 30%;
-  animation-delay: -10s;
-  animation-duration: 24s;
-}
-
-.float-item.item-7 {
-  width: 100px;
-  bottom: 8%;
-  left: 6%;
-  animation-delay: -4s;
-  animation-duration: 19s;
-}
-
-@keyframes drift {
+@keyframes radiation-float {
   0% {
-    transform: translate3d(0, 0, 0) rotate(-4deg) scale(1);
-  }
-  25% {
-    transform: translate3d(10px, -18px, 0) rotate(2deg) scale(1.04);
+    transform: translateY(0) rotate(-4deg);
   }
   50% {
-    transform: translate3d(-16px, -30px, 0) rotate(-2deg) scale(1.02);
-  }
-  75% {
-    transform: translate3d(12px, -12px, 0) rotate(3deg) scale(1.05);
+    transform: translateY(-10px) rotate(-3deg);
   }
   100% {
-    transform: translate3d(0, 0, 0) rotate(-4deg) scale(1);
+    transform: translateY(6px) rotate(-5deg);
   }
 }
 
-@keyframes soft-drift {
+@keyframes egg-sway {
   0% {
-    transform: translate3d(0, 0, 0) rotate(-2deg) scale(1.02);
+    transform: translateY(0) scale(1);
   }
   50% {
-    transform: translate3d(14px, -18px, 0) rotate(2deg) scale(1.03);
+    transform: translateY(-12px) scale(1.01);
   }
   100% {
-    transform: translate3d(-6px, 10px, 0) rotate(-3deg) scale(1.02);
+    transform: translateY(8px) scale(1.002);
+  }
+}
+
+@keyframes gloss-breathe {
+  0% {
+    opacity: 0.9;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.01);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(4px) scale(0.998);
+  }
+}
+
+@keyframes logo-lift {
+  0% {
+    transform: translateX(-45%) translateY(0) scale(1);
+  }
+  45% {
+    transform: translateX(-45%) translateY(-10px) scale(1.01);
+  }
+  100% {
+    transform: translateX(-45%) translateY(8px) scale(0.996);
+  }
+}
+
+@keyframes cloth-wave {
+  0% {
+    transform: translateY(0) rotate(1deg) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-2deg) scale(1.01);
+  }
+  100% {
+    transform: translateY(6px) rotate(1deg) scale(1);
+  }
+}
+
+@keyframes star-drift {
+  0% {
+    transform: translateY(0) rotate(var(--star-rotation))
+      scale(var(--star-scale));
+  }
+  50% {
+    transform: translateY(-14px) rotate(var(--star-rotation))
+      scale(var(--star-scale))
+      scale(1.06);
+  }
+  100% {
+    transform: translateY(10px) rotate(var(--star-rotation))
+      scale(var(--star-scale))
+      scale(0.98);
   }
 }
 
@@ -1288,11 +1324,11 @@ body.hand-cursor-right {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 18px 26px;
+  padding: 8px 10px 0;
   pointer-events: none;
   z-index: var(--z-index-high);
-  transform: translateY(2%);
-  transition: opacity 0.45s ease, transform 0.9s cubic-bezier(0.34, 1.4, 0.42, 1);
+  transform: none;
+  transition: opacity 0.45s ease;
 }
 
 .hand-overlay .hand-image {
@@ -1316,7 +1352,7 @@ body.hand-cursor-right {
 
 .kitchen-hands {
   z-index: 6;
-  padding: 10px 28px 4px;
+  padding: 0 12px 0;
 }
 
 .kitchen-hands .hand-image {
@@ -1446,10 +1482,14 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 #screen-5 {
-  padding: 0;
-  background: transparent;
+  position: relative;
   justify-content: center;
   align-items: center;
+  padding: 32px 16px 96px;
+  background: url("../img/廚房動圖.png") center/cover no-repeat;
+  overflow: hidden;
+  gap: 24px;
+  z-index: var(--z-bg);
 }
 
 .alchemy-workbench {
@@ -1463,6 +1503,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: var(--z-bg);
 }
 
 .alchemy-workbench::before {
@@ -1486,8 +1527,11 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .slot-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-s);
+  grid-template-columns: repeat(3, minmax(170px, 1fr));
+  gap: 14px;
+  justify-items: stretch;
+  width: min(720px, 92vw);
+  margin: 32px auto 0;
 }
 
 .selection-slot {
@@ -1503,6 +1547,10 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   min-height: 52px;
   transition: all var(--transition-fast);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  width: 100%;
+  max-width: 220px;
+  justify-self: center;
+  z-index: var(--z-ui);
 }
 
 .selection-slot.filled {
@@ -1575,7 +1623,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   .egg-graphic {
     width: 280px;
     height: 340px;
-    background: url("../img/eggmain.jpg") center/contain no-repeat;
+    background: url("../img/待機蛋 (去背) 1.png") center/contain no-repeat;
     border-radius: 50% 50% 46% 54%;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
     position: relative;
@@ -1770,6 +1818,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   background: url("../img/廚房動圖.png") center/cover no-repeat;
   overflow: hidden;
   gap: 24px;
+  z-index: var(--z-bg);
 }
 
 .casting-header {
@@ -3187,11 +3236,12 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .alchemy-workbench.bright {
-  width: 100%;
-  max-width: 1200px;
+  width: 100vw;
+  max-width: none;
+  margin: 0 calc(50% - 50vw);
+  padding: 0 0 40px;
   background: transparent;
   border-radius: 0;
-  padding: 10px 14px 40px;
   box-shadow: none;
   border: none;
 }
@@ -3204,7 +3254,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .slot-row {
   display: grid;
-  grid-template-columns: repeat(4, 70px);
+  grid-template-columns: repeat(3, 70px);
   gap: 14px;
   justify-items: center;
   align-items: center;
@@ -3323,11 +3373,11 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     align-items: center;
     gap: 28px;
     overflow: hidden;
-    padding: 48px 18px 120px;
+    padding: 48px 0 120px;
     background: transparent;
     box-shadow: none;
     border-radius: 0;
-    z-index: 1;
+    z-index: var(--z-bg);
   }
 
   .workbench-body::after {
@@ -3335,13 +3385,13 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     position: absolute;
     bottom: -60px;
     left: 50%;
-    transform: translateX(-50%);
-    width: 280%;
+    transform: translate(-50%, 60px);
+    width: 100vw;
     max-width: none;
     height: clamp(420px, 62vh, 640px);
     background: url("../img/vector-1.svg") center/cover no-repeat;
     pointer-events: none;
-    z-index: 1;
+    z-index: var(--z-table);
   }
 
 .kitchen-illustration {
@@ -3350,7 +3400,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .workbench-body > * {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-item);
 }
 
   .main-egg-display {
@@ -3361,27 +3411,29 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     align-items: center;
     justify-content: center;
     position: relative;
-    transform: none;
+    transform: translateY(-36px);
     margin: 0 auto 12px;
-    z-index: 10;
+    z-index: var(--z-player);
   }
 
   .egg-graphic {
     width: 280px;
     height: 340px;
-    background: url("../img/eggmain.jpg") center/contain no-repeat;
+    background: url("../img/待機蛋 (去背) 1.png") center/contain no-repeat;
     border-radius: 50% 50% 46% 54%;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
     animation: floaty 3.2s ease-in-out infinite, egg-wobble 2.8s ease-in-out infinite;
+    z-index: var(--z-player);
   }
 
-.drop-hint {
-  position: absolute;
-  bottom: 10px;
-  font-weight: 600;
-  color: #5a4100;
-  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
-}
+  .drop-hint {
+    position: absolute;
+    bottom: 10px;
+    font-weight: 600;
+    color: #5a4100;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
+    z-index: var(--z-ui);
+  }
 
 
   .ingredient-table {
@@ -3389,39 +3441,80 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     bottom: auto;
     left: auto;
     transform: none;
-    width: min(960px, 100%);
-    margin: 0 auto;
+    width: 100vw;
+    max-width: none;
+    margin: 0 calc(50% - 50vw);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-  align-items: flex-end;
-  gap: 16px 18px;
-  padding: 0 12px;
-  background: transparent;
-  box-shadow: none;
-  pointer-events: auto;
-  z-index: 4;
-  border-radius: 0;
-}
+    align-items: flex-end;
+    gap: 18px 18px;
+    padding: 0 0 12px;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: auto;
+    z-index: var(--z-item);
+    border-radius: 0;
+  }
 
-.ingredient-token {
-  background: transparent;
-  border: none;
-  padding: 0;
-  border-radius: 0;
-  cursor: grab;
-  box-shadow: none;
-  transition: transform var(--transition-fast), filter var(--transition-fast);
-  z-index: 8;
-  will-change: transform, filter;
-  transform: translate(0, 0) rotate(0deg);
-}
+  .ingredient-token {
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: element;
+    box-shadow: none;
+    transition: transform var(--transition-fast), filter var(--transition-fast);
+    z-index: var(--z-item);
+    will-change: transform, filter;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  .ingredient-token:active {
+    cursor: grabbing;
+    transform: scale(1.06);
+  }
 
 .ingredient-token.dragging,
 .ingredient-token:hover {
   transform: translateY(-10px) scale(1.05);
   box-shadow: none;
   filter: saturate(1.12);
+}
+
+.ingredient-token.drag-active {
+  z-index: calc(var(--z-ui) + 10);
+  transition: none;
+  transform: translate(0, 0) scale(1.02);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+}
+
+.ingredient-token.drag-active .token-img-wrap {
+  pointer-events: none;
+}
+
+.ingredient-token.consumed {
+  opacity: 0;
+  transform: scale(0.72);
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+
+.drag-revert {
+  transition: transform 0.32s cubic-bezier(0.25, 0.9, 0.35, 1.1);
+}
+
+.manual-drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
+  opacity: 0.96;
 }
 
 .ingredient-token img {
@@ -3432,6 +3525,50 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   padding: 0;
   background: transparent;
   border-radius: 0;
+}
+
+.drop-flare,
+.slot-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 230, 157, 0.6), transparent 60%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  border-radius: 40%;
+  animation: flash-pop 0.45s ease;
+  z-index: var(--z-effect);
+}
+
+.slot-flash {
+  inset: -6%;
+  border-radius: 18px;
+  filter: blur(2px);
+}
+
+@keyframes flash-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+.drop-target.hit-success .egg-graphic {
+  filter: drop-shadow(0 12px 24px rgba(255, 198, 89, 0.4));
+  animation: egg-react 0.85s ease, floaty 3.2s ease-in-out infinite,
+    egg-wobble 2.8s ease-in-out infinite;
+}
+
+.drop-target.hit-success,
+.selection-slot.hit-success {
+  filter: drop-shadow(0 6px 12px rgba(255, 199, 96, 0.42));
 }
 
 .drop-target.drag-over {
