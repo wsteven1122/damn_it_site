@@ -1096,6 +1096,19 @@ class GameController {
         card.classList.remove("dragging");
         this.clearHandCursor();
       });
+
+      // 提供點擊/鍵盤選取以確保行動裝置也能玩
+      card.addEventListener("click", () => {
+        this.playTone("uiTap");
+        this.addIngredient(ingredient);
+      });
+      card.addEventListener("keyup", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          this.playTone("uiTap");
+          this.addIngredient(ingredient);
+        }
+      });
     });
 
     if (this.dom.dropTarget) {
