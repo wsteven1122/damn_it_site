@@ -1081,6 +1081,7 @@ class GameController {
       card.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", ingredient);
         e.dataTransfer.effectAllowed = "copy";
+        e.dataTransfer.setDragImage(card, card.offsetWidth / 2, card.offsetHeight / 2);
         card.classList.add("dragging");
         const side = e.clientX < window.innerWidth / 2 ? "left" : "right";
         this.setHandCursor(side);

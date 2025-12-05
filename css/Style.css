@@ -1675,7 +1675,8 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   position: relative;
   justify-content: flex-start;
   align-items: stretch;
-  padding: var(--spacing-l) var(--spacing-xl) 140px;
+  /* padding: var(--spacing-l) var(--spacing-xl) 140px; */
+  overflow: hidden;
   background: transparent;
   overflow-y: auto;
   overflow-x: hidden;
@@ -3188,6 +3189,15 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     rotate(var(--rot)) scale(1.05);
   box-shadow: none;
   filter: saturate(1.12);
+}
+
+.ingredient-token.dragging {
+  position: relative;
+  top: -9999px;
+  left: -9999px;
+}
+.ingredient-token.selected {
+  opacity: 0;
 }
 
 .ingredient-token img {
