@@ -1677,7 +1677,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   justify-content: flex-start;
   align-items: stretch;
   padding: var(--spacing-l) var(--spacing-xl) 120px;
-  background: transparent;
+  background: url("../img/廚房動圖.png") center/cover no-repeat;
   overflow: hidden;
   gap: var(--spacing-l);
 }
@@ -2934,7 +2934,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   width: 100%;
   max-width: 1200px;
   background: transparent;
-  border-radius: 32px;
+  border-radius: 0;
   padding: 10px 14px 40px;
   box-shadow: none;
   border: none;
@@ -3088,18 +3088,13 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   gap: 26px;
   overflow: hidden;
   padding: 20px 18px 120px;
-  background: url("../img/廚房動圖.png") center/cover no-repeat;
-  box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.22);
-  border-radius: 24px;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
 }
 
 .kitchen-illustration {
-  position: absolute;
-  inset: 0;
-  background: url("../img/Rectangle 97.png") center/cover no-repeat;
-  pointer-events: none;
-  filter: blur(0.5px);
-  opacity: 0.78;
+  display: none;
 }
 
 .main-egg-display {
@@ -3228,9 +3223,9 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   height: 126px;
   object-fit: contain;
   display: block;
-  padding: 6px;
-  background: rgba(255, 255, 255, 0.78);
-  border-radius: 18px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
 }
 
 .drop-target.drag-over {
