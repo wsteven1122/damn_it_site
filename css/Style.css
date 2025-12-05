@@ -3080,14 +3080,15 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .workbench-body {
   position: relative;
-  min-height: clamp(520px, 72vh, 760px);
-  display: flex;
-  flex-direction: column;
+  min-height: clamp(520px, 70vh, 760px);
+  display: grid;
+  grid-template-rows: auto auto;
+  justify-items: center;
   align-items: center;
-  justify-content: center;
-  gap: 26px;
+  align-content: center;
+  gap: clamp(30px, 5vh, 56px);
   overflow: hidden;
-  padding: 20px 18px 120px;
+  padding: 28px 18px 82px;
   background: transparent;
   box-shadow: none;
   border-radius: 0;
@@ -3102,10 +3103,9 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   height: 380px;
   display: grid;
   place-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  transform: none;
+  margin: 0 auto;
   z-index: 10;
 }
 
@@ -3132,13 +3132,13 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   bottom: auto;
   left: auto;
   transform: none;
-  width: min(1040px, 100%);
-  margin: 220px auto 0;
+  width: min(960px, 100%);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   justify-items: center;
   gap: 28px 24px;
-  padding: 18px 18px 0;
+  padding: 6px 12px 0;
   background: transparent;
   box-shadow: none;
   pointer-events: auto;
