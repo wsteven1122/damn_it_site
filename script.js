@@ -294,6 +294,7 @@ class GameController {
     this.state.isTransitioning = true;
 
     try {
+      await this.loadNextScreenAssets(nextScreenId);
       await this.playCurtainTransition(() => this.switchScreens(nextScreenId));
 
       if (nextScreenId === "screen-2") {
@@ -322,6 +323,22 @@ class GameController {
     } finally {
       this.state.isTransitioning = false;
     }
+  }
+
+  async loadNextScreenAssets(nextScreenId) {
+    const resources = [
+      "img/紅布幕（關） 1.png",
+      "img/紅布幕（開） 1.png",
+    ];
+    const promises = resources.map((src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => resolve();
+        img.onerror = () => reject(`Failed to load image: ${src}`);
+      });
+    });
+    await Promise.all(promises);
   }
 
   playCurtainTransition(midpointCallback) {
@@ -1055,13 +1072,14 @@ class GameController {
     });
 
     // 2. 開始遊戲按鈕 (Screen 1 Start)
-    if (this.dom.lottieStartBtn) {
-      this.dom.lottieStartBtn.addEventListener("click", () => {
-        if (this.state.isTransitioning) return;
-        this.playTone("uiTap");
-        this.performTransition(this.dom.lottieStartBtn.dataset.target);
-      });
-    }
+    // FIXME: already handled in nextScreenBtns
+    // if (this.dom.lottieStartBtn) {
+    //   this.dom.lottieStartBtn.addEventListener("click", () => {
+    //     if (this.state.isTransitioning) return;
+    //     this.playTone("uiTap");
+    //     this.performTransition(this.dom.lottieStartBtn.dataset.target);
+    //   });
+    // }
 
     // 3. 食材選擇/拖曳
     this.dom.ingredientTokens.forEach((card) => {
@@ -1228,5 +1246,5 @@ class GameController {
 // =========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  new GameController();
+  window.gc = new GameController();
 });
