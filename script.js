@@ -7,7 +7,7 @@ const CONFIG = {
   CURTAIN_CLOSE_MS: 420,
   CURTAIN_SHAKE_MS: 200,
   CURTAIN_OPEN_MS: 1100,
-  MAX_INGREDIENTS: 4,
+  MAX_INGREDIENTS: 3,
   INGREDIENT_IMAGES: {
     榴槤: "./img/榴槤.png",
     魷魚: "./img/魷魚.png",
@@ -91,7 +91,7 @@ const CONFIG = {
       },
       {
         targetId: "ingredient-tray",
-        text: "直接拖曳原始圖片食材到米特蛋上方，最多四種。",
+        text: "直接拖曳原始圖片食材到米特蛋上方，最多三種。",
         position: "top",
       },
       {

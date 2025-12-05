@@ -1575,7 +1575,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   .egg-graphic {
     width: 280px;
     height: 340px;
-    background: url("../img/eggmain.jpg") center/contain no-repeat;
+    background: url("../img/待機蛋 (去背) 1.png") center/contain no-repeat;
     border-radius: 50% 50% 46% 54%;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
     position: relative;
@@ -3204,7 +3204,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .slot-row {
   display: grid;
-  grid-template-columns: repeat(4, 70px);
+  grid-template-columns: repeat(3, 70px);
   gap: 14px;
   justify-items: center;
   align-items: center;
@@ -3369,7 +3369,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   .egg-graphic {
     width: 280px;
     height: 340px;
-    background: url("../img/eggmain.jpg") center/contain no-repeat;
+    background: url("../img/待機蛋 (去背) 1.png") center/contain no-repeat;
     border-radius: 50% 50% 46% 54%;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
     animation: floaty 3.2s ease-in-out infinite, egg-wobble 2.8s ease-in-out infinite;
