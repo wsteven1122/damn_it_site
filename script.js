@@ -218,6 +218,7 @@ class GameController {
     }
     this.loadLottieAnimations();
     this.setupBackgroundMusic();
+    this.seedHomeStars();
     this.setupSoundBoard();
     this.setupSunEasterEgg();
     this.initEventListeners();
@@ -488,6 +489,40 @@ class GameController {
 
     document.addEventListener("pointerdown", unlockAudio);
     document.addEventListener("touchstart", unlockAudio);
+  }
+
+  seedHomeStars() {
+    const starField = document.getElementById("star-field");
+    if (!starField) return;
+
+    const starSprites = [
+      "./img/HomePage.png",
+      "./img/Frame 64.png",
+      "./img/Frame 100.png",
+      "./img/Frame 215.png",
+    ];
+
+    starField.innerHTML = "";
+    const starCount = 14;
+
+    for (let i = 0; i < starCount; i += 1) {
+      const star = document.createElement("img");
+      const left = 8 + Math.random() * 76;
+      const top = 6 + Math.random() * 38;
+      const rotation = (Math.random() * 20 - 10).toFixed(2);
+      const scale = (0.82 + Math.random() * 0.35).toFixed(2);
+      const delay = (Math.random() * 4).toFixed(2);
+
+      star.src = starSprites[i % starSprites.length];
+      star.alt = "裝飾星星";
+      star.style.left = `${left}%`;
+      star.style.top = `${top}%`;
+      star.style.setProperty("--star-rotation", `${rotation}deg`);
+      star.style.setProperty("--star-scale", scale);
+      star.style.animationDelay = `${delay}s`;
+
+      starField.appendChild(star);
+    }
   }
 
   setupSoundBoard() {

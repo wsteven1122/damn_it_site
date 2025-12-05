@@ -561,207 +561,231 @@ body.hand-cursor-right {
 }
 
 .home-screen {
-  justify-content: center;
-  align-items: center;
+  position: relative;
   padding: 0;
+  min-height: 100vh;
+  display: block;
+  align-items: initial;
+  justify-content: initial;
+  gap: 0;
 }
 
-/* 首頁背景：保留主視覺蛋與簡潔配件 */
-.home-visual-layer {
+.home-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.home-stage img,
+.home-stage button {
+  position: absolute;
+  user-select: none;
+}
+
+.radiation-lines {
+  width: 52vw;
+  max-width: 760px;
+  top: 18vh;
+  left: -6vw;
+  transform: rotate(-4deg);
+  z-index: 2;
+  animation: radiation-float 18s ease-in-out infinite alternate;
+}
+
+.egg-liquid {
+  width: 78vw;
+  max-width: 1160px;
+  top: 18vh;
+  right: -6vw;
+  z-index: 3;
+  animation: egg-sway 15s ease-in-out infinite alternate;
+}
+
+.egg-gloss {
+  width: 62vw;
+  max-width: 980px;
+  top: 26vh;
+  right: 4vw;
+  z-index: 4;
+  opacity: 0.9;
+  animation: gloss-breathe 12s ease-in-out infinite;
+}
+
+.logo-layer {
+  position: absolute;
+  top: 34vh;
+  left: 43%;
+  transform: translateX(-45%);
+  z-index: 5;
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
+}
+
+.logo-layer .hero-logo {
+  width: clamp(420px, 48vw, 620px);
+  height: auto;
+  animation: logo-lift 10s ease-in-out infinite;
+}
+
+.floating-stars {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  z-index: 6;
   pointer-events: none;
-  z-index: 0;
 }
 
-.home-visual-layer .home-white-egg {
+.floating-stars img {
   position: absolute;
-  top: 4%;
-  left: 50%;
-  width: clamp(760px, 84vw, 1200px);
-  height: clamp(540px, 62vw, 820px);
-  transform: translateX(-50%) rotate(-8deg);
-  background: url("../img/whiteegg.svg") no-repeat center / contain;
-  filter: drop-shadow(0 24px 38px rgba(0, 0, 0, 0.3));
-  opacity: 0.98;
-  animation: soft-drift 18s ease-in-out infinite alternate;
+  width: 82px;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  animation: star-drift 8s ease-in-out infinite;
+  transform-origin: center;
+  --star-rotation: 0deg;
+  --star-scale: 1;
+  transform: translateY(0) rotate(var(--star-rotation))
+    scale(var(--star-scale));
 }
 
-.home-visual-layer .floating-eggshell {
-  position: absolute;
-  width: 220px;
-  height: 180px;
-  background-image: url("../img/待機蛋 (去背) 1.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  top: 8%;
-  right: 34%;
-  transform: rotate(8deg);
-  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.25));
-  animation: soft-drift 14s ease-in-out infinite;
-}
-
-.home-visual-layer .floating-durian {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  background-image: url("../img/榴槤.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  bottom: 12%;
-  left: 12%;
-  transform: rotate(-10deg);
-  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28));
-  animation: soft-drift 16s ease-in-out infinite;
-}
-
-.home-hero {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-}
-
-.hero-logo {
-  width: min(80vw, 600px);
-  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.35));
+.checkered-cloth {
+  width: 52vw;
+  max-width: 760px;
+  bottom: -2vh;
+  right: -8vw;
+  z-index: 7;
+  animation: cloth-wave 16s ease-in-out infinite;
 }
 
 .start-button {
-  width: 240px;
-  height: 120px;
-  background-image: url("../img/botton_Start_.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  width: 220px;
+  height: 122px;
+  bottom: 20vh;
+  left: 52%;
+  transform: translateX(-50%);
+  z-index: 8;
+  background: none;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s ease, filter 0.2s ease;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+  transition: transform 0.28s ease, filter 0.28s ease;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+}
+
+.start-button img {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .start-button:hover,
-.start-button:focus {
-  transform: translateY(-4px) scale(1.02);
-  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+.start-button:focus-visible {
+  transform: translateX(-50%) scale(1.06);
+  filter: drop-shadow(0 18px 38px rgba(255, 191, 60, 0.9));
   outline: none;
 }
 
-.home-secondary-actions {
-  position: absolute;
-  right: -24px;
-  bottom: -32px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+.start-button:active {
+  transform: translateX(-50%) scale(0.98);
 }
 
-.home-secondary-actions .menu-image-btn {
-  width: 170px;
-  aspect-ratio: 3 / 1;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.28));
+.home-settings-btn {
+  width: 60px;
+  height: 60px;
+  top: 26px;
+  right: 28px;
+  z-index: 9;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  transition: transform 0.2s ease;
 }
 
-.floating-ingredients {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
+.home-settings-btn:hover,
+.home-settings-btn:focus-visible {
+  transform: scale(1.08);
+  outline: none;
 }
 
-.float-item {
-  position: absolute;
-  animation: drift 18s var(--wave-ease) infinite;
-  opacity: 0.9;
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.35));
-}
-
-.float-item.item-1 {
-  width: 160px;
-  top: 10%;
-  left: 6%;
-  animation-delay: -2s;
-  animation-duration: 19s;
-}
-
-.float-item.item-2 {
-  width: 120px;
-  top: 18%;
-  right: 12%;
-  animation-delay: -6s;
-  animation-duration: 23s;
-}
-
-.float-item.item-3 {
-  width: 140px;
-  bottom: 12%;
-  left: 18%;
-  animation-delay: -3s;
-  animation-duration: 21s;
-}
-
-.float-item.item-4 {
-  width: 120px;
-  bottom: 16%;
-  right: 20%;
-  animation-duration: 20s;
-}
-
-.float-item.item-5 {
-  width: 110px;
-  top: 30%;
-  left: 32%;
-  animation-delay: -8s;
-  animation-duration: 22s;
-}
-
-.float-item.item-6 {
-  width: 150px;
-  top: 6%;
-  right: 30%;
-  animation-delay: -10s;
-  animation-duration: 24s;
-}
-
-.float-item.item-7 {
-  width: 100px;
-  bottom: 8%;
-  left: 6%;
-  animation-delay: -4s;
-  animation-duration: 19s;
-}
-
-@keyframes drift {
+@keyframes radiation-float {
   0% {
-    transform: translate3d(0, 0, 0) rotate(-4deg) scale(1);
-  }
-  25% {
-    transform: translate3d(10px, -18px, 0) rotate(2deg) scale(1.04);
+    transform: translateY(0) rotate(-4deg);
   }
   50% {
-    transform: translate3d(-16px, -30px, 0) rotate(-2deg) scale(1.02);
-  }
-  75% {
-    transform: translate3d(12px, -12px, 0) rotate(3deg) scale(1.05);
+    transform: translateY(-10px) rotate(-3deg);
   }
   100% {
-    transform: translate3d(0, 0, 0) rotate(-4deg) scale(1);
+    transform: translateY(6px) rotate(-5deg);
   }
 }
 
-@keyframes soft-drift {
+@keyframes egg-sway {
   0% {
-    transform: translate3d(0, 0, 0) rotate(-2deg) scale(1.02);
+    transform: translateY(0) scale(1);
   }
   50% {
-    transform: translate3d(14px, -18px, 0) rotate(2deg) scale(1.03);
+    transform: translateY(-12px) scale(1.01);
   }
   100% {
-    transform: translate3d(-6px, 10px, 0) rotate(-3deg) scale(1.02);
+    transform: translateY(8px) scale(1.002);
+  }
+}
+
+@keyframes gloss-breathe {
+  0% {
+    opacity: 0.9;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.01);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(4px) scale(0.998);
+  }
+}
+
+@keyframes logo-lift {
+  0% {
+    transform: translateX(-45%) translateY(0) scale(1);
+  }
+  45% {
+    transform: translateX(-45%) translateY(-10px) scale(1.01);
+  }
+  100% {
+    transform: translateX(-45%) translateY(8px) scale(0.996);
+  }
+}
+
+@keyframes cloth-wave {
+  0% {
+    transform: translateY(0) rotate(1deg) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-2deg) scale(1.01);
+  }
+  100% {
+    transform: translateY(6px) rotate(1deg) scale(1);
+  }
+}
+
+@keyframes star-drift {
+  0% {
+    transform: translateY(0) rotate(var(--star-rotation))
+      scale(var(--star-scale));
+  }
+  50% {
+    transform: translateY(-14px) rotate(var(--star-rotation))
+      scale(var(--star-scale))
+      scale(1.06);
+  }
+  100% {
+    transform: translateY(10px) rotate(var(--star-rotation))
+      scale(var(--star-scale))
+      scale(0.98);
   }
 }
 
