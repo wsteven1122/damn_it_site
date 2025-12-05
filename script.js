@@ -854,10 +854,17 @@ class GameController {
 
 
       await wait(250);
+      if (aborted) {
+        bubble.remove();
+        return;
+      }
       bubble.classList.add("pop-in");
 
       for (let i = 0; i <= text.length; i++) {
-        if (aborted) return;
+        if (aborted) {
+          bubble.remove();
+          return;
+        }
         bubble.textContent = text.substring(0, i);
         await wait(35);
       }
