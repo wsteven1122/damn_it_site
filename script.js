@@ -7,7 +7,7 @@ const CONFIG = {
   CURTAIN_CLOSE_MS: 420,
   CURTAIN_SHAKE_MS: 200,
   CURTAIN_OPEN_MS: 1100,
-  MAX_INGREDIENTS: 3,
+  MAX_INGREDIENTS: 4,
   INGREDIENT_IMAGES: {
     榴槤: "./img/榴槤.png",
     魷魚: "./img/魷魚.png",
@@ -90,18 +90,13 @@ const CONFIG = {
         position: "bottom",
       },
       {
-        targetId: "kitchen-status-chip",
-        text: "綠色提示列會計算目前選擇的數量，避免被上方選單遮住。",
-        position: "left",
-      },
-      {
         targetId: "ingredient-tray",
-        text: "直接拖曳原始圖片食材到米特蛋上方，最多三種。",
+        text: "直接拖曳原始圖片食材到米特蛋上方，最多四種。",
         position: "top",
       },
       {
         targetId: "cast-spell-btn",
-        text: "選好後按【開始唸咒】進入變身影片。",
+        text: "選好後按【MAGIC】啟動，跳轉進入變身影片。",
         position: "top",
       },
     ],
@@ -201,7 +196,6 @@ class GameController {
       tipText: document.getElementById("tip-text"),
       tipNextBtn: document.getElementById("tip-next-btn"),
 
-      selectionStatus: document.getElementById("current-selection-count"),
       selectionSlots: document.querySelectorAll(".selection-slot"),
       castSpellBtn: document.getElementById("cast-spell-btn"),
 
@@ -212,6 +206,7 @@ class GameController {
 
   init() {
     this.dom.persistentUI.style.display = "flex";
+    document.body.dataset.activeScreen = this.state.currentScreenId;
     if (this.dom.curtainLayer) {
       this.dom.curtainLayer.classList.add("open");
       this.dom.curtainLayer.setAttribute("aria-hidden", "true");
@@ -219,8 +214,6 @@ class GameController {
     this.loadLottieAnimations();
     this.setupBackgroundMusic();
     this.setupSoundBoard();
-    const maxCountLabel = document.getElementById("max-selection-count");
-    if (maxCountLabel) maxCountLabel.textContent = CONFIG.MAX_INGREDIENTS;
     this.initEventListeners();
     this.updateIngredientStatus();
     this.updateHandState(this.state.currentScreenId);
@@ -249,6 +242,7 @@ class GameController {
       setTimeout(() => nextScreen.classList.remove("wave-enter"), CONFIG.TRANSITION_DURATION + 180);
     }
     this.state.currentScreenId = nextScreenId;
+    document.body.dataset.activeScreen = nextScreenId;
     this.updatePersistentUI(nextScreenId);
     this.updateSceneMood(nextScreenId);
     this.updateHandState(nextScreenId);
@@ -265,6 +259,8 @@ class GameController {
 
   updatePersistentUI(screenId) {
     this.dom.persistentUI.style.display = "flex";
+    const hideToolbar = screenId === "screen-5";
+    this.dom.persistentUI.classList.toggle("hidden", hideToolbar);
   }
 
   updateHandState(screenId) {
@@ -616,11 +612,6 @@ class GameController {
   // ---------------------- 食材選擇邏輯 ----------------------
 
   updateIngredientStatus() {
-    if (this.dom.selectionStatus) {
-      this.dom.selectionStatus.textContent =
-        this.state.selectedIngredients.size;
-    }
-
     const isCastDisabled =
       this.state.selectedIngredients.size === 0 ||
       this.state.selectedIngredients.size > CONFIG.MAX_INGREDIENTS;
