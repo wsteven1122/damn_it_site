@@ -2770,6 +2770,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   position: relative;
   text-align: center;
   align-self: center;
+  margin: 0 0 18px; /* for the triangle pointer */
 }
 
 .typing-bubble {
