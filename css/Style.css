@@ -33,6 +33,14 @@
   --z-index-high: 1000; /* Modals, Alerts, Guide */
   --z-index-curtain: 9999;
 
+  /* 分層：背景 / 桌面 / 道具 / 主角 / 特效 / UI */
+  --z-bg: 0;
+  --z-table: 6;
+  --z-item: 12;
+  --z-player: 16;
+  --z-effect: 20;
+  --z-ui: 32;
+
   /* 過渡效果 */
   --transition-fast: 0.2s ease-out;
   --transition-medium: 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -194,9 +202,10 @@ body.hand-cursor-right {
 .overlay-ingredients-inner {
   width: min(1160px, 96%);
   margin: 0 auto;
-  padding: 18px 14px 32px;
+  padding: 32px 14px 32px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
   pointer-events: none;
 }
@@ -207,6 +216,7 @@ body.hand-cursor-right {
 
 .overlay-selection-bar {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 18px;
   justify-content: center;
@@ -215,6 +225,8 @@ body.hand-cursor-right {
   border-radius: 0;
   box-shadow: none;
   backdrop-filter: none;
+  position: relative;
+  z-index: var(--z-ui);
 }
 
 .magic-cloud {
@@ -1288,11 +1300,11 @@ body.hand-cursor-right {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 18px 26px;
+  padding: 8px 10px 0;
   pointer-events: none;
   z-index: var(--z-index-high);
-  transform: translateY(2%);
-  transition: opacity 0.45s ease, transform 0.9s cubic-bezier(0.34, 1.4, 0.42, 1);
+  transform: none;
+  transition: opacity 0.45s ease;
 }
 
 .hand-overlay .hand-image {
@@ -1316,7 +1328,7 @@ body.hand-cursor-right {
 
 .kitchen-hands {
   z-index: 6;
-  padding: 10px 28px 4px;
+  padding: 0 12px 0;
 }
 
 .kitchen-hands .hand-image {
@@ -1446,10 +1458,14 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 #screen-5 {
-  padding: 0;
-  background: transparent;
+  position: relative;
   justify-content: center;
   align-items: center;
+  padding: 32px 16px 96px;
+  background: url("../img/廚房動圖.png") center/cover no-repeat;
+  overflow: hidden;
+  gap: 24px;
+  z-index: var(--z-bg);
 }
 
 .alchemy-workbench {
@@ -1463,6 +1479,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: var(--z-bg);
 }
 
 .alchemy-workbench::before {
@@ -1486,8 +1503,11 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .slot-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-s);
+  grid-template-columns: repeat(3, minmax(170px, 1fr));
+  gap: 14px;
+  justify-items: stretch;
+  width: min(720px, 92vw);
+  margin: 32px auto 0;
 }
 
 .selection-slot {
@@ -1503,6 +1523,10 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   min-height: 52px;
   transition: all var(--transition-fast);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  width: 100%;
+  max-width: 220px;
+  justify-self: center;
+  z-index: var(--z-ui);
 }
 
 .selection-slot.filled {
@@ -1575,7 +1599,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   .egg-graphic {
     width: 280px;
     height: 340px;
-    background: url("../img/eggmain.jpg") center/contain no-repeat;
+    background: url("../img/待機蛋 (去背) 1.png") center/contain no-repeat;
     border-radius: 50% 50% 46% 54%;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
     position: relative;
@@ -1770,6 +1794,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   background: url("../img/廚房動圖.png") center/cover no-repeat;
   overflow: hidden;
   gap: 24px;
+  z-index: var(--z-bg);
 }
 
 .casting-header {
@@ -3187,11 +3212,12 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .alchemy-workbench.bright {
-  width: 100%;
-  max-width: 1200px;
+  width: 100vw;
+  max-width: none;
+  margin: 0 calc(50% - 50vw);
+  padding: 0 0 40px;
   background: transparent;
   border-radius: 0;
-  padding: 10px 14px 40px;
   box-shadow: none;
   border: none;
 }
@@ -3204,7 +3230,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .slot-row {
   display: grid;
-  grid-template-columns: repeat(4, 70px);
+  grid-template-columns: repeat(3, 70px);
   gap: 14px;
   justify-items: center;
   align-items: center;
@@ -3323,11 +3349,11 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     align-items: center;
     gap: 28px;
     overflow: hidden;
-    padding: 48px 18px 120px;
+    padding: 48px 0 120px;
     background: transparent;
     box-shadow: none;
     border-radius: 0;
-    z-index: 1;
+    z-index: var(--z-bg);
   }
 
   .workbench-body::after {
@@ -3335,13 +3361,13 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     position: absolute;
     bottom: -60px;
     left: 50%;
-    transform: translateX(-50%);
-    width: 280%;
+    transform: translate(-50%, 60px);
+    width: 100vw;
     max-width: none;
     height: clamp(420px, 62vh, 640px);
     background: url("../img/vector-1.svg") center/cover no-repeat;
     pointer-events: none;
-    z-index: 1;
+    z-index: var(--z-table);
   }
 
 .kitchen-illustration {
@@ -3350,7 +3376,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .workbench-body > * {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-item);
 }
 
   .main-egg-display {
@@ -3361,27 +3387,29 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     align-items: center;
     justify-content: center;
     position: relative;
-    transform: none;
+    transform: translateY(-36px);
     margin: 0 auto 12px;
-    z-index: 10;
+    z-index: var(--z-player);
   }
 
   .egg-graphic {
     width: 280px;
     height: 340px;
-    background: url("../img/eggmain.jpg") center/contain no-repeat;
+    background: url("../img/待機蛋 (去背) 1.png") center/contain no-repeat;
     border-radius: 50% 50% 46% 54%;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
     animation: floaty 3.2s ease-in-out infinite, egg-wobble 2.8s ease-in-out infinite;
+    z-index: var(--z-player);
   }
 
-.drop-hint {
-  position: absolute;
-  bottom: 10px;
-  font-weight: 600;
-  color: #5a4100;
-  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
-}
+  .drop-hint {
+    position: absolute;
+    bottom: 10px;
+    font-weight: 600;
+    color: #5a4100;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
+    z-index: var(--z-ui);
+  }
 
 
   .ingredient-table {
@@ -3389,39 +3417,80 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
     bottom: auto;
     left: auto;
     transform: none;
-    width: min(960px, 100%);
-    margin: 0 auto;
+    width: 100vw;
+    max-width: none;
+    margin: 0 calc(50% - 50vw);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-  align-items: flex-end;
-  gap: 16px 18px;
-  padding: 0 12px;
-  background: transparent;
-  box-shadow: none;
-  pointer-events: auto;
-  z-index: 4;
-  border-radius: 0;
-}
+    align-items: flex-end;
+    gap: 18px 18px;
+    padding: 0 0 12px;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: auto;
+    z-index: var(--z-item);
+    border-radius: 0;
+  }
 
-.ingredient-token {
-  background: transparent;
-  border: none;
-  padding: 0;
-  border-radius: 0;
-  cursor: grab;
-  box-shadow: none;
-  transition: transform var(--transition-fast), filter var(--transition-fast);
-  z-index: 8;
-  will-change: transform, filter;
-  transform: translate(0, 0) rotate(0deg);
-}
+  .ingredient-token {
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: element;
+    box-shadow: none;
+    transition: transform var(--transition-fast), filter var(--transition-fast);
+    z-index: var(--z-item);
+    will-change: transform, filter;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  .ingredient-token:active {
+    cursor: grabbing;
+    transform: scale(1.06);
+  }
 
 .ingredient-token.dragging,
 .ingredient-token:hover {
   transform: translateY(-10px) scale(1.05);
   box-shadow: none;
   filter: saturate(1.12);
+}
+
+.ingredient-token.drag-active {
+  z-index: calc(var(--z-ui) + 10);
+  transition: none;
+  transform: translate(0, 0) scale(1.02);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+}
+
+.ingredient-token.drag-active .token-img-wrap {
+  pointer-events: none;
+}
+
+.ingredient-token.consumed {
+  opacity: 0;
+  transform: scale(0.72);
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+
+.drag-revert {
+  transition: transform 0.32s cubic-bezier(0.25, 0.9, 0.35, 1.1);
+}
+
+.manual-drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
+  opacity: 0.96;
 }
 
 .ingredient-token img {
@@ -3432,6 +3501,50 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   padding: 0;
   background: transparent;
   border-radius: 0;
+}
+
+.drop-flare,
+.slot-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 230, 157, 0.6), transparent 60%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  border-radius: 40%;
+  animation: flash-pop 0.45s ease;
+  z-index: var(--z-effect);
+}
+
+.slot-flash {
+  inset: -6%;
+  border-radius: 18px;
+  filter: blur(2px);
+}
+
+@keyframes flash-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+.drop-target.hit-success .egg-graphic {
+  filter: drop-shadow(0 12px 24px rgba(255, 198, 89, 0.4));
+  animation: egg-react 0.85s ease, floaty 3.2s ease-in-out infinite,
+    egg-wobble 2.8s ease-in-out infinite;
+}
+
+.drop-target.hit-success,
+.selection-slot.hit-success {
+  filter: drop-shadow(0 6px 12px rgba(255, 199, 96, 0.42));
 }
 
 .drop-target.drag-over {
