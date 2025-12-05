@@ -867,10 +867,12 @@ class GameController {
           return;
         }
         bubble.textContent = text.substring(0, i);
+        if (i === 1) {
+          void self.dom.messagesContainer.offsetHeight;
+          self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
+        }
         await wait(35);
       }
-
-      self.dom.messagesContainer.scrollTop = self.dom.messagesContainer.scrollHeight;
     }
 
     function renderAllMessagesInstant() {
