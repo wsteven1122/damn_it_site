@@ -555,21 +555,26 @@ body.hand-cursor-right {
 
 .home-screen {
   position: relative;
-  padding: 0;
+  padding: clamp(24px, 5vw, 56px);
   min-height: 100vh;
-  display: block;
-  align-items: initial;
-  justify-content: initial;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0;
+  background: #050505;
 }
 
 .home-stage {
   position: relative;
-  width: 100%;
-  height: 100vh;
-  max-width: 1440px;
+  width: min(1320px, 92vw);
+  aspect-ratio: 16 / 9;
+  height: auto;
+  max-height: min(840px, calc(100vh - 120px));
   margin: 0 auto;
   overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #c5d7ff 0%, #d9e5ff 100%);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
 }
 
 .home-stage .layer {
@@ -589,11 +594,11 @@ body.hand-cursor-right {
 }
 
 .sky-gradient-img {
-  width: 120%;
+  width: 110%;
   max-width: none;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -52%);
+  top: 52%;
+  transform: translate(-50%, -50%);
 }
 
 .radiation-rays {
@@ -601,11 +606,11 @@ body.hand-cursor-right {
 }
 
 .radiation-lines {
-  width: 68%;
+  width: 96%;
   max-width: none;
-  left: 36%;
-  top: 18%;
-  transform: translate(-50%, -6%) rotate(-6deg);
+  left: 46%;
+  top: 52%;
+  transform: translate(-50%, -46%) rotate(-12deg);
   animation: radiation-float 18s ease-in-out infinite alternate;
 }
 
@@ -614,41 +619,43 @@ body.hand-cursor-right {
 }
 
 .egg-liquid {
-  width: 88%;
+  width: 104%;
   max-width: none;
-  left: 63%;
-  top: 44%;
-  transform: translate(-50%, -42%) rotate(2deg);
+  left: 51%;
+  top: 60%;
+  transform: translate(-50%, -50%) rotate(2deg);
   animation: egg-sway 15s ease-in-out infinite alternate;
 }
 
 .background-objects {
   z-index: 4;
+  pointer-events: none;
 }
 
 .egg-gloss {
-  width: 64%;
+  width: 66%;
   max-width: none;
-  left: 66%;
-  top: 43%;
-  opacity: 0.9;
-  transform: translate(-50%, -50%);
+  left: 65%;
+  top: 48%;
+  opacity: 0.92;
+  transform: translate(-50%, -50%) rotate(-2deg);
   animation: gloss-breathe 12s ease-in-out infinite;
 }
 
 .checkered-cloth {
-  width: 58%;
+  width: 68%;
   max-width: none;
-  left: 67%;
-  top: 83%;
-  transform: translate(-50%, -50%) rotate(-9deg);
+  left: 74%;
+  top: 92%;
+  transform: translate(-50%, -50%) rotate(-8deg);
   animation: cloth-wave 16s ease-in-out infinite;
 }
 
 .floating-stars {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 3;
+  opacity: 0.85;
   pointer-events: none;
 }
 
@@ -665,30 +672,30 @@ body.hand-cursor-right {
 }
 
 .logo-layer {
-  z-index: 6;
+  z-index: 7;
   filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
 }
 
 .logo-layer .hero-logo {
-  width: clamp(420px, 48vw, 620px);
+  width: clamp(540px, 48vw, 720px);
   height: auto;
   left: 50%;
-  top: 42%;
+  top: 47%;
   transform: translate(-50%, -50%);
   animation: logo-lift 10s ease-in-out infinite;
 }
 
 .cards-layer {
-  z-index: 7;
+  z-index: 8;
   pointer-events: none;
 }
 
 .start-button {
-  width: 220px;
-  height: 122px;
-  left: 50%;
-  top: calc(42% + 130px);
-  transform: translateX(-50%);
+  width: 170px;
+  height: auto;
+  left: 62%;
+  top: 64%;
+  transform: translateX(-50%) rotate(-6deg);
   background: none;
   border: none;
   cursor: pointer;
@@ -705,31 +712,38 @@ body.hand-cursor-right {
 
 .start-button:hover,
 .start-button:focus-visible {
-  transform: translateX(-50%) scale(1.06);
+  transform: translateX(-50%) rotate(-6deg) scale(1.06);
   filter: drop-shadow(0 18px 38px rgba(255, 191, 60, 0.9));
   outline: none;
 }
 
 .start-button:active {
-  transform: translateX(-50%) scale(0.98);
+  transform: translateX(-50%) rotate(-6deg) scale(0.98);
 }
 
 .ui-buttons {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 8;
+  z-index: 9;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 14px;
+  padding: 26px 30px;
 }
 
 .ui-buttons button {
-  width: 64px;
-  height: 64px;
+  width: 58px;
+  height: 58px;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
   pointer-events: auto;
+  position: static;
 }
 
 .ui-buttons img {
@@ -738,81 +752,122 @@ body.hand-cursor-right {
   object-fit: contain;
 }
 
-.home-ui-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-}
-
-.speaker-ui-btn {
-  position: fixed;
-  top: 20px;
-  right: 80px;
+.home-ui-btn,
+.home-settings-btn {
+  display: none;
 }
 
 .help-ui-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
+  order: 1;
 }
 
-.home-settings-btn {
-  position: fixed;
-  width: 60px;
-  height: 60px;
-  top: 96px;
-  right: 20px;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
-  transition: transform 0.2s ease;
-  pointer-events: auto;
+.speaker-ui-btn {
+  order: 2;
 }
 
-.home-settings-btn:hover,
-.home-settings-btn:focus-visible {
-  transform: scale(1.08);
-  outline: none;
+.sticker-layer {
+  z-index: 5;
+  pointer-events: none;
+}
+
+.sticker-layer .sticker {
+  position: absolute;
+  user-select: none;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.32));
+}
+
+.sticker-stone {
+  width: clamp(110px, 12vw, 150px);
+  top: 8%;
+  left: 11%;
+  transform: rotate(-12deg);
+}
+
+.sticker-eggs {
+  width: clamp(140px, 15vw, 190px);
+  top: 26%;
+  left: 24%;
+  transform: rotate(-10deg);
+}
+
+.sticker-lemon {
+  width: clamp(130px, 14vw, 180px);
+  bottom: 8%;
+  left: 14%;
+  transform: rotate(-6deg);
+}
+
+.sticker-phone {
+  width: clamp(120px, 13vw, 170px);
+  bottom: 15%;
+  left: 30%;
+  transform: rotate(-12deg);
+}
+
+.sticker-coriander {
+  width: clamp(150px, 16vw, 210px);
+  top: 12%;
+  right: 14%;
+  transform: rotate(6deg);
+}
+
+.sticker-meat {
+  width: clamp(180px, 18vw, 240px);
+  top: 44%;
+  right: 12%;
+  transform: rotate(-10deg);
+}
+
+.sticker-pants {
+  width: clamp(140px, 15vw, 200px);
+  bottom: 14%;
+  right: 8%;
+  transform: rotate(5deg);
+}
+
+.sticker-bomb {
+  width: clamp(120px, 13vw, 170px);
+  top: 12%;
+  right: 32%;
+  transform: rotate(10deg);
 }
 
 @keyframes radiation-float {
   0% {
-    transform: translate(-50%, -6%) rotate(-6deg);
+    transform: translate(-50%, -46%) rotate(-12deg);
   }
   50% {
-    transform: translate(-50%, -10%) rotate(-5deg);
+    transform: translate(-50%, -52%) rotate(-10deg);
   }
   100% {
-    transform: translate(-50%, -2%) rotate(-7deg);
+    transform: translate(-50%, -40%) rotate(-13deg);
   }
 }
 
 @keyframes egg-sway {
   0% {
-    transform: translate(-50%, -42%) rotate(2deg) scale(1);
+    transform: translate(-50%, -50%) rotate(2deg) scale(1);
   }
   50% {
-    transform: translate(-50%, -46%) rotate(2.4deg) scale(1.01);
+    transform: translate(-50%, -55%) rotate(2.4deg) scale(1.01);
   }
   100% {
-    transform: translate(-50%, -40%) rotate(1.5deg) scale(1.002);
+    transform: translate(-50%, -45%) rotate(1.5deg) scale(1.002);
   }
 }
 
 @keyframes gloss-breathe {
   0% {
     opacity: 0.9;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) rotate(-2deg) scale(1);
   }
   50% {
     opacity: 1;
-    transform: translate(-50%, -52%) scale(1.01);
+    transform: translate(-50%, -52%) rotate(-1deg) scale(1.01);
   }
   100% {
     opacity: 0.9;
-    transform: translate(-50%, -48%) scale(0.998);
+    transform: translate(-50%, -48%) rotate(-2deg) scale(0.998);
   }
 }
 
@@ -830,13 +885,13 @@ body.hand-cursor-right {
 
 @keyframes cloth-wave {
   0% {
-    transform: translate(-50%, -50%) rotate(-9deg) scale(1);
+    transform: translate(-50%, -50%) rotate(-8deg) scale(1);
   }
   50% {
-    transform: translate(-50%, -54%) rotate(-11deg) scale(1.01);
+    transform: translate(-50%, -54%) rotate(-9.5deg) scale(1.01);
   }
   100% {
-    transform: translate(-50%, -47%) rotate(-8deg) scale(1);
+    transform: translate(-50%, -47%) rotate(-7deg) scale(1);
   }
 }
 
@@ -3737,6 +3792,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   opacity: 0.6;
   cursor: not-allowed;
 }
+<<<<<<< Updated upstream
 
 /* Screen visibility control (avoid display:none to preserve animations) */
 .screen {
@@ -3758,3 +3814,190 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 .screen.wave-enter {
   pointer-events: none;
 }
+=======
+/* 預設：全部 overlay 不顯示 */
+#screen-ui-overlay {
+  display: none;
+}
+
+/* 只有在 screen-5 active 時才顯示 */
+body[data-active-screen="screen-5"] #screen-ui-overlay {
+  display: block;
+}
+/* 預設隱藏「選蛋介面」畫面 */
+.egg-choice-screen {
+  display: none;
+}
+
+/* 只有在 screen-4 啟用時才顯示 */
+#screen-4.active .egg-choice-screen {
+  display: block;
+}
+
+/* ============ 畫面錯層防呆 ============ */
+.egg-choice-screen {
+  display: none;
+}
+#screen-4.active .egg-choice-screen {
+  display: block;
+}
+
+/* =====================================================
+   UI LAYER PATCH — DO NOT REMOVE EXISTING CSS
+   修正 Screen / Overlay / Modal / Video 層級衝突
+===================================================== */
+
+/* 基礎建立獨立 stacking context */
+body {
+  isolation: isolate;
+}
+
+/* =====================================================
+   SCREEN SYSTEM FIX
+===================================================== */
+
+/* 所有畫面預設不可見 */
+.screen {
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+
+/* 只顯示 active */
+.screen.active {
+  display: block;
+  z-index: 10;
+}
+
+/* 強制清除殘影 */
+.screen.exiting,
+.screen.incoming,
+.screen.wave-enter {
+  pointer-events: none;
+}
+
+/* =====================================================
+   WORLD LAYER
+===================================================== */
+
+#world-layer {
+  position: relative;
+  z-index: 1;
+}
+
+/* =====================================================
+   OVERLAY FIX
+===================================================== */
+
+#screen-ui-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* 當 overlay 有啟用時才接受事件 */
+#screen-ui-overlay.active {
+  pointer-events: auto;
+}
+
+/* overlay 單層顯示控制 */
+.overlay-layer {
+  display: none;
+}
+
+.overlay-layer.active {
+  display: block;
+}
+
+/* =====================================================
+   CURTAIN / VIDEO LAYER
+===================================================== */
+
+#curtain-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.transformation-space {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+}
+
+/* =====================================================
+   MODAL / GUIDE FIX
+===================================================== */
+
+#guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+
+/* 提示框顯示保證在最上層 */
+#guide-tooltip,
+#guide-focus-ring {
+  z-index: 85;
+}
+
+/* =====================================================
+   EASTER / POPUP
+===================================================== */
+
+#sun-hatch-popover {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+}
+
+/* =====================================================
+   TOOLBAR FIX
+===================================================== */
+
+#persistent-ui {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+}
+
+/* =====================================================
+   CLICK PASS THROUGHS
+===================================================== */
+
+/* 避免 overlay 吃掉畫面事件 */
+.overlay-layer:not(.active),
+.screen-ui-overlay:not(.active) {
+  pointer-events: none;
+}
+
+/* ============ 首頁視覺校正 ============ */
+.radiation-lines {
+  left: 50%;
+}
+
+.egg-liquid {
+  left: 50%;
+}
+
+.floating-stars {
+  z-index: 2;
+  opacity: 0.85;
+}
+
+/* ============ 按鈕只留一套 ============ */
+.start-button {
+  display: none !important;
+}
+.radiation-lines {
+  left: 46%;
+}
+.egg-choice-screen {
+  display: none;
+}
+#screen-4.active .egg-choice-screen {
+  display: block;
+}
+>>>>>>> Stashed changes
