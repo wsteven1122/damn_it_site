@@ -569,6 +569,8 @@ body.hand-cursor-right {
   border-radius: 0;
   background: linear-gradient(180deg, #9fbaf7 0%, #c9d9ff 100%);
   box-shadow: none;
+  --home-scale: 0.72;
+  --floating-max-scale: 0.9;
 }
 
 .home-stage .layer {
@@ -581,17 +583,18 @@ body.hand-cursor-right {
 .home-stage button {
   position: absolute;
   user-select: none;
-  max-width: 160%;
-  max-height: 160%;
+  max-width: 120%;
+  max-height: 120%;
   object-fit: contain;
 }
 
 .sky-gradient {
   z-index: 1;
+  pointer-events: auto;
 }
 
 .sky-gradient-img {
-  width: 132%;
+  width: calc(132% * var(--home-scale));
   max-width: none;
   left: 50%;
   top: 50%;
@@ -603,10 +606,10 @@ body.hand-cursor-right {
 }
 
 .radiation-lines {
-  width: 152%;
+  width: calc(152% * var(--home-scale));
   max-width: none;
-  left: 36%;
-  top: 54%;
+  left: 50%;
+  top: 52%;
   transform: translate(-50%, -50%) rotate(-11deg);
   animation: radiation-float 18s ease-in-out infinite alternate;
 }
@@ -616,11 +619,11 @@ body.hand-cursor-right {
 }
 
 .egg-liquid {
-  width: 142%;
+  width: calc(142% * var(--home-scale));
   max-width: none;
-  left: 56%;
-  top: 54%;
-  transform: translate(-50%, -48%) rotate(1deg);
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%) rotate(1deg);
   animation: egg-sway 15s ease-in-out infinite alternate;
 }
 
@@ -630,20 +633,20 @@ body.hand-cursor-right {
 }
 
 .egg-gloss {
-  width: 58%;
+  width: calc(58% * var(--home-scale));
   max-width: none;
-  left: 64%;
-  top: 46%;
+  left: 58%;
+  top: 44%;
   opacity: 0.9;
   transform: translate(-50%, -50%) rotate(-2deg);
   animation: gloss-breathe 12s ease-in-out infinite;
 }
 
 .checkered-cloth {
-  width: 104%;
+  width: calc(104% * var(--home-scale));
   max-width: none;
-  left: 80%;
-  top: 98%;
+  left: 72%;
+  top: 92%;
   transform: translate(-50%, -50%) rotate(-4deg);
   animation: cloth-wave 16s ease-in-out infinite;
 }
@@ -665,40 +668,56 @@ body.hand-cursor-right {
   transform-origin: center;
   --star-rotation: 0deg;
   --star-scale: 1;
-  transform: translateY(0) rotate(var(--star-rotation)) scale(var(--star-scale));
+  max-width: min(10vw, 72px);
+  transform: translateY(0) rotate(var(--star-rotation))
+    scale(min(var(--star-scale), var(--floating-max-scale)));
 }
 
 .logo-layer {
-  z-index: 7;
+  z-index: 12;
   filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+.hero-logo-group {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1.5vw, 16px);
+  padding: clamp(6px, 2vw, 18px);
+  overflow: visible;
 }
 
 .logo-layer .hero-logo {
-  width: clamp(660px, 60vw, 940px);
+  position: relative;
+  width: clamp(480px, 45vw, 680px);
   height: auto;
-  left: 49%;
-  top: 58%;
-  transform: translate(-50%, -50%);
-  animation: logo-lift 10s ease-in-out infinite;
-}
-
-.cards-layer {
-  z-index: 8;
+  transform: none;
+  animation: none;
   pointer-events: none;
+  z-index: 1;
 }
 
 .start-button {
-  width: clamp(140px, 12vw, 190px);
+  position: absolute;
+  top: 62%;
+  left: 66%;
+  width: clamp(120px, 10vw, 170px);
   height: auto;
-  left: 69%;
-  top: 72.5%;
-  transform: translateX(-50%) rotate(-12deg);
+  transform: translate(48%, 44%) rotate(-10deg);
   background: none;
   border: none;
   cursor: pointer;
   transition: transform 0.28s ease, filter 0.28s ease;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
   pointer-events: auto;
+  z-index: var(--z-ui);
+  touch-action: manipulation;
 }
 
 .start-button img {
@@ -709,13 +728,13 @@ body.hand-cursor-right {
 
 .start-button:hover,
 .start-button:focus-visible {
-  transform: translateX(-50%) rotate(-12deg) scale(1.06);
+  transform: translate(48%, 44%) rotate(-10deg) scale(1.06);
   filter: drop-shadow(0 18px 38px rgba(255, 191, 60, 0.9));
   outline: none;
 }
 
 .start-button:active {
-  transform: translateX(-50%) rotate(-12deg) scale(0.98);
+  transform: translate(48%, 44%) rotate(-10deg) scale(0.98);
 }
 
 .ui-buttons {
@@ -753,12 +772,6 @@ body.hand-cursor-right {
   display: none;
 }
 
-.home-settings-btn {
-  display: inline-flex;
-  width: 64px;
-  height: 64px;
-}
-
 .help-ui-btn {
   order: 3;
 }
@@ -770,75 +783,85 @@ body.hand-cursor-right {
 .sticker-layer {
   z-index: 5;
   pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-auto-rows: minmax(120px, 1fr);
+  align-items: center;
+  justify-items: center;
+  padding: 8vh 8vw 6vh;
+  gap: min(5vw, 48px);
 }
 
 .sticker-layer .sticker {
-  position: absolute;
+  position: relative;
   user-select: none;
   filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.32));
+  max-width: min(22vw, 220px);
+  max-height: min(22vh, 220px);
+  transform: scale(var(--floating-max-scale)) rotate(var(--tilt, 0deg));
 }
 
 .sticker-stone {
-  width: clamp(140px, 15vw, 190px);
-  top: 12%;
-  left: 18%;
-  transform: rotate(-12deg);
+  width: clamp(110px, 12vw, 150px);
+  --tilt: -12deg;
+  justify-self: start;
+  align-self: start;
 }
 
 .sticker-eggs {
-  width: clamp(170px, 17vw, 220px);
-  top: 34%;
-  left: 32%;
-  transform: rotate(-10deg);
+  width: clamp(130px, 14vw, 180px);
+  --tilt: -10deg;
+  justify-self: center;
+  align-self: start;
 }
 
 .sticker-lemon {
-  width: clamp(150px, 16vw, 200px);
-  bottom: 14%;
-  left: 16%;
-  transform: rotate(-6deg);
+  width: clamp(120px, 13vw, 170px);
+  --tilt: -6deg;
+  justify-self: start;
+  align-self: end;
 }
 
 .sticker-phone {
-  width: clamp(134px, 14vw, 184px);
-  bottom: 12%;
-  left: 38%;
-  transform: rotate(-14deg);
+  width: clamp(110px, 12vw, 160px);
+  --tilt: -14deg;
+  justify-self: center;
+  align-self: end;
 }
 
 .sticker-coriander {
-  width: clamp(180px, 18vw, 240px);
-  top: 14%;
-  right: 14%;
-  transform: rotate(6deg);
+  width: clamp(140px, 15vw, 200px);
+  --tilt: 6deg;
+  justify-self: end;
+  align-self: start;
 }
 
 .sticker-meat {
-  width: clamp(210px, 20vw, 270px);
-  top: 46%;
-  right: 6%;
-  transform: rotate(-8deg);
+  width: clamp(160px, 17vw, 220px);
+  --tilt: -8deg;
+  justify-self: end;
+  align-self: center;
 }
 
 .sticker-pants {
-  width: clamp(200px, 20vw, 260px);
-  bottom: 6%;
-  right: 2%;
-  transform: rotate(5deg);
+  width: clamp(150px, 16vw, 210px);
+  --tilt: 5deg;
+  justify-self: end;
+  align-self: end;
 }
 
 .sticker-bomb {
-  width: clamp(120px, 13vw, 170px);
-  top: 12%;
-  right: 26%;
-  transform: rotate(6deg);
+  width: clamp(100px, 11vw, 150px);
+  --tilt: 6deg;
+  justify-self: center;
+  align-self: center;
 }
 
 .sticker-durian {
-  width: clamp(170px, 17vw, 230px);
-  bottom: 3%;
-  right: 14%;
-  transform: rotate(-6deg);
+  width: clamp(130px, 14vw, 190px);
+  --tilt: -6deg;
+  justify-self: end;
+  align-self: end;
 }
 
 @keyframes radiation-float {
@@ -2384,6 +2407,12 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   cursor: pointer;
   color: #543200;
   font-weight: 700;
+}
+
+.settings-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
 }
 
 @keyframes sunEggHatch {
