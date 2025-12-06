@@ -3737,3 +3737,24 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Screen visibility control (avoid display:none to preserve animations) */
+.screen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.screen.incoming,
+.screen.exiting,
+.screen.wave-enter {
+  pointer-events: none;
+}
