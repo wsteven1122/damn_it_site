@@ -322,6 +322,12 @@ body.hand-cursor-right {
 
 .screen.wave-enter {
   animation: screen-wave var(--wave-duration) var(--wave-ease) both;
+  pointer-events: none;
+}
+
+.screen.incoming,
+.screen.exiting {
+  pointer-events: none;
 }
 
 /* Collage / Scrapbook transition overlay */
@@ -3737,3 +3743,4 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
