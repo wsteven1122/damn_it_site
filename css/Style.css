@@ -71,9 +71,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  display: block;
   position: relative;
   touch-action: manipulation;
   overscroll-behavior: contain;
@@ -560,15 +558,17 @@ body.hand-cursor-right {
 
 .home-stage {
   position: relative;
-  width: 100vw;
-  max-width: 1920px;
+  width: 100%;
+  max-width: none;
   min-height: 100vh;
   height: 100vh;
-  margin: 0 auto;
-  overflow: hidden;
+  margin: 0;
+  overflow: visible;
   border-radius: 0;
   background: linear-gradient(180deg, #9fbaf7 0%, #c9d9ff 100%);
   box-shadow: none;
+  --home-scale: 0.7;
+  --floating-max-scale: 0.7;
 }
 
 .home-stage .layer {
@@ -581,17 +581,18 @@ body.hand-cursor-right {
 .home-stage button {
   position: absolute;
   user-select: none;
-  max-width: 160%;
-  max-height: 160%;
+  max-width: 120%;
+  max-height: 120%;
   object-fit: contain;
 }
 
 .sky-gradient {
   z-index: 1;
+  pointer-events: auto;
 }
 
 .sky-gradient-img {
-  width: 132%;
+  width: calc(132% * var(--home-scale));
   max-width: none;
   left: 50%;
   top: 50%;
@@ -603,57 +604,21 @@ body.hand-cursor-right {
 }
 
 .radiation-lines {
-  width: 152%;
+  width: calc(152% * var(--home-scale));
   max-width: none;
-  left: 36%;
-  top: 54%;
+  left: 50%;
+  top: 52%;
   transform: translate(-50%, -50%) rotate(-11deg);
   animation: radiation-float 18s ease-in-out infinite alternate;
-}
-
-.egg-liquid-layer {
-  z-index: 3;
-}
-
-.egg-liquid {
-  width: 142%;
-  max-width: none;
-  left: 56%;
-  top: 54%;
-  transform: translate(-50%, -48%) rotate(1deg);
-  animation: egg-sway 15s ease-in-out infinite alternate;
-}
-
-.background-objects {
-  z-index: 4;
-  pointer-events: none;
-}
-
-.egg-gloss {
-  width: 58%;
-  max-width: none;
-  left: 64%;
-  top: 46%;
-  opacity: 0.9;
-  transform: translate(-50%, -50%) rotate(-2deg);
-  animation: gloss-breathe 12s ease-in-out infinite;
-}
-
-.checkered-cloth {
-  width: 104%;
-  max-width: none;
-  left: 80%;
-  top: 98%;
-  transform: translate(-50%, -50%) rotate(-4deg);
-  animation: cloth-wave 16s ease-in-out infinite;
 }
 
 .floating-stars {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 3;
   opacity: 0.8;
   pointer-events: none;
+  padding: 8vh 8vw;
 }
 
 .floating-stars img {
@@ -665,63 +630,80 @@ body.hand-cursor-right {
   transform-origin: center;
   --star-rotation: 0deg;
   --star-scale: 1;
-  transform: translateY(0) rotate(var(--star-rotation)) scale(var(--star-scale));
+  max-width: min(10vw, 72px);
+  transform: translateY(0) rotate(var(--star-rotation))
+    scale(min(var(--star-scale), var(--floating-max-scale)));
 }
 
 .logo-layer {
-  z-index: 7;
+  z-index: 20;
   filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+.hero-logo-group {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1.5vw, 16px);
+  padding: clamp(6px, 2vw, 18px);
+  overflow: visible;
 }
 
 .logo-layer .hero-logo {
-  width: clamp(660px, 60vw, 940px);
+  position: relative;
+  width: clamp(480px, 45vw, 680px);
   height: auto;
-  left: 49%;
-  top: 58%;
-  transform: translate(-50%, -50%);
-  animation: logo-lift 10s ease-in-out infinite;
-}
-
-.cards-layer {
-  z-index: 8;
+  transform: none;
+  animation: none;
   pointer-events: none;
+  z-index: 1;
 }
 
 .start-button {
-  width: clamp(140px, 12vw, 190px);
+  position: absolute;
+  bottom: -6%;
+  right: -10%;
+  width: clamp(120px, 12vw, 180px);
   height: auto;
-  left: 69%;
-  top: 72.5%;
-  transform: translateX(-50%) rotate(-12deg);
   background: none;
   border: none;
   cursor: pointer;
   transition: transform 0.28s ease, filter 0.28s ease;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
   pointer-events: auto;
+  z-index: calc(var(--z-index-high) + 50);
+  touch-action: manipulation;
+  transform-origin: center;
 }
 
 .start-button img {
   width: 100%;
   height: 100%;
   display: block;
+  pointer-events: none;
 }
 
 .start-button:hover,
 .start-button:focus-visible {
-  transform: translateX(-50%) rotate(-12deg) scale(1.06);
+  transform: scale(1.06);
   filter: drop-shadow(0 18px 38px rgba(255, 191, 60, 0.9));
   outline: none;
 }
 
 .start-button:active {
-  transform: translateX(-50%) rotate(-12deg) scale(0.98);
+  transform: scale(0.98);
 }
 
 .ui-buttons {
   position: absolute;
   inset: 0;
-  z-index: 9;
+  z-index: calc(var(--z-index-high) + 80);
   pointer-events: none;
   display: flex;
   flex-direction: row;
@@ -732,8 +714,8 @@ body.hand-cursor-right {
 }
 
 .ui-buttons button {
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   background: none;
   border: none;
   padding: 0;
@@ -741,22 +723,21 @@ body.hand-cursor-right {
   filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.42));
   pointer-events: auto;
   position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
 }
 
 .ui-buttons img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: contain;
+  pointer-events: none;
 }
 
 .home-ui-btn {
   display: none;
-}
-
-.home-settings-btn {
-  display: inline-flex;
-  width: 64px;
-  height: 64px;
 }
 
 .help-ui-btn {
@@ -768,77 +749,82 @@ body.hand-cursor-right {
 }
 
 .sticker-layer {
-  z-index: 5;
+  z-index: 4;
   pointer-events: none;
+  position: absolute;
+  inset: 0;
 }
 
 .sticker-layer .sticker {
   position: absolute;
   user-select: none;
   filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.32));
+  max-width: min(18vw, 180px);
+  max-height: min(18vh, 180px);
+  transform: scale(var(--floating-max-scale)) rotate(var(--tilt, 0deg));
 }
 
 .sticker-stone {
-  width: clamp(140px, 15vw, 190px);
-  top: 12%;
-  left: 18%;
-  transform: rotate(-12deg);
+  width: clamp(92px, 10vw, 130px);
+  --tilt: -12deg;
+  top: 6%;
+  left: 4%;
 }
 
 .sticker-eggs {
-  width: clamp(170px, 17vw, 220px);
-  top: 34%;
-  left: 32%;
-  transform: rotate(-10deg);
+  width: clamp(108px, 12vw, 150px);
+  --tilt: -10deg;
+  top: 8%;
+  right: 6%;
 }
 
 .sticker-lemon {
-  width: clamp(150px, 16vw, 200px);
-  bottom: 14%;
-  left: 16%;
-  transform: rotate(-6deg);
+  width: clamp(100px, 12vw, 140px);
+  --tilt: -6deg;
+  bottom: 10%;
+  left: 6%;
 }
 
 .sticker-phone {
-  width: clamp(134px, 14vw, 184px);
-  bottom: 12%;
-  left: 38%;
-  transform: rotate(-14deg);
+  width: clamp(94px, 11vw, 130px);
+  --tilt: -14deg;
+  bottom: 14%;
+  right: 6%;
 }
 
 .sticker-coriander {
-  width: clamp(180px, 18vw, 240px);
-  top: 14%;
-  right: 14%;
-  transform: rotate(6deg);
+  width: clamp(112px, 13vw, 160px);
+  --tilt: 6deg;
+  top: 12%;
+  right: 18%;
 }
 
 .sticker-meat {
-  width: clamp(210px, 20vw, 270px);
-  top: 46%;
-  right: 6%;
-  transform: rotate(-8deg);
+  width: clamp(128px, 15vw, 180px);
+  --tilt: -8deg;
+  bottom: 20%;
+  right: 18%;
 }
 
 .sticker-pants {
-  width: clamp(200px, 20vw, 260px);
-  bottom: 6%;
-  right: 2%;
-  transform: rotate(5deg);
+  width: clamp(120px, 14vw, 170px);
+  --tilt: 5deg;
+  bottom: 12%;
+  left: 18%;
 }
 
 .sticker-bomb {
-  width: clamp(120px, 13vw, 170px);
-  top: 12%;
-  right: 26%;
-  transform: rotate(6deg);
+  width: clamp(86px, 10vw, 120px);
+  --tilt: 6deg;
+  top: 18%;
+  left: 16%;
 }
 
 .sticker-durian {
-  width: clamp(170px, 17vw, 230px);
-  bottom: 3%;
-  right: 14%;
-  transform: rotate(-6deg);
+  width: clamp(108px, 13vw, 160px);
+  --tilt: -6deg;
+  top: 16%;
+  right: 10%;
 }
 
 @keyframes radiation-float {
@@ -2386,6 +2372,12 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   font-weight: 700;
 }
 
+.settings-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+}
+
 @keyframes sunEggHatch {
   0% {
     transform: translate(-50%, 0) scale(1);
@@ -3103,86 +3095,38 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 #curtain-transition {
   position: fixed;
   inset: 0;
-  display: flex;
+  display: none;
   justify-content: space-between;
   pointer-events: none;
   z-index: var(--z-index-curtain);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  transform: none;
 }
 
 #curtain-transition .curtain {
   width: 50%;
-  background: url("../img/紅布幕（關） 1.png") center/cover no-repeat;
-  transform: translateX(0);
-  transition: transform
-      var(--curtain-close, 0.42s cubic-bezier(0.65, 0, 0.8, 0.4)),
-    background-image 0.3s ease-in-out;
-  box-shadow: inset -8px 0 18px rgba(0, 0, 0, 0.25),
-    inset 8px 0 18px rgba(0, 0, 0, 0.2);
+  background: none;
+  transform: none;
+  transition: none;
+  box-shadow: none;
   position: relative;
-  clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+  clip-path: none;
+  display: none;
 }
 
 #curtain-transition .curtain::before {
   content: "";
-  position: absolute;
-  inset: -18px 0 auto 0;
-  height: 46px;
-  background: repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.18),
-      rgba(255, 255, 255, 0.18) 10px,
-      transparent 10px,
-      transparent 18px
-    ),
-    radial-gradient(
-      circle at 16px 100%,
-      rgba(255, 255, 255, 0.45),
-      transparent 55%
-    );
-  opacity: 0.75;
-  clip-path: polygon(0 0, 100% 0, 100% 65%, 0 100%);
+  display: none;
 }
 
-#curtain-transition.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-#curtain-transition.shudder {
-  animation: curtain-shudder 0.28s ease-in-out 0.02s 2;
-}
-
-#curtain-transition.open .curtain-left {
-  transform: translateX(-100%);
-  background: url("../img/紅布幕（開） 1.png") center/cover no-repeat;
-  transition: transform
-    var(--curtain-open, 1.1s cubic-bezier(0.21, 0.78, 0.24, 1));
-}
-
-#curtain-transition.open .curtain-right {
-  transform: translateX(100%);
-  background: url("../img/紅布幕（開） 1.png") center/cover no-repeat;
-  transition: transform
-    var(--curtain-open, 1.1s cubic-bezier(0.21, 0.78, 0.24, 1));
-}
-
-@keyframes curtain-shudder {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-6px) rotate(-0.5deg);
-  }
-  50% {
-    transform: translateY(4px) rotate(0.6deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
+#curtain-transition.active,
+#curtain-transition.shudder,
+#curtain-transition.open {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: none;
 }
 
 #screen-2 {
@@ -3889,6 +3833,11 @@ body {
   position: fixed;
   inset: 0;
   z-index: 60;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: none;
 }
 
 .transformation-space {
@@ -3949,12 +3898,8 @@ body {
   left: 50%;
 }
 
-.egg-liquid {
-  left: 50%;
-}
-
 .floating-stars {
-  z-index: 2;
+  z-index: 3;
   opacity: 0.85;
 }
 
