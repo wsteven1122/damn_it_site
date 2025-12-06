@@ -702,12 +702,13 @@ body.hand-cursor-right {
 
 .ui-buttons {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   z-index: calc(var(--z-index-high) + 80);
   pointer-events: none;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 14px;
   padding: 22px 28px;
