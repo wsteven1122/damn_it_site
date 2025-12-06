@@ -127,8 +127,8 @@ body.hand-cursor-right {
    ========================================================================= */
 
 #game-container {
-  width: 100%;
-  max-width: 1400px;
+  width: 100vw;
+  max-width: none;
   min-height: 100vh;
   height: 100vh;
   position: relative;
@@ -555,26 +555,25 @@ body.hand-cursor-right {
 
 .home-screen {
   position: relative;
-  padding: clamp(24px, 5vw, 56px);
+  padding: clamp(12px, 3vw, 24px);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0;
-  background: #050505;
+  background: linear-gradient(180deg, #a9c6fb 0%, #cddcff 100%);
 }
 
 .home-stage {
   position: relative;
-  width: min(1320px, 92vw);
-  aspect-ratio: 16 / 9;
-  height: auto;
-  max-height: min(840px, calc(100vh - 120px));
-  margin: 0 auto;
+  width: min(1920px, 100vw);
+  height: min(980px, 100vh);
+  aspect-ratio: unset;
+  margin: 0;
   overflow: hidden;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #c5d7ff 0%, #d9e5ff 100%);
-  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+  border-radius: 0;
+  background: linear-gradient(180deg, #9fbaf7 0%, #c9d9ff 100%);
+  box-shadow: none;
 }
 
 .home-stage .layer {
@@ -594,7 +593,7 @@ body.hand-cursor-right {
 }
 
 .sky-gradient-img {
-  width: 110%;
+  width: 128%;
   max-width: none;
   left: 50%;
   top: 52%;
@@ -606,10 +605,10 @@ body.hand-cursor-right {
 }
 
 .radiation-lines {
-  width: 96%;
+  width: 128%;
   max-width: none;
-  left: 46%;
-  top: 52%;
+  left: 38%;
+  top: 48%;
   transform: translate(-50%, -46%) rotate(-12deg);
   animation: radiation-float 18s ease-in-out infinite alternate;
 }
@@ -619,11 +618,11 @@ body.hand-cursor-right {
 }
 
 .egg-liquid {
-  width: 104%;
+  width: 128%;
   max-width: none;
-  left: 51%;
-  top: 60%;
-  transform: translate(-50%, -50%) rotate(2deg);
+  left: 53%;
+  top: 54%;
+  transform: translate(-50%, -46%) rotate(1deg);
   animation: egg-sway 15s ease-in-out infinite alternate;
 }
 
@@ -633,29 +632,29 @@ body.hand-cursor-right {
 }
 
 .egg-gloss {
-  width: 66%;
+  width: 60%;
   max-width: none;
-  left: 65%;
-  top: 48%;
-  opacity: 0.92;
+  left: 63%;
+  top: 46%;
+  opacity: 0.9;
   transform: translate(-50%, -50%) rotate(-2deg);
   animation: gloss-breathe 12s ease-in-out infinite;
 }
 
 .checkered-cloth {
-  width: 68%;
+  width: 92%;
   max-width: none;
-  left: 74%;
-  top: 92%;
-  transform: translate(-50%, -50%) rotate(-8deg);
+  left: 80%;
+  top: 96%;
+  transform: translate(-50%, -50%) rotate(-4deg);
   animation: cloth-wave 16s ease-in-out infinite;
 }
 
 .floating-stars {
   position: absolute;
   inset: 0;
-  z-index: 3;
-  opacity: 0.85;
+  z-index: 6;
+  opacity: 0.8;
   pointer-events: none;
 }
 
@@ -672,30 +671,30 @@ body.hand-cursor-right {
 }
 
 .logo-layer {
-  z-index: 7;
+  z-index: 9;
   filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
 }
 
 .logo-layer .hero-logo {
-  width: clamp(540px, 48vw, 720px);
+  width: clamp(620px, 58vw, 880px);
   height: auto;
-  left: 50%;
-  top: 47%;
+  left: 44%;
+  top: 60%;
   transform: translate(-50%, -50%);
   animation: logo-lift 10s ease-in-out infinite;
 }
 
 .cards-layer {
-  z-index: 8;
+  z-index: 10;
   pointer-events: none;
 }
 
 .start-button {
-  width: 170px;
+  width: clamp(130px, 11vw, 170px);
   height: auto;
   left: 62%;
-  top: 64%;
-  transform: translateX(-50%) rotate(-6deg);
+  top: 72%;
+  transform: translateX(-50%) rotate(-12deg);
   background: none;
   border: none;
   cursor: pointer;
@@ -712,13 +711,13 @@ body.hand-cursor-right {
 
 .start-button:hover,
 .start-button:focus-visible {
-  transform: translateX(-50%) rotate(-6deg) scale(1.06);
+  transform: translateX(-50%) rotate(-12deg) scale(1.06);
   filter: drop-shadow(0 18px 38px rgba(255, 191, 60, 0.9));
   outline: none;
 }
 
 .start-button:active {
-  transform: translateX(-50%) rotate(-6deg) scale(0.98);
+  transform: translateX(-50%) rotate(-12deg) scale(0.98);
 }
 
 .ui-buttons {
@@ -727,21 +726,21 @@ body.hand-cursor-right {
   z-index: 9;
   pointer-events: none;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-start;
   gap: 14px;
-  padding: 26px 30px;
+  padding: 22px 28px;
 }
 
 .ui-buttons button {
-  width: 58px;
-  height: 58px;
+  width: 62px;
+  height: 62px;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.42));
   pointer-events: auto;
   position: static;
 }
@@ -752,13 +751,18 @@ body.hand-cursor-right {
   object-fit: contain;
 }
 
-.home-ui-btn,
-.home-settings-btn {
+.home-ui-btn {
   display: none;
 }
 
+.home-settings-btn {
+  display: inline-flex;
+  width: 64px;
+  height: 64px;
+}
+
 .help-ui-btn {
-  order: 1;
+  order: 3;
 }
 
 .speaker-ui-btn {
@@ -777,59 +781,66 @@ body.hand-cursor-right {
 }
 
 .sticker-stone {
-  width: clamp(110px, 12vw, 150px);
-  top: 8%;
-  left: 11%;
+  width: clamp(140px, 15vw, 190px);
+  top: 14%;
+  left: 20%;
   transform: rotate(-12deg);
 }
 
 .sticker-eggs {
-  width: clamp(140px, 15vw, 190px);
-  top: 26%;
-  left: 24%;
+  width: clamp(170px, 17vw, 220px);
+  top: 36%;
+  left: 32%;
   transform: rotate(-10deg);
 }
 
 .sticker-lemon {
-  width: clamp(130px, 14vw, 180px);
-  bottom: 8%;
-  left: 14%;
+  width: clamp(150px, 16vw, 200px);
+  bottom: 16%;
+  left: 18%;
   transform: rotate(-6deg);
 }
 
 .sticker-phone {
-  width: clamp(120px, 13vw, 170px);
-  bottom: 15%;
-  left: 30%;
-  transform: rotate(-12deg);
+  width: clamp(134px, 14vw, 184px);
+  bottom: 10%;
+  left: 36%;
+  transform: rotate(-14deg);
 }
 
 .sticker-coriander {
-  width: clamp(150px, 16vw, 210px);
-  top: 12%;
-  right: 14%;
+  width: clamp(180px, 18vw, 240px);
+  top: 16%;
+  right: 12%;
   transform: rotate(6deg);
 }
 
 .sticker-meat {
-  width: clamp(180px, 18vw, 240px);
-  top: 44%;
-  right: 12%;
-  transform: rotate(-10deg);
+  width: clamp(210px, 20vw, 270px);
+  top: 48%;
+  right: 6%;
+  transform: rotate(-8deg);
 }
 
 .sticker-pants {
-  width: clamp(140px, 15vw, 200px);
-  bottom: 14%;
-  right: 8%;
+  width: clamp(200px, 20vw, 260px);
+  bottom: 6%;
+  right: 2%;
   transform: rotate(5deg);
 }
 
 .sticker-bomb {
   width: clamp(120px, 13vw, 170px);
   top: 12%;
-  right: 32%;
-  transform: rotate(10deg);
+  right: 28%;
+  transform: rotate(6deg);
+}
+
+.sticker-durian {
+  width: clamp(170px, 17vw, 230px);
+  bottom: 2%;
+  right: 18%;
+  transform: rotate(-6deg);
 }
 
 @keyframes radiation-float {
@@ -840,19 +851,19 @@ body.hand-cursor-right {
     transform: translate(-50%, -52%) rotate(-10deg);
   }
   100% {
-    transform: translate(-50%, -40%) rotate(-13deg);
+    transform: translate(-50%, -40%) rotate(-12deg);
   }
 }
 
 @keyframes egg-sway {
   0% {
-    transform: translate(-50%, -50%) rotate(2deg) scale(1);
+    transform: translate(-50%, -50%) rotate(1deg) scale(1);
   }
   50% {
-    transform: translate(-50%, -55%) rotate(2.4deg) scale(1.01);
+    transform: translate(-50%, -55%) rotate(1.8deg) scale(1.01);
   }
   100% {
-    transform: translate(-50%, -45%) rotate(1.5deg) scale(1.002);
+    transform: translate(-50%, -46%) rotate(1deg) scale(1.002);
   }
 }
 
@@ -3792,29 +3803,6 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   opacity: 0.6;
   cursor: not-allowed;
 }
-<<<<<<< Updated upstream
-
-/* Screen visibility control (avoid display:none to preserve animations) */
-.screen {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-
-.screen.active {
-  opacity: 1;
-  pointer-events: auto;
-  z-index: 10;
-}
-
-.screen.incoming,
-.screen.exiting,
-.screen.wave-enter {
-  pointer-events: none;
-}
-=======
 /* 預設：全部 overlay 不顯示 */
 #screen-ui-overlay {
   display: none;
@@ -4000,4 +3988,3 @@ body {
 #screen-4.active .egg-choice-screen {
   display: block;
 }
->>>>>>> Stashed changes
