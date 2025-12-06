@@ -3253,6 +3253,8 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .egg-choice-screen {
   gap: 22px;
+  display: flex;
+  flex-direction: column;
 }
 
 .egg-choice-header {
@@ -3812,23 +3814,6 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 body[data-active-screen="screen-5"] #screen-ui-overlay {
   display: block;
 }
-/* 預設隱藏「選蛋介面」畫面 */
-.egg-choice-screen {
-  display: none;
-}
-
-/* 只有在 screen-4 啟用時才顯示 */
-#screen-4.active .egg-choice-screen {
-  display: block;
-}
-
-/* ============ 畫面錯層防呆 ============ */
-.egg-choice-screen {
-  display: none;
-}
-#screen-4.active .egg-choice-screen {
-  display: block;
-}
 
 /* =====================================================
    UI LAYER PATCH — DO NOT REMOVE EXISTING CSS
@@ -3975,16 +3960,7 @@ body {
   opacity: 0.85;
 }
 
-/* ============ 按鈕只留一套 ============ */
-.start-button {
-  display: none !important;
-}
-.radiation-lines {
-  left: 46%;
-}
-.egg-choice-screen {
-  display: none;
-}
-#screen-4.active .egg-choice-screen {
-  display: block;
+/* 恢復首頁 CTA 與互動入口的可見度 */
+.home-stage .start-button {
+  display: inline-block;
 }
