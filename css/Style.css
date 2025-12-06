@@ -294,13 +294,6 @@ body.hand-cursor-right {
   justify-content: flex-start;
 }
 
-.screen.active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0) scale(1);
-  z-index: var(--z-index-mid);
-}
-
 .screen.exiting {
   opacity: 0;
   transform: translate3d(0, -8%, 0) scale(0.97);
@@ -588,7 +581,7 @@ body.hand-cursor-right {
 
 .sky-gradient {
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .sky-gradient-img {
@@ -1973,7 +1966,9 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .transformation-space {
-  position: relative;
+  position: relative; /* 或在布局內正常定位即可 */
+  inset: auto;
+  z-index: 1; /* 只要比背景高、比 UI / toolbar 低就好 */
   width: 100%;
   min-height: 100vh;
   border-radius: 0;
@@ -3771,19 +3766,6 @@ body {
    SCREEN SYSTEM FIX
 ===================================================== */
 
-/* 所有畫面預設不可見 */
-.screen {
-  display: none;
-  position: absolute;
-  inset: 0;
-}
-
-/* 只顯示 active */
-.screen.active {
-  display: block;
-  z-index: 10;
-}
-
 /* 強制清除殘影 */
 .screen.exiting,
 .screen.incoming,
@@ -3798,6 +3780,18 @@ body {
 #world-layer {
   position: relative;
   z-index: 1;
+}
+
+/* 類似這種邏輯就好 */
+.screen {
+  opacity: 0;
+  pointer-events: none;
+  /* transform: translate3d(...) 之類 */
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* =====================================================
@@ -3906,4 +3900,200 @@ body {
 /* 恢復首頁 CTA 與互動入口的可見度 */
 .home-stage .start-button {
   display: inline-block;
+}
+/* ===========================================
+   EMERGENCY UI FIX
+   =========================================== */
+
+.overlay-layer,
+#screen-ui-overlay,
+#guide-overlay,
+.transformation-space,
+#spinner-overlay {
+  display: none !important;
+  pointer-events: none !important;
+}
+#lottie-start-btn {
+  position: relative;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+.screen {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+/* ===========================================================
+   ✅ SUBMISSION SAFE PATCH v1.0
+   目標：
+   - 關閉所有 Overlay / Video / Curtain / Guide
+   - 還原 Screen 正常顯示
+   - 強制 CTA 可點擊
+   - 清除層級衝突
+   =========================================================== */
+
+/* ✅ 清掉複雜 stack isolation */
+body {
+  isolation: initial !important;
+}
+
+/* ===========================================================
+   ✅ 完全封殺問題層
+   =========================================================== */
+
+.overlay-layer,
+.screen-ui-overlay,
+#screen-ui-overlay,
+#curtain-transition,
+#guide-overlay,
+.transformation-space,
+#spinner-overlay,
+.spinner-overlay,
+#casting-video,
+.video-shell {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ===========================================================
+   ✅ 恢復 Screen 正常顯示與操作
+   =========================================================== */
+
+.screen {
+  display: block !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  z-index: 1 !important;
+}
+
+.screen.exiting,
+.screen.incoming,
+.screen.wave-enter {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* ===========================================================
+   ✅ WORLD LAYER 修正
+   =========================================================== */
+
+#world-layer {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.world-layer,
+.world-scroll {
+  overflow: visible !important;
+}
+
+/* ===========================================================
+   ✅ HOME SCREEN 안정化
+   =========================================================== */
+
+.home-screen {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.home-stage {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.logo-layer {
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+.hero-logo {
+  pointer-events: none !important;
+}
+
+/* ===========================================================
+   ✅ START BUTTON 保命層
+   =========================================================== */
+
+.start-button,
+#lottie-start-btn {
+  position: absolute !important;
+  display: block !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 99999 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+.start-button img {
+  pointer-events: none !important;
+}
+
+/* hover feedback */
+.start-button:hover {
+  transform: scale(1.05) !important;
+}
+
+/* ===========================================================
+   ✅ TOP UI 保命層
+   =========================================================== */
+
+.ui-buttons {
+  position: fixed !important;
+  inset: auto 12px auto auto !important;
+  top: 14px !important;
+  display: flex !important;
+  pointer-events: auto !important;
+  z-index: 99990 !important;
+}
+
+.ui-buttons button {
+  pointer-events: auto !important;
+}
+
+/* ===========================================================
+   ✅ 禁止任何遮擋點擊的元件吃事件
+   =========================================================== */
+
+.layer,
+.sticker-layer,
+.sky-gradient,
+.radiation-rays,
+.floating-stars,
+.radiation-lines,
+.hero-logo,
+.logo-layer img {
+  pointer-events: none !important;
+}
+
+/* ===========================================================
+   ✅ 保證 HOME 可操作
+   =========================================================== */
+
+.home-stage,
+.home-stage * {
+  pointer-events: auto !important;
+}
+
+/* ===========================================================
+   ✅ 全畫面點擊保護罩清除
+   =========================================================== */
+
+*[style*="pointer-events:none"] {
+  pointer-events: auto !important;
+}
+
+/* ===========================================================
+   ✅ 保底安全修正
+   =========================================================== */
+
+body,
+html {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }

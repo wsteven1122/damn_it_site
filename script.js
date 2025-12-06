@@ -289,7 +289,10 @@ class GameController {
 
     let anyActive = false;
     this.dom.overlayLayers.forEach((layer) => {
-      const shouldShow = layer.dataset.screen === screenId;
+      const screenTokens = (layer.dataset.screen || "")
+        .split(/[\s,]+/)
+        .filter(Boolean);
+      const shouldShow = screenTokens.includes(screenId);
       layer.classList.toggle("active", shouldShow);
       layer.setAttribute("aria-hidden", shouldShow ? "false" : "true");
       if (shouldShow) anyActive = true;
@@ -318,6 +321,25 @@ class GameController {
     if (this.state.isTransitioning) return;
 
     this.state.isTransitioning = true;
+
+    if (this.dom.overlayLayers?.length) {
+      this.dom.overlayLayers.forEach((layer) => {
+        layer.classList.remove("active");
+        layer.setAttribute("aria-hidden", "true");
+      });
+    }
+
+    if (this.dom.screenOverlay) {
+      this.dom.screenOverlay.classList.remove("active");
+      this.dom.screenOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    if (this.dom.guideOverlay) {
+      this.dom.guideOverlay.classList.add("hidden");
+      this.dom.guideOverlay.classList.remove("active");
+      this.dom.guideOverlay.setAttribute("aria-hidden", "true");
+      this.dom.guideTooltip?.classList.remove("active");
+    }
 
     try {
       if (nextScreenId === "screen-7") {
@@ -1246,7 +1268,10 @@ class GameController {
 
       activeSteps = CONFIG.GUIDE_FLOWS[screenId] || CONFIG.GUIDE_STEPS;
 
+      self.dom.guideOverlay.dataset.screen = screenId;
+      self.dom.guideOverlay.classList.add("active");
       self.dom.guideOverlay.classList.remove("hidden");
+      self.dom.guideOverlay.setAttribute("aria-hidden", "false");
       self.dom.guideTooltip.classList.add("active");
       currentStep = 0;
       showStep();
@@ -1255,6 +1280,8 @@ class GameController {
 
     function exit() {
       self.dom.guideOverlay.classList.add("hidden");
+      self.dom.guideOverlay.classList.remove("active");
+      self.dom.guideOverlay.setAttribute("aria-hidden", "true");
       self.dom.guideTooltip.classList.remove("active");
       self.state.isTransitioning = false;
     }
