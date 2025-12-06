@@ -567,8 +567,8 @@ body.hand-cursor-right {
   border-radius: 0;
   background: linear-gradient(180deg, #9fbaf7 0%, #c9d9ff 100%);
   box-shadow: none;
-  --home-scale: 0.72;
-  --floating-max-scale: 0.9;
+  --home-scale: 0.7;
+  --floating-max-scale: 0.7;
 }
 
 .home-stage .layer {
@@ -612,50 +612,13 @@ body.hand-cursor-right {
   animation: radiation-float 18s ease-in-out infinite alternate;
 }
 
-.egg-liquid-layer {
-  z-index: 3;
-}
-
-.egg-liquid {
-  width: calc(142% * var(--home-scale));
-  max-width: none;
-  left: 50%;
-  top: 52%;
-  transform: translate(-50%, -50%) rotate(1deg);
-  animation: egg-sway 15s ease-in-out infinite alternate;
-}
-
-.background-objects {
-  z-index: 4;
-  pointer-events: none;
-}
-
-.egg-gloss {
-  width: calc(58% * var(--home-scale));
-  max-width: none;
-  left: 58%;
-  top: 44%;
-  opacity: 0.9;
-  transform: translate(-50%, -50%) rotate(-2deg);
-  animation: gloss-breathe 12s ease-in-out infinite;
-}
-
-.checkered-cloth {
-  width: calc(104% * var(--home-scale));
-  max-width: none;
-  left: 72%;
-  top: 92%;
-  transform: translate(-50%, -50%) rotate(-4deg);
-  animation: cloth-wave 16s ease-in-out infinite;
-}
-
 .floating-stars {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 3;
   opacity: 0.8;
   pointer-events: none;
-  padding: 6vh 6vw;
+  padding: 8vh 8vw;
 }
 
 .floating-stars img {
@@ -673,7 +636,7 @@ body.hand-cursor-right {
 }
 
 .logo-layer {
-  z-index: 12;
+  z-index: 20;
   filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
   display: flex;
   justify-content: center;
@@ -704,9 +667,9 @@ body.hand-cursor-right {
 
 .start-button {
   position: absolute;
-  bottom: -8%;
-  right: -12%;
-  width: clamp(120px, 10vw, 170px);
+  bottom: -6%;
+  right: -10%;
+  width: clamp(120px, 12vw, 180px);
   height: auto;
   background: none;
   border: none;
@@ -714,7 +677,7 @@ body.hand-cursor-right {
   transition: transform 0.28s ease, filter 0.28s ease;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
   pointer-events: auto;
-  z-index: var(--z-index-high);
+  z-index: calc(var(--z-index-high) + 50);
   touch-action: manipulation;
   transform-origin: center;
 }
@@ -723,6 +686,7 @@ body.hand-cursor-right {
   width: 100%;
   height: 100%;
   display: block;
+  pointer-events: none;
 }
 
 .start-button:hover,
@@ -739,7 +703,7 @@ body.hand-cursor-right {
 .ui-buttons {
   position: absolute;
   inset: 0;
-  z-index: 9;
+  z-index: calc(var(--z-index-high) + 80);
   pointer-events: none;
   display: flex;
   flex-direction: row;
@@ -750,8 +714,8 @@ body.hand-cursor-right {
 }
 
 .ui-buttons button {
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   background: none;
   border: none;
   padding: 0;
@@ -759,12 +723,17 @@ body.hand-cursor-right {
   filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.42));
   pointer-events: auto;
   position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
 }
 
 .ui-buttons img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: contain;
+  pointer-events: none;
 }
 
 .home-ui-btn {
@@ -780,7 +749,7 @@ body.hand-cursor-right {
 }
 
 .sticker-layer {
-  z-index: 5;
+  z-index: 4;
   pointer-events: none;
   position: absolute;
   inset: 0;
@@ -790,72 +759,72 @@ body.hand-cursor-right {
   position: absolute;
   user-select: none;
   filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.32));
-  max-width: min(22vw, 220px);
-  max-height: min(22vh, 220px);
+  max-width: min(18vw, 180px);
+  max-height: min(18vh, 180px);
   transform: scale(var(--floating-max-scale)) rotate(var(--tilt, 0deg));
 }
 
 .sticker-stone {
-  width: clamp(110px, 12vw, 150px);
+  width: clamp(92px, 10vw, 130px);
   --tilt: -12deg;
-  top: 10%;
-  left: 6%;
+  top: 6%;
+  left: 4%;
 }
 
 .sticker-eggs {
-  width: clamp(130px, 14vw, 180px);
+  width: clamp(108px, 12vw, 150px);
   --tilt: -10deg;
   top: 8%;
-  right: 10%;
+  right: 6%;
 }
 
 .sticker-lemon {
-  width: clamp(120px, 13vw, 170px);
+  width: clamp(100px, 12vw, 140px);
   --tilt: -6deg;
-  bottom: 8%;
-  left: 12%;
+  bottom: 10%;
+  left: 6%;
 }
 
 .sticker-phone {
-  width: clamp(110px, 12vw, 160px);
+  width: clamp(94px, 11vw, 130px);
   --tilt: -14deg;
-  bottom: 16%;
-  right: 8%;
+  bottom: 14%;
+  right: 6%;
 }
 
 .sticker-coriander {
-  width: clamp(140px, 15vw, 200px);
+  width: clamp(112px, 13vw, 160px);
   --tilt: 6deg;
   top: 12%;
-  right: 22%;
+  right: 18%;
 }
 
 .sticker-meat {
-  width: clamp(160px, 17vw, 220px);
+  width: clamp(128px, 15vw, 180px);
   --tilt: -8deg;
-  bottom: 18%;
-  right: 20%;
+  bottom: 20%;
+  right: 18%;
 }
 
 .sticker-pants {
-  width: clamp(150px, 16vw, 210px);
+  width: clamp(120px, 14vw, 170px);
   --tilt: 5deg;
-  bottom: 10%;
-  left: 22%;
+  bottom: 12%;
+  left: 18%;
 }
 
 .sticker-bomb {
-  width: clamp(100px, 11vw, 150px);
+  width: clamp(86px, 10vw, 120px);
   --tilt: 6deg;
   top: 18%;
-  left: 20%;
+  left: 16%;
 }
 
 .sticker-durian {
-  width: clamp(130px, 14vw, 190px);
+  width: clamp(108px, 13vw, 160px);
   --tilt: -6deg;
   top: 16%;
-  right: 6%;
+  right: 10%;
 }
 
 @keyframes radiation-float {
@@ -3172,7 +3141,6 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 #curtain-transition.active {
   opacity: 1;
   visibility: visible;
-  pointer-events: auto;
 }
 
 #curtain-transition.shudder {
@@ -3972,12 +3940,8 @@ body {
   left: 50%;
 }
 
-.egg-liquid {
-  left: 50%;
-}
-
 .floating-stars {
-  z-index: 2;
+  z-index: 3;
   opacity: 0.85;
 }
 

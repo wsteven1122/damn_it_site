@@ -514,11 +514,11 @@ class GameController {
     ];
 
     const starLayout = [
-      { left: 10, top: 14, rotation: -6, scale: 0.88, delay: 0.6 },
-      { left: 20, top: 78, rotation: 6, scale: 0.92, delay: 1.1 },
-      { left: 84, top: 18, rotation: 4, scale: 0.96, delay: 0.8 },
-      { left: 82, top: 78, rotation: -8, scale: 0.94, delay: 1.4 },
-      { left: 6, top: 48, rotation: 10, scale: 0.9, delay: 0.7 },
+      { left: 6, top: 18, rotation: -6, scale: 0.86, delay: 0.6 },
+      { left: 14, top: 82, rotation: 6, scale: 0.88, delay: 1.1 },
+      { left: 88, top: 20, rotation: 4, scale: 0.9, delay: 0.8 },
+      { left: 84, top: 82, rotation: -8, scale: 0.9, delay: 1.4 },
+      { left: 6, top: 40, rotation: 10, scale: 0.86, delay: 0.7 },
     ];
 
     starField.innerHTML = "";
