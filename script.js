@@ -215,8 +215,12 @@ class GameController {
     this.dom.persistentUI.style.display = "flex";
     document.body.dataset.activeScreen = this.state.currentScreenId;
     if (this.dom.curtainLayer) {
-      this.dom.curtainLayer.classList.add("open");
+      this.dom.curtainLayer.classList.remove("active", "open", "shudder");
       this.dom.curtainLayer.setAttribute("aria-hidden", "true");
+      this.dom.curtainLayer.style.display = "none";
+      this.dom.curtainLayer.style.opacity = "0";
+      this.dom.curtainLayer.style.pointerEvents = "none";
+      this.dom.curtainLayer.dataset.disabled = "true";
     }
     this.loadLottieAnimations();
     this.setupBackgroundMusic();
@@ -353,49 +357,19 @@ class GameController {
   playCurtainTransition(midpointCallback) {
     return new Promise((resolve) => {
       const layer = this.dom.curtainLayer;
-      if (!layer) {
+      if (!layer || layer.dataset.disabled === "true") {
         midpointCallback?.();
         resolve();
         return;
       }
 
-      const closeMs = CONFIG.CURTAIN_CLOSE_MS;
-      const shakeMs = CONFIG.CURTAIN_SHAKE_MS;
-      const openMs = CONFIG.CURTAIN_OPEN_MS;
-      const totalDuration = closeMs + shakeMs + openMs;
-
-      this.playSfxGroup("transition");
-
-      layer.style.setProperty(
-        "--curtain-close",
-        `${closeMs}ms cubic-bezier(0.7, 0.05, 0.95, 0.25)`
-      );
-      layer.style.setProperty(
-        "--curtain-open",
-        `${openMs}ms cubic-bezier(0.18, 0.78, 0.2, 1)`
-      );
-
-      layer.setAttribute("aria-hidden", "false");
-      layer.classList.add("active");
-      layer.classList.remove("open", "shudder");
-      void layer.offsetWidth;
-      const midpointTimer = setTimeout(() => {
-        midpointCallback?.();
-        layer.classList.add("shudder");
-      }, closeMs + 120);
-
-      const openTimer = setTimeout(() => {
-        layer.classList.add("open");
-      }, closeMs + shakeMs);
-
-      const cleanupTimer = setTimeout(() => {
-        layer.classList.remove("active", "shudder");
-        layer.classList.add("open");
-        layer.setAttribute("aria-hidden", "true");
-        resolve();
-      }, totalDuration);
-
-      this.state.transitionTimers = [midpointTimer, openTimer, cleanupTimer];
+      layer.setAttribute("aria-hidden", "true");
+      layer.classList.remove("active", "open", "shudder");
+      layer.style.display = "none";
+      layer.style.opacity = "0";
+      layer.style.pointerEvents = "none";
+      midpointCallback?.();
+      resolve();
     });
   }
 
