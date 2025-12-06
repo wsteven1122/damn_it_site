@@ -2783,86 +2783,6 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   }
 }
 
-/* =========================================================================
-   9. 新手導覽覆蓋層 (Guide Overlay) 樣式
-   ========================================================================= */
-
-.guide-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
-  z-index: var(--z-index-curtain); /* 比普通 Modal 低一點 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.3s;
-}
-
-.guide-overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.guide-focus-ring {
-  position: absolute;
-  pointer-events: none;
-  border: 4px dashed var(--color-primary);
-  border-radius: var(--border-radius-l);
-  box-shadow: 0 0 20px rgba(240, 163, 10, 0.8);
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-.guide-tooltip {
-  position: absolute;
-  background-color: var(--color-background-light);
-  border: 2px solid var(--color-accent);
-  border-radius: var(--border-radius-m);
-  padding: var(--spacing-m);
-  width: 250px;
-  box-shadow: 0 0 15px rgba(10, 240, 192, 0.5);
-  pointer-events: auto;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.tooltip-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-s);
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 5px;
-}
-
-.tooltip-stage-indicator {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
-
-.tooltip-main-text {
-  font-size: 0.95rem;
-  color: var(--color-text-light);
-}
-
-.tooltip-footer {
-  margin-top: var(--spacing-m);
-  text-align: right;
-}
-
-.guide-click-prompt {
-  position: absolute;
-  bottom: 10%;
-  color: var(--color-primary);
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: var(--spacing-s);
-  border-radius: var(--border-radius-s);
-  font-size: 0.9rem;
-  animation: blink 1.5s infinite;
-}
 
 @keyframes blink {
   0%,
@@ -3085,7 +3005,21 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 }
 
 .start-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
+
+.start-button img {
+  display: block;
+}
+
+.start-button:hover,
+.start-button:focus-visible {
+  transform: scale(1.05);
+}
+
 /* 幕簾轉場：快關、慢開並帶有抖動感 */
 #curtain-transition {
   position: fixed;
@@ -3096,32 +3030,43 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   z-index: var(--z-index-curtain);
   opacity: 0;
   visibility: hidden;
-  transform: none;
+  transition: opacity 0.3s ease;
 }
 
 #curtain-transition .curtain {
-  width: 50%;
-  background: none;
-  transform: none;
-  transition: none;
-  box-shadow: none;
-  position: relative;
-  clip-path: none;
-  display: none;
+  flex: 1;
+  background: radial-gradient(circle at 20% 20%, #ffd86f, #ff9f0d);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.25);
+  transform: translateX(0);
+  transition: transform 0.42s ease;
 }
 
-#curtain-transition .curtain::before {
-  content: "";
-  display: none;
+#curtain-transition .curtain-left {
+  transform: translateX(-100%);
 }
 
-#curtain-transition.active,
-#curtain-transition.shudder,
-#curtain-transition.open {
-  display: none;
-  opacity: 0;
-  visibility: hidden;
-  transform: none;
+#curtain-transition .curtain-right {
+  transform: translateX(100%);
+}
+
+#curtain-transition.active {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+#curtain-transition.active.closing .curtain-left,
+#curtain-transition.active.closing .curtain-right {
+  transform: translateX(0);
+}
+
+#curtain-transition.active.open .curtain-left {
+  transform: translateX(-100%);
+}
+
+#curtain-transition.active.open .curtain-right {
+  transform: translateX(100%);
 }
 
 #screen-2 {
@@ -3820,18 +3765,11 @@ body {
 }
 
 /* =====================================================
-   CURTAIN / VIDEO LAYER
+   CURTAIN / VIDEO / TOOLBAR LAYER
 ===================================================== */
 
 #curtain-transition {
-  position: fixed;
-  inset: 0;
   z-index: 60;
-  display: none;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: none;
 }
 
 .transformation-space {
@@ -3840,260 +3778,24 @@ body {
   z-index: 55;
 }
 
-/* =====================================================
-   MODAL / GUIDE FIX
-===================================================== */
-
-#guide-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-}
-
-/* 提示框顯示保證在最上層 */
-#guide-tooltip,
-#guide-focus-ring {
-  z-index: 85;
-}
-
-/* =====================================================
-   EASTER / POPUP
-===================================================== */
-
 #sun-hatch-popover {
   position: fixed;
   inset: 0;
   z-index: 70;
 }
 
-/* =====================================================
-   TOOLBAR FIX
-===================================================== */
-
 #persistent-ui {
   position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 30;
+  top: 12px;
+  right: 12px;
+  z-index: 50;
 }
 
-/* =====================================================
-   CLICK PASS THROUGHS
-===================================================== */
-
-/* 避免 overlay 吃掉畫面事件 */
 .overlay-layer:not(.active),
 .screen-ui-overlay:not(.active) {
   pointer-events: none;
 }
 
-/* ============ 首頁視覺校正 ============ */
-.radiation-lines {
-  left: 50%;
-}
-
-.floating-stars {
-  z-index: 3;
-  opacity: 0.85;
-}
-
-/* 恢復首頁 CTA 與互動入口的可見度 */
 .home-stage .start-button {
   display: inline-block;
-}
-/* ===========================================
-   EMERGENCY UI FIX
-   =========================================== */
-
-.overlay-layer,
-#screen-ui-overlay,
-#guide-overlay,
-.transformation-space,
-#spinner-overlay {
-  display: none !important;
-  pointer-events: none !important;
-}
-#lottie-start-btn {
-  position: relative;
-  z-index: 99999 !important;
-  pointer-events: auto !important;
-}
-.screen {
-  display: block !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-/* ===========================================================
-   ✅ SUBMISSION SAFE PATCH v1.0
-   目標：
-   - 關閉所有 Overlay / Video / Curtain / Guide
-   - 還原 Screen 正常顯示
-   - 強制 CTA 可點擊
-   - 清除層級衝突
-   =========================================================== */
-
-/* ✅ 清掉複雜 stack isolation */
-body {
-  isolation: initial !important;
-}
-
-/* ===========================================================
-   ✅ 完全封殺問題層
-   =========================================================== */
-
-.overlay-layer,
-.screen-ui-overlay,
-#screen-ui-overlay,
-#curtain-transition,
-#guide-overlay,
-.transformation-space,
-#spinner-overlay,
-.spinner-overlay,
-#casting-video,
-.video-shell {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* ===========================================================
-   ✅ 恢復 Screen 正常顯示與操作
-   =========================================================== */
-
-.screen {
-  display: block !important;
-  opacity: 1 !important;
-  transform: none !important;
-  pointer-events: auto !important;
-  z-index: 1 !important;
-}
-
-.screen.exiting,
-.screen.incoming,
-.screen.wave-enter {
-  display: none !important;
-  opacity: 0 !important;
-}
-
-/* ===========================================================
-   ✅ WORLD LAYER 修正
-   =========================================================== */
-
-#world-layer {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.world-layer,
-.world-scroll {
-  overflow: visible !important;
-}
-
-/* ===========================================================
-   ✅ HOME SCREEN 안정化
-   =========================================================== */
-
-.home-screen {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-.home-stage {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.logo-layer {
-  position: relative !important;
-  z-index: 10 !important;
-  pointer-events: auto !important;
-}
-
-.hero-logo {
-  pointer-events: none !important;
-}
-
-/* ===========================================================
-   ✅ START BUTTON 保命層
-   =========================================================== */
-
-.start-button,
-#lottie-start-btn {
-  position: absolute !important;
-  display: block !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 99999 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
-}
-
-.start-button img {
-  pointer-events: none !important;
-}
-
-/* hover feedback */
-.start-button:hover {
-  transform: scale(1.05) !important;
-}
-
-/* ===========================================================
-   ✅ TOP UI 保命層
-   =========================================================== */
-
-.ui-buttons {
-  position: fixed !important;
-  inset: auto 12px auto auto !important;
-  top: 14px !important;
-  display: flex !important;
-  pointer-events: auto !important;
-  z-index: 99990 !important;
-}
-
-.ui-buttons button {
-  pointer-events: auto !important;
-}
-
-/* ===========================================================
-   ✅ 禁止任何遮擋點擊的元件吃事件
-   =========================================================== */
-
-.layer,
-.sticker-layer,
-.sky-gradient,
-.radiation-rays,
-.floating-stars,
-.radiation-lines,
-.hero-logo,
-.logo-layer img {
-  pointer-events: none !important;
-}
-
-/* ===========================================================
-   ✅ 保證 HOME 可操作
-   =========================================================== */
-
-.home-stage,
-.home-stage * {
-  pointer-events: auto !important;
-}
-
-/* ===========================================================
-   ✅ 全畫面點擊保護罩清除
-   =========================================================== */
-
-*[style*="pointer-events:none"] {
-  pointer-events: auto !important;
-}
-
-/* ===========================================================
-   ✅ 保底安全修正
-   =========================================================== */
-
-body,
-html {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
 }

@@ -36,33 +36,6 @@
       <div class="alert-progress-bar"></div>
     </div>
 
-    <div
-      id="guide-overlay"
-      class="guide-overlay overlay-layer hidden"
-      data-screen=""
-      aria-modal="true"
-      role="dialog"
-      aria-label="新手導覽"
-      aria-hidden="true"
-    >
-      <div id="guide-focus-ring" class="guide-focus-ring"></div>
-      <div id="guide-tooltip" class="guide-tooltip">
-        <header class="tooltip-header">
-          <span class="tooltip-stage-indicator"
-            >步驟 <span id="tip-current-step">1</span> /
-            <span id="tip-total-steps">4</span></span
-          >
-        </header>
-        <p id="tip-text" class="tooltip-main-text">指引提示文字</p>
-        <footer class="tooltip-footer">
-          <button id="tip-next-btn" class="btn btn-primary tooltip-nav-btn">
-            下一步
-          </button>
-        </footer>
-      </div>
-      <div class="guide-click-prompt">點擊任意處或按 [下一步] 繼續</div>
-    </div>
-
     <div id="curtain-transition" aria-hidden="true">
       <div class="curtain curtain-left"></div>
       <div class="curtain curtain-right"></div>
@@ -185,12 +158,6 @@
               <div class="ui-buttons layer" aria-label="主要導覽">
                 <button class="home-ui-btn" aria-label="回到首頁">
                   <img src="./img/HomePage.png" alt="首頁" />
-                </button>
-                <button class="speaker-ui-btn" aria-label="音量">
-                  <img src="./img/voice_on.png" alt="音量" />
-                </button>
-                <button class="help-ui-btn" aria-label="幫助">
-                  <img src="./img/Botton_teaching_Default.png" alt="幫助" />
                 </button>
               </div>
             </div>
@@ -832,21 +799,6 @@
     <div id="persistent-ui" class="persistent-ui">
       <div class="persistent-inner">
         <div class="persistent-actions">
-          <button
-            id="global-volume-btn"
-            class="icon-btn volume-toggle"
-            aria-label="音量"
-            aria-pressed="false"
-          >
-            <img src="./img/voice_on.png" alt="音量" />
-          </button>
-          <button
-            id="global-guide-btn"
-            class="icon-btn guide-trigger"
-            aria-label="新手導覽"
-          >
-            <img src="./img/Botton_teaching_Default.png" alt="導覽" />
-          </button>
           <button
             id="sun-easter-btn"
             class="icon-btn sun-egg-btn"

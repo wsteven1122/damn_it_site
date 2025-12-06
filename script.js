@@ -35,96 +35,6 @@ const CONFIG = {
     "至於結果？我也不知道。",
     "事不宜遲，馬上開始行動！",
   ],
-  // 導覽步驟 (Guide Module)
-  GUIDE_STEPS: [
-    {
-      targetId: "lottie-start-btn",
-      text: "點擊這個【開始遊戲】按鈕，即可展開你的煉蛋廚房之旅！",
-      position: "right",
-    },
-    {
-      targetId: "global-volume-btn",
-      text: "這是【音量按鈕】，點擊它來調整 BGM 或音效大小。",
-      position: "left",
-    },
-    {
-      targetId: "global-guide-btn",
-      text: "這是【指引按鈕】，可以隨時點擊它來重新查看本教學。",
-      position: "left",
-    },
-  ],
-  GUIDE_FLOWS: {
-    "screen-1": [
-      {
-        targetId: "lottie-start-btn",
-        text: "點擊【開始遊戲】啟動冒險，畫面上的雙手也會跟著前往廚房！",
-        position: "right",
-      },
-      {
-        targetId: "global-guide-btn",
-        text: "任何時候想再看教學，點擊這顆【導覽】按鈕即可。",
-        position: "left",
-      },
-    ],
-    "screen-2": [
-      {
-        targetId: "messages",
-        text: "這裡播放故事對話，搭配雙手框住情境，請慢慢閱讀。",
-        position: "right",
-      },
-      {
-        targetId: "dialog-skip-btn",
-        text: "想直接進入遊戲可以按【跳過故事】。",
-        position: "top",
-      },
-      {
-        targetId: "continue-btn",
-        text: "看完後點【進入煉蛋爐】繼續。",
-        position: "top",
-      },
-    ],
-    "screen-5": [
-      {
-        targetId: "selection-row",
-        text: "這些欄位顯示已放入的食材，按叉叉可清除。",
-        position: "bottom",
-      },
-      {
-        targetId: "ingredient-tray",
-        text: "直接拖曳原始圖片食材到米特蛋上方，最多三種。",
-        position: "top",
-      },
-      {
-        targetId: "cast-spell-btn",
-        text: "選好後按【MAGIC】啟動，跳轉進入變身影片。",
-        position: "top",
-      },
-    ],
-    "screen-6": [
-      {
-        targetId: "casting-video",
-        text: "影片全幅鋪滿舞台，搭配光暈讓變身效果更明顯。",
-        position: "right",
-      },
-      {
-        targetId: "skip-video-btn",
-        text: "右下角有【Skip】可以提前結束。",
-        position: "left",
-      },
-      {
-        targetId: "next-from-video-btn",
-        text: "完成後點擊【查看結果】繼續。",
-        position: "top",
-      },
-    ],
-    "screen-gallery": [
-      {
-        targetId: "floating-gallery-field",
-        text: "卡片在空間中漂浮，鎖定的成品會呈現半透明覆蓋。",
-        position: "left",
-      },
-    ],
-  },
 };
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -145,7 +55,7 @@ class GameController {
       isMuted: false,
       lottieInstances: {},
     };
-    this.loadModules(); // 載入模塊 (Dialog, Guide)
+    this.loadModules(); // 載入模塊 (Dialog)
     this.init();
   }
 
@@ -184,20 +94,11 @@ class GameController {
       alertText: document.getElementById("alert-text"),
       alertIcon: document.getElementById("alert-icon"),
 
-      volumeBtns: document.querySelectorAll(".volume-toggle"),
-      guideBtns: document.querySelectorAll(".guide-trigger"),
       settingsBtns: document.querySelectorAll(
         "#settings-btn, [data-target='screen-settings']"
       ),
       spinnerOverlay: document.getElementById("spinner-overlay"),
       skipVideoBtns: document.querySelectorAll(".skip-video-btn"),
-
-      // Guide Elements
-      guideOverlay: document.getElementById("guide-overlay"),
-      guideFocusRing: document.getElementById("guide-focus-ring"),
-      guideTooltip: document.getElementById("guide-tooltip"),
-      tipText: document.getElementById("tip-text"),
-      tipNextBtn: document.getElementById("tip-next-btn"),
 
       selectionSlots: document.querySelectorAll(".selection-slot"),
       castSpellBtn: document.getElementById("cast-spell-btn"),
@@ -215,12 +116,11 @@ class GameController {
     this.dom.persistentUI.style.display = "flex";
     document.body.dataset.activeScreen = this.state.currentScreenId;
     if (this.dom.curtainLayer) {
-      this.dom.curtainLayer.classList.remove("active", "open", "shudder");
+      this.dom.curtainLayer.classList.remove("active", "open", "closing");
       this.dom.curtainLayer.setAttribute("aria-hidden", "true");
       this.dom.curtainLayer.style.display = "none";
       this.dom.curtainLayer.style.opacity = "0";
       this.dom.curtainLayer.style.pointerEvents = "none";
-      this.dom.curtainLayer.dataset.disabled = "true";
     }
     this.loadLottieAnimations();
     this.setupBackgroundMusic();
@@ -334,13 +234,6 @@ class GameController {
       this.dom.screenOverlay.setAttribute("aria-hidden", "true");
     }
 
-    if (this.dom.guideOverlay) {
-      this.dom.guideOverlay.classList.add("hidden");
-      this.dom.guideOverlay.classList.remove("active");
-      this.dom.guideOverlay.setAttribute("aria-hidden", "true");
-      this.dom.guideTooltip?.classList.remove("active");
-    }
-
     try {
       if (nextScreenId === "screen-7") {
         this.generateResult();
@@ -377,20 +270,35 @@ class GameController {
   }
 
   playCurtainTransition(midpointCallback) {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       const layer = this.dom.curtainLayer;
-      if (!layer || layer.dataset.disabled === "true") {
+      if (!layer) {
         midpointCallback?.();
         resolve();
         return;
       }
 
-      layer.setAttribute("aria-hidden", "true");
-      layer.classList.remove("active", "open", "shudder");
+      layer.style.display = "flex";
+      layer.removeAttribute("data-disabled");
+      layer.setAttribute("aria-hidden", "false");
+      layer.classList.remove("open");
+      layer.classList.add("active", "closing");
+      layer.style.pointerEvents = "auto";
+      layer.style.opacity = "1";
+
+      await wait(CONFIG.CURTAIN_CLOSE_MS);
+      midpointCallback?.();
+
+      layer.classList.remove("closing");
+      layer.classList.add("open");
+
+      await wait(CONFIG.CURTAIN_OPEN_MS);
+
+      layer.classList.remove("active", "open");
       layer.style.display = "none";
       layer.style.opacity = "0";
       layer.style.pointerEvents = "none";
-      midpointCallback?.();
+      layer.setAttribute("aria-hidden", "true");
       resolve();
     });
   }
@@ -1069,7 +977,6 @@ class GameController {
 
   loadModules() {
     this.Dialog = this.createDialogModule();
-    this.Guide = this.createGuideModule();
   }
 
   // ---------------------- 對話模塊 (Screen 2) ----------------------
@@ -1171,134 +1078,6 @@ class GameController {
         hideTyping();
       },
     };
-  }
-
-  // ---------------------- 導覽模塊 (Guide Module) ----------------------
-
-  createGuideModule() {
-    let currentStep = 0;
-    let activeSteps = CONFIG.GUIDE_STEPS;
-    const self = this;
-
-    // 輔助函數：取得目標元素範圍
-    function getTargetRect(element) {
-      const rect = element.getBoundingClientRect();
-      const padding = 15;
-      return {
-        x: rect.x - padding,
-        y: rect.y - padding,
-        width: rect.width + 2 * padding,
-        height: rect.height + 2 * padding,
-      };
-    }
-
-    // 輔助函數：計算提示框位置 (略，與上一個版本相同)
-    function calculateTooltipPosition(targetRect, position) {
-      let top, left;
-      const tooltip = self.dom.guideTooltip;
-
-      tooltip.style.opacity = 0;
-      tooltip.style.display = "block";
-
-      top = targetRect.y + targetRect.height / 2 - tooltip.offsetHeight / 2;
-      left = targetRect.x + targetRect.width + 30;
-
-      if (position === "left") {
-        left = targetRect.x - tooltip.offsetWidth - 30;
-      } else if (position === "top") {
-        top = targetRect.y - tooltip.offsetHeight - 30;
-        left = targetRect.x + targetRect.width / 2 - tooltip.offsetWidth / 2;
-      } else if (position === "bottom") {
-        top = targetRect.y + targetRect.height + 30;
-        left = targetRect.x + targetRect.width / 2 - tooltip.offsetWidth / 2;
-      }
-
-      left = Math.max(
-        20,
-        Math.min(left, window.innerWidth - tooltip.offsetWidth - 20)
-      );
-      top = Math.max(
-        20,
-        Math.min(top, window.innerHeight - tooltip.offsetHeight - 20)
-      );
-
-      tooltip.style.opacity = 1;
-      return { top, left };
-    }
-
-    function showStep() {
-      if (currentStep >= activeSteps.length) {
-        exit();
-        return;
-      }
-
-      const step = activeSteps[currentStep];
-      const targetElement = document.getElementById(step.targetId);
-
-      if (!targetElement || targetElement.offsetParent === null) {
-        currentStep++;
-        showStep();
-        return;
-      }
-
-      const targetRect = getTargetRect(targetElement);
-
-      self.dom.guideFocusRing.style.width = `${targetRect.width}px`;
-      self.dom.guideFocusRing.style.height = `${targetRect.height}px`;
-      self.dom.guideFocusRing.style.top = `${targetRect.y}px`;
-      self.dom.guideFocusRing.style.left = `${targetRect.x}px`;
-
-      self.dom.tipText.textContent = step.text;
-
-      const tooltipPos = calculateTooltipPosition(targetRect, step.position);
-      self.dom.guideTooltip.style.top = `${tooltipPos.top}px`;
-      self.dom.guideTooltip.style.left = `${tooltipPos.left}px`;
-
-      self.dom.guideTooltip.classList.add("active");
-      self.dom.tipNextBtn.textContent =
-        currentStep === activeSteps.length - 1 ? "完成指引" : "下一步";
-
-      document.getElementById("tip-current-step").textContent = currentStep + 1;
-      document.getElementById("tip-total-steps").textContent =
-        activeSteps.length;
-    }
-
-    function start(screenId = self.state.currentScreenId) {
-      if (self.state.isTransitioning) return;
-
-      activeSteps = CONFIG.GUIDE_FLOWS[screenId] || CONFIG.GUIDE_STEPS;
-
-      self.dom.guideOverlay.dataset.screen = screenId;
-      self.dom.guideOverlay.classList.add("active");
-      self.dom.guideOverlay.classList.remove("hidden");
-      self.dom.guideOverlay.setAttribute("aria-hidden", "false");
-      self.dom.guideTooltip.classList.add("active");
-      currentStep = 0;
-      showStep();
-      self.state.isTransitioning = true; // 鎖定遊戲流程
-    }
-
-    function exit() {
-      self.dom.guideOverlay.classList.add("hidden");
-      self.dom.guideOverlay.classList.remove("active");
-      self.dom.guideOverlay.setAttribute("aria-hidden", "true");
-      self.dom.guideTooltip.classList.remove("active");
-      self.state.isTransitioning = false;
-    }
-
-    function next() {
-      currentStep++;
-      showStep();
-    }
-
-    self.dom.tipNextBtn.addEventListener("click", next);
-    self.dom.guideOverlay.addEventListener("click", (event) => {
-      if (event.target === self.dom.guideOverlay) {
-        next();
-      }
-    });
-
-    return { start, exit, next };
   }
 
   // ---------------------- 事件監聽器 ----------------------
@@ -1443,43 +1222,7 @@ class GameController {
     }
 
     // 5. 永久 UI 按鈕
-    this.dom.volumeBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        this.playTone("uiTap");
-        this.state.isMuted = !this.state.isMuted;
-        this.dom.volumeBtns.forEach((el) => {
-          el.classList.toggle("muted", this.state.isMuted);
-          el.setAttribute("aria-pressed", this.state.isMuted);
-          el.setAttribute(
-            "aria-label",
-            this.state.isMuted ? "音量已靜音" : "音量開啟"
-          );
-        });
-        this.showAlert(
-          "info",
-          this.state.isMuted ? "已關閉音效" : "已開啟音效"
-        );
-        if (this.dom.castingVideo) {
-          this.dom.castingVideo.muted = this.state.isMuted;
-        }
-        if (this.dom.bgmAudio) {
-          this.dom.bgmAudio.muted = this.state.isMuted;
-        }
-        if (this.audioCtx) {
-          this.state.isMuted ? this.audioCtx.suspend() : this.audioCtx.resume();
-        }
-      });
-    });
-
-    // 6. 新手導覽按鈕 (僅點擊時啟動)
-    this.dom.guideBtns.forEach((btn) =>
-      btn.addEventListener("click", () => {
-        this.playTone("uiTap");
-        this.Guide.start(this.state.currentScreenId);
-      })
-    );
-
-    // 7. 設置按鈕
+    // 6. 設置按鈕
     this.dom.settingsBtns.forEach((btn) =>
       btn.addEventListener("click", (e) => {
         if (!e.currentTarget.dataset.target) return;
@@ -1487,7 +1230,7 @@ class GameController {
       })
     );
 
-    // 8. 施法按鈕 (Cast Spell)
+    // 7. 施法按鈕 (Cast Spell)
     if (this.dom.castSpellBtn) {
       this.dom.castSpellBtn.addEventListener("click", () => {
         if (!this.dom.castSpellBtn.disabled) {
