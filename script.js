@@ -1117,8 +1117,8 @@ class GameController {
 
     const attachMouseDragFallback = (card, ingredient) => {
       card.addEventListener("pointerdown", (e) => {
-        if (e.pointerType && e.pointerType !== "mouse") return;
         if (typeof e.button === "number" && e.button !== 0) return;
+        if (e.pointerType === "mouse") return;
         e.preventDefault();
 
         const cardRect = card.getBoundingClientRect();
@@ -1160,6 +1160,7 @@ class GameController {
 
         window.addEventListener("pointermove", handleMove);
         window.addEventListener("pointerup", handleUp, { once: true });
+        window.addEventListener("pointercancel", handleUp, { once: true });
       });
     };
 
