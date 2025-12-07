@@ -562,18 +562,22 @@ body.hand-cursor-right {
   pointer-events: none;
   z-index: 0;
 }
+.egg-anchor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .home-visual-layer .home-white-egg {
-  position: absolute;
-  top: 12px;
-  left: 6%;
-  display: inline;
-  width: clamp(760px, 84vw, 1200px);
-  height: clamp(540px, 62vw, 820px);
-  transform: translateX(-50%) rotate(-8deg);
+  width: clamp(1140px, 126vw, 1800px);
+  height: clamp(1140px, 126vw, 1800px);
+
   background: url("../img/蛋白_画板\ 1\ 1.png") no-repeat center / contain;
-  filter: drop-shadow(0 24px 38px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.28));
   opacity: 0.98;
+
+  transform: rotate(-8deg);
   animation: soft-drift 18s ease-in-out infinite alternate;
 }
 
