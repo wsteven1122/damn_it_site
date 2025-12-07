@@ -1324,13 +1324,18 @@ body.hand-cursor-right {
 }
 
 .kitchen-hands {
+  position: absolute;
+  inset: auto 0 14px 0;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 20px 0;
   z-index: 6;
-  padding: 0 12px 0;
 }
 
 .kitchen-hands .hand-image {
   width: clamp(150px, 20vw, 260px);
-  max-height: 32vh;
+  max-height: 30vh;
+  transform: translateY(10%);
 }
 
 .story-hands {
