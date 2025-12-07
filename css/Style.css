@@ -77,6 +77,7 @@ body {
   position: relative;
   touch-action: manipulation;
   overscroll-behavior: contain;
+  isolation: auto;
 }
 
 body.scene-kitchen {
@@ -146,7 +147,8 @@ body.hand-cursor-right {
   min-height: 100vh;
   display: block;
   overflow: visible;
-  z-index: var(--z-index-low);
+  position: relative;
+  z-index: 1;
 }
 
 .world-scroll {
@@ -164,10 +166,10 @@ body.hand-cursor-right {
   position: fixed;
   inset: 0;
   z-index: 3200;
-  display: flex;
   justify-content: center;
   align-items: stretch;
   pointer-events: none;
+  display: block;
 }
 
 .screen-ui-overlay.active {
@@ -2809,7 +2811,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(2px);
-  z-index: var(--z-index-curtain); /* 比普通 Modal 低一點 */
+  z-index: 80 !important; /* 比普通 Modal 低一點 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2829,7 +2831,10 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   box-shadow: 0 0 20px rgba(240, 163, 10, 0.8);
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
-
+.guide-tooltip,
+.guide-focus-ring {
+  z-index: 85 !important;
+}
 .guide-tooltip {
   position: absolute;
   background-color: var(--color-background-light);
@@ -3107,7 +3112,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   display: flex;
   justify-content: space-between;
   pointer-events: none;
-  z-index: var(--z-index-curtain);
+  z-index: 90;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
