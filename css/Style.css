@@ -655,7 +655,8 @@ body.hand-cursor-right {
   cursor: pointer;
   box-shadow: 0 16px 30px rgba(251, 133, 0, 0.35);
   letter-spacing: 0.6px;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .hero-start-button:hover,
@@ -1444,7 +1445,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   justify-content: flex-start;
   gap: var(--spacing-m);
   padding-top: 140px;
-  background: transparent;
+  background: url("../img/廚房.gif") center/cover no-repeat;
 }
 
 #screen-5 {
@@ -1452,7 +1453,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   justify-content: center;
   align-items: center;
   padding: 32px 16px 96px;
-  background: url("../img/廚房動圖.png") center/cover no-repeat;
+  background: url("../img/廚房.gif") center/cover no-repeat;
   overflow: hidden;
   gap: 24px;
   z-index: var(--z-bg);
