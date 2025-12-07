@@ -658,7 +658,7 @@ body.hand-cursor-right {
 
 .floating-stars img {
   position: absolute;
-  width: 82px;
+  width: 41px;
   height: auto;
   filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
   animation: star-drift 8s ease-in-out infinite;
@@ -676,14 +676,14 @@ body.hand-cursor-right {
 .logo-layer .hero-logo {
   width: clamp(660px, 60vw, 940px);
   height: auto;
-  left: 49%;
-  top: 58%;
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
   animation: logo-lift 10s ease-in-out infinite;
 }
 
 .cards-layer {
-  z-index: 8;
+  z-index: var(--z-index-high);
   pointer-events: none;
 }
 
@@ -699,6 +699,7 @@ body.hand-cursor-right {
   transition: transform 0.28s ease, filter 0.28s ease;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
   pointer-events: auto;
+  z-index: var(--z-index-high);
 }
 
 .start-button img {
@@ -779,63 +780,63 @@ body.hand-cursor-right {
 }
 
 .sticker-stone {
-  width: clamp(140px, 15vw, 190px);
+  width: clamp(70px, 7.5vw, 95px);
   top: 12%;
   left: 18%;
   transform: rotate(-12deg);
 }
 
 .sticker-eggs {
-  width: clamp(170px, 17vw, 220px);
+  width: clamp(85px, 8.5vw, 110px);
   top: 34%;
   left: 32%;
   transform: rotate(-10deg);
 }
 
 .sticker-lemon {
-  width: clamp(150px, 16vw, 200px);
+  width: clamp(75px, 8vw, 100px);
   bottom: 14%;
   left: 16%;
   transform: rotate(-6deg);
 }
 
 .sticker-phone {
-  width: clamp(134px, 14vw, 184px);
+  width: clamp(67px, 7vw, 92px);
   bottom: 12%;
   left: 38%;
   transform: rotate(-14deg);
 }
 
 .sticker-coriander {
-  width: clamp(180px, 18vw, 240px);
+  width: clamp(90px, 9vw, 120px);
   top: 14%;
   right: 14%;
   transform: rotate(6deg);
 }
 
 .sticker-meat {
-  width: clamp(210px, 20vw, 270px);
+  width: clamp(105px, 10vw, 135px);
   top: 46%;
   right: 6%;
   transform: rotate(-8deg);
 }
 
 .sticker-pants {
-  width: clamp(200px, 20vw, 260px);
+  width: clamp(100px, 10vw, 130px);
   bottom: 6%;
   right: 2%;
   transform: rotate(5deg);
 }
 
 .sticker-bomb {
-  width: clamp(120px, 13vw, 170px);
+  width: clamp(60px, 6.5vw, 85px);
   top: 12%;
   right: 26%;
   transform: rotate(6deg);
 }
 
 .sticker-durian {
-  width: clamp(170px, 17vw, 230px);
+  width: clamp(85px, 8.5vw, 115px);
   bottom: 3%;
   right: 14%;
   transform: rotate(-6deg);
