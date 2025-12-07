@@ -77,119 +77,38 @@
             data-index="1"
             aria-label="首頁：蛋米特 DAMN IT!"
           >
-            <div class="home-stage">
-              <div class="sky-gradient layer" aria-hidden="true">
+            <div class="home-hero">
+              <div class="home-hero__background" aria-hidden="true">
                 <img
                   src="./img/Background_blue.png"
                   alt="天空漸層背景"
-                  class="sky-gradient-img"
                   loading="lazy"
                 />
+                <div class="home-hero__backdrop"></div>
               </div>
 
-              <div class="radiation-rays layer" aria-hidden="true">
-                <img
-                  src="./img/射綫_画板 1 1.png"
-                  alt="放射線"
-                  class="radiation-lines"
-                />
-              </div>
-
-              <div
-                id="star-field"
-                class="floating-stars layer"
-                aria-hidden="true"
-              ></div>
-
-              <div class="sticker-layer layer" aria-hidden="true">
-                <img
-                  src="./img/Floating Object_Stone.png"
-                  alt="漂浮石頭"
-                  class="sticker sticker-stone"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/Floating object_egg.png"
-                  alt="漂浮蛋"
-                  class="sticker sticker-eggs"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/Floating Object_Lemon.png"
-                  alt="漂浮檸檬"
-                  class="sticker sticker-lemon"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/Floating Object_Phone.png"
-                  alt="漂浮手機"
-                  class="sticker sticker-phone"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/Floating Object_Coriander.png"
-                  alt="漂浮香菜"
-                  class="sticker sticker-coriander"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/Floating Object_Lingering.png"
-                  alt="漂浮肉條"
-                  class="sticker sticker-meat"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/Floating Object_Pants.png"
-                  alt="漂浮短褲"
-                  class="sticker sticker-pants"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/Floating object_bomb.png"
-                  alt="漂浮炸彈"
-                  class="sticker sticker-bomb"
-                  loading="lazy"
-                />
-                <img
-                  src="./img/榴槤.png"
-                  alt="漂浮榴槤"
-                  class="sticker sticker-durian"
-                  loading="lazy"
-                />
-              </div>
-
-                <div class="logo-layer layer">
-                  <div class="hero-logo-group">
-                    <img
-                      src="./img/Title.png"
-                      alt="蛋米特 DAMN IT!"
-                      class="hero-logo"
-                      loading="lazy"
-                    />
-                    <button
-                      id="lottie-start-btn"
-                      class="start-button next-screen-btn"
-                      data-target="screen-2"
-                      aria-label="開始遊戲"
-                    >
-                      <img
-                        src="./img/botton_Start_.png"
-                        alt="開始遊戲"
-                      />
-                    </button>
-                  </div>
+              <div class="home-hero__content">
+                <div class="home-hero__brand" aria-hidden="true">
+                  <img
+                    src="./img/Title.png"
+                    alt="蛋米特 DAMN IT!"
+                    class="home-hero__logo"
+                    loading="lazy"
+                  />
                 </div>
-
-              <div class="ui-buttons layer" aria-label="主要導覽">
-                <button class="home-ui-btn" aria-label="回到首頁">
-                  <img src="./img/HomePage.png" alt="首頁" />
-                </button>
-                <button class="speaker-ui-btn" aria-label="音量">
-                  <img src="./img/voice_on.png" alt="音量" />
-                </button>
-                <button class="help-ui-btn" aria-label="幫助">
-                  <img src="./img/Botton_teaching_Default.png" alt="幫助" />
-                </button>
+                <h1 class="home-hero__heading">傳說中的米特蛋</h1>
+                <p class="home-hero__tagline">踏入蛋米特的世界，點擊開始立即開啟冒險。</p>
+                <div class="home-hero__actions">
+                  <button
+                    id="lottie-start-btn"
+                    class="hero-start-button next-screen-btn"
+                    data-target="screen-2"
+                    aria-label="開始遊戲"
+                    aria-controls="screen-2"
+                  >
+                    開始遊戲
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -398,7 +317,7 @@
               <div class="guide-bubble">
                 <h2>煉蛋爐操作指南</h2>
                 <p>
-                  把食材拖到米特蛋上，最多三種。桌面周圍的食材都可以試試，選中後會在上方欄位顯示，點叉叉可以取消。
+                  把魔法方塊拖到米特蛋上，最多三種。選中後會在上方欄位顯示，點叉叉可以取消。
                 </p>
                 <p>影片播放完才能查看結果，右下角有半透明的 Skip 按鈕。</p>
               </div>
@@ -451,71 +370,31 @@
                   id="ingredient-tray"
                   class="ingredient-table"
                   role="group"
-                  aria-label="可選擇的魔法食材"
+                  aria-label="可拖曳的魔法方塊"
                 >
                   <div
-                    class="ingredient-token"
-                    data-ingredient="榴槤"
+                    class="ingredient-token block-token"
+                    data-ingredient="魔法方塊A"
                     tabindex="0"
                     draggable="true"
                   >
-                    <img src="./img/榴槤.png" alt="榴槤" />
+                    <span class="block-label">A</span>
                   </div>
                   <div
-                    class="ingredient-token"
-                    data-ingredient="魷魚"
+                    class="ingredient-token block-token"
+                    data-ingredient="魔法方塊B"
                     tabindex="0"
                     draggable="true"
                   >
-                    <img src="./img/魷魚.png" alt="魷魚" />
+                    <span class="block-label">B</span>
                   </div>
                   <div
-                    class="ingredient-token"
-                    data-ingredient="檸檬"
+                    class="ingredient-token block-token"
+                    data-ingredient="魔法方塊C"
                     tabindex="0"
                     draggable="true"
                   >
-                    <img src="./img/檸檬.png" alt="檸檬" />
-                  </div>
-                  <div
-                    class="ingredient-token"
-                    data-ingredient="手機"
-                    tabindex="0"
-                    draggable="true"
-                  >
-                    <img src="./img/手機.png" alt="手機" />
-                  </div>
-                  <div
-                    class="ingredient-token"
-                    data-ingredient="TNT"
-                    tabindex="0"
-                    draggable="true"
-                  >
-                    <img src="./img/炸彈.png" alt="TNT" />
-                  </div>
-                  <div
-                    class="ingredient-token"
-                    data-ingredient="香菜"
-                    tabindex="0"
-                    draggable="true"
-                  >
-                    <img src="./img/香菜.png" alt="香菜" />
-                  </div>
-                  <div
-                    class="ingredient-token"
-                    data-ingredient="隕石"
-                    tabindex="0"
-                    draggable="true"
-                  >
-                    <img src="./img/石頭.png" alt="隕石" />
-                  </div>
-                  <div
-                    class="ingredient-token"
-                    data-ingredient="服裝"
-                    tabindex="0"
-                    draggable="true"
-                  >
-                    <img src="./img/褲子.png" alt="服裝" />
+                    <span class="block-label">C</span>
                   </div>
                 </div>
               </div>
