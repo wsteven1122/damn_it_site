@@ -1324,13 +1324,22 @@ body.hand-cursor-right {
 }
 
 .kitchen-hands {
+  position: absolute;
+  inset: auto 0 14px 0;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 20px 0;
   z-index: 6;
-  padding: 0 12px 0;
+}
+
+#screen-5 .kitchen-hands {
+  display: none;
 }
 
 .kitchen-hands .hand-image {
   width: clamp(150px, 20vw, 260px);
-  max-height: 32vh;
+  max-height: 30vh;
+  transform: translateY(10%);
 }
 
 .story-hands {
@@ -3360,14 +3369,14 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 
 .workbench-body {
   position: relative;
-  min-height: calc(100vh - 40px);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: 28px;
-  overflow: hidden;
-  padding: 48px 0 120px;
+  gap: 24px;
+  overflow: visible;
+  padding: 40px 0 0;
   background: transparent;
   box-shadow: none;
   border-radius: 0;
@@ -3377,7 +3386,7 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
 .workbench-body::after {
   content: "";
   position: absolute;
-  bottom: -60px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
@@ -3441,12 +3450,13 @@ body.hands-folded .screen.active .hand-overlay .hand-image {
   justify-content: center;
   align-items: flex-end;
   gap: 18px 18px;
-  padding: 0 0 12px;
+  padding: 4px 18px calc(22px + env(safe-area-inset-bottom));
   background: transparent;
   box-shadow: none;
   pointer-events: auto;
   z-index: 4;
   border-radius: 0;
+  margin-top: auto;
 }
 
 .ingredient-token {
