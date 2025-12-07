@@ -636,7 +636,7 @@ body.hand-cursor-right {
 }
 
 .logo-layer {
-  z-index: 20;
+  z-index: var(--z-index-high);
   filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.35));
   display: flex;
   justify-content: center;
@@ -3906,4 +3906,6 @@ body {
 /* 恢復首頁 CTA 與互動入口的可見度 */
 .home-stage .start-button {
   display: inline-block;
+  z-index: var(--z-index-curtain);
+  pointer-events: auto;
 }
