@@ -1,1084 +1,1429 @@
-/* =========================================================================
-   0. CSS 變數與基礎設定 (Variables & Base Styles)
-   ========================================================================= */
+/* =========================================
+   Egg Mix Magic - 完整樣式表 (已修正)
+   ========================================= */
 
+/* --- 全局變量與基礎設置 --- */
 :root {
-  /* 基礎色彩 (Alchemy Dark Theme) */
-  --color-primary: #f0a30a; /* 金色/橙色 (亮點) */
-  --color-secondary: #c07a00; /* 深金色 */
-  --color-accent: #0af0c0; /* 青綠色 (魔法/Lottie 效果) */
-  --color-background-dark: #7db9e8; /* 主背景淺藍 */
-  --color-background-mid: #5f8aff; /* 卡片/容器背景 */
-  --color-background-light: #68c2ff; /* 次級背景 */
-  --color-text-light: #e0e0e0; /* 主要文字 */
-  --color-text-muted: #9e9e9e; /* 輔助文字 */
-  --color-border: rgba(240, 163, 10, 0.4); /* 邊框 */
-
-  /* 狀態色彩 */
-  --color-success: #4caf50;
-  --color-danger: #f44336;
-  --color-info: #2196f3;
-  --color-warning: #ffc107;
-
-  /* 空間間距 */
-  --padding-unit: 16px;
-  --spacing-s: 8px;
-  --spacing-m: 16px;
-  --spacing-l: 24px;
-  --spacing-xl: 32px;
-
-  /* Z-Index 分層 */
-  --z-index-low: 10;
-  --z-index-mid: 100;
-  --z-index-high: 1000; /* Modals, Alerts, Guide */
-  --z-index-curtain: 9999;
-
-  /* 過渡效果 */
-  --transition-fast: 0.2s ease-out;
-  --transition-medium: 0.5s ease-in-out;
-  --transition-slow: 1s cubic-bezier(0.8, 0.2, 0.2, 0.8);
-
-  /* 邊角半徑 */
-  --border-radius-s: 4px;
-  --border-radius-m: 8px;
-  --border-radius-l: 12px;
+  --bg-top: #80a2ff;
+  --bg-btm: #c5cfff;
+  --btn-border: #dd5e28;
+  --tutorial-bg: #fff0c3;
+  --text-font: "Arial", sans-serif;
 }
 
-/* 確保盒子模型計算正確 */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+body,
+html {
   margin: 0;
   padding: 0;
-}
-
-/* 字體佔位符：實際應用時需替換為遊戲字體 */
-body {
-  font-family: "AlchemyFont", "Noto Sans TC", sans-serif;
-  background-color: var(--color-background-dark);
-  color: var(--color-text-light);
-  min-height: 100vh;
-  overflow: hidden; /* 確保沒有滾動條 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  touch-action: manipulation;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  color: var(--color-primary);
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-p {
-  line-height: 1.6;
-}
-
-.highlight {
-  color: var(--color-accent);
-  font-weight: bold;
-  text-shadow: 0 0 5px rgba(10, 240, 192, 0.5);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+  font-family: var(--text-font);
+  user-select: none;
 }
 
-/* =========================================================================
-   1. 遊戲容器與畫面切換 (Game Container & Screen Management)
-   ========================================================================= */
+::-webkit-scrollbar {
+  display: none;
+}
 
 #game-container {
   width: 100%;
-  max-width: 480px; /* 模擬手機或單欄遊戲介面 */
-  height: 100vh;
-  max-height: 800px;
+  height: 100%;
   position: relative;
-  overflow: hidden;
-  border: 4px solid var(--color-border);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-  background-color: var(--color-background-dark);
+  background: linear-gradient(to bottom, var(--bg-top) 50%, var(--bg-btm) 50%);
 }
 
-.screen {
+/* --- 通用 UI 組件 --- */
+.full-page {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  padding: var(--spacing-xl);
+  transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  background-color: var(--color-background-dark);
-  transition: opacity var(--transition-medium),
-    transform var(--transition-medium);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(100%);
-  z-index: var(--z-index-low);
-}
-
-.screen.active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-  z-index: var(--z-index-mid);
-}
-
-.scrollable-content-area {
-  width: 100%;
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: var(--spacing-m) 0;
-}
-
-/* =========================================================================
-   2. 通用 UI 元件 (Buttons, Alerts)
-   ========================================================================= */
-
-.btn {
-  padding: 12px 24px;
-  border: 2px solid;
-  border-radius: var(--border-radius-m);
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  transition: all var(--transition-fast);
-  text-transform: uppercase;
-}
-
-/* Primary Button (金色) */
-.btn-primary {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-background-dark);
-  box-shadow: 0 4px 10px rgba(240, 163, 10, 0.4);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--color-secondary);
-  border-color: var(--color-secondary);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(240, 163, 10, 0.6);
-}
-
-/* Secondary Button (深色邊框) */
-.btn-secondary {
-  background-color: transparent;
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: rgba(240, 163, 10, 0.1);
-  color: var(--color-accent);
-}
-
-.btn:disabled,
-.btn[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-/* Alert Message (彈出訊息) */
-.alert {
-  position: fixed;
-  top: var(--spacing-m);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: var(--z-index-high);
-  display: flex;
-  align-items: center;
-  padding: var(--spacing-m) var(--spacing-l);
-  border-radius: var(--border-radius-l);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  transition: transform var(--transition-fast), opacity var(--transition-fast);
-  opacity: 1;
-}
-
-.alert.hidden {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-50px);
-}
-
-.alert-icon-symbol {
-  margin-right: var(--spacing-m);
-  font-size: 1.2rem;
-}
-
-.alert.success {
-  background-color: var(--color-success);
-}
-.alert.error {
-  background-color: var(--color-danger);
-}
-.alert.info {
-  background-color: var(--color-info);
-}
-
-/* =========================================================================
-   3. 特殊效果與轉場 (Curtain & Modals)
-   ========================================================================= */
-
-/* A. 布幕轉場 (Curtain) */
-.curtain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--color-background-dark);
-  z-index: var(--z-index-curtain);
-  display: flex;
   justify-content: center;
-  align-items: center;
-  transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
-  pointer-events: none;
+}
+.hidden-page {
+  transform: translateY(100%);
+}
+.scrolled-up {
+  transform: translateY(-100%);
+}
+.active-page {
+  transform: translateY(0);
 }
 
-.curtain-closed {
-  opacity: 0;
-  visibility: hidden;
+/* =========================================
+   1. 右上角按鈕 (修正後的核心代碼)
+   ========================================= */
+.top-ui {
+  position: fixed;
+  top: 20px;
+  z-index: 1000;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+
+  /* 移除舊樣式 */
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+
+  /* 圖片設定 */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transition: transform 0.1s;
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+}
+.top-ui:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+.top-ui:active {
+  transform: scale(0.95);
 }
 
-.curtain-open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+/* --- 個別按鈕圖片 (請確保檔名已修改) --- */
+
+/* 教程按鈕 */
+#btn-tutorial {
+  right: 90px;
+  background-image: url("./img/Botton_teaching_Default.png");
+}
+#btn-tutorial:hover,
+#btn-tutorial:active {
+  background-image: url("./img/Botton_teaching_Hover.png");
 }
 
-.curtain-center-logo {
-  /* 煉金符號或 Logo 佔位符 */
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 5px solid var(--color-primary);
-  background: radial-gradient(
-    circle,
-    var(--color-secondary) 0%,
-    transparent 70%
-  );
-  animation: pulse 1.5s infinite alternate;
+/* 聲音按鈕 */
+#btn-sound {
+  right: 20px;
+  background-image: url("./img/sound_orange.png");
+}
+#btn-sound:hover,
+#btn-sound:active {
+  background-image: url("./img/sound_brown.png");
 }
 
-@keyframes pulse {
-  from {
-    box-shadow: 0 0 10px var(--color-primary);
-  }
-  to {
-    box-shadow: 0 0 30px var(--color-primary);
-  }
+/* 回首頁按鈕 */
+#btn-home {
+  left: 20px;
+  background-image: url("./img/home_orange.png");
+  display: none;
 }
 
-/* B. 結果彈窗 (Modal) */
-.modal {
+/* =========================================
+   2. 教程彈窗 (通訊欄風格)
+   ========================================= */
+#tutorial-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  z-index: var(--z-index-high);
-  display: flex;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999 !important; /* 最上層 */
+  display: none;
   justify-content: center;
   align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--transition-fast);
 }
 
-.modal.active {
-  opacity: 1;
-  visibility: visible;
-}
-
+/* =========================================
+   修正後的彈窗設定 (包含圖片與大小)
+   ========================================= */
 .modal-content {
-  background-color: var(--color-background-mid);
-  padding: var(--spacing-xl);
-  border-radius: var(--border-radius-l);
-  max-width: 90%;
-  width: 380px;
-  text-align: center;
+  /* 1. 圖片路徑 (你的檔名是對的) */
+  background-image: url("./img/tutorial_bg.png");
+
+  /* 2. 讓圖片充滿整個框框 */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+
+  /* 3. 移除背景色跟邊框 */
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+
+  /* 4. ★關鍵：一定要有大小，不然會變成隱形的！★ */
+  width: 80%;
+  max-width: 600px;
+  min-height: 400px;
   position: relative;
-  border: 3px solid var(--color-primary);
-  box-shadow: 0 0 30px rgba(240, 163, 10, 0.6);
-  transform: scale(0.8);
-  opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 0.4s ease-out;
+
+  /* 5. 設定內距 (讓文字不要壓到圖片邊框) */
+  padding-top: 80px;
+  padding-bottom: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
+  box-sizing: border-box;
 }
 
-.modal.active .modal-content {
-  transform: scale(1);
-  opacity: 1;
+.modal-text-area {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  color: #333;
+  font-weight: bold;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: var(--color-text-light);
-  font-size: 2rem;
+  top: 15px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  padding: 5px;
-  transition: color var(--transition-fast);
+  background-image: url("./img/Botton_delete_Default.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: transform 0.1s;
 }
-
 .close-btn:hover {
-  color: var(--color-danger);
+  transform: scale(1.1);
+}
+.close-btn:active {
+  transform: scale(0.9);
 }
 
-.result-egg-img {
-  width: 150px;
-  height: 150px;
-  object-fit: contain;
-  margin: var(--spacing-m) auto;
-  animation: float-and-glow 3s infinite ease-in-out;
-}
+/* =========================================
+   3. 頁面與動畫
+   ========================================= */
 
-@keyframes float-and-glow {
-  0%,
-  100% {
-    transform: translateY(0);
-    box-shadow: 0 0 15px rgba(240, 163, 10, 0.5);
+/* 漂浮動畫 */
+@keyframes floatAnim {
+  0% {
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-10px);
-    box-shadow: 0 0 25px rgba(240, 163, 10, 0.8);
+    transform: translateY(-15px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
   }
 }
-
-.result-metadata {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-top: var(--spacing-s);
+.floater {
+  position: absolute;
+  animation: floatAnim 3s ease-in-out infinite;
+  pointer-events: auto;
+  transition: margin 0.2s;
+}
+.floater:hover {
+  margin-top: -10px;
 }
 
-.modal-footer {
-  display: flex;
-  justify-content: space-around;
-  margin-top: var(--spacing-xl);
-}
-
-/* =========================================================================
-   4. Screen 1 (首頁) 樣式
-   ========================================================================= */
-
-#screen-1 {
-  justify-content: space-around;
-}
-
-.title-section {
-  text-align: center;
-  margin-top: var(--spacing-xl);
-}
-
-.lottie-title-container {
+/* 手部動畫 */
+.hands-container {
+  position: absolute;
+  bottom: -100%;
   width: 100%;
-  max-width: 300px;
-  height: 150px;
-  margin: 0 auto;
-}
-
-.game-subtitle {
-  color: var(--color-accent);
-  margin-top: var(--spacing-s);
-}
-
-.menu-options {
+  height: 100%;
+  pointer-events: none;
+  transition: bottom 0.5s ease-out;
+  z-index: 50;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  width: 100%;
-  padding: 0 var(--spacing-l);
+}
+.hand-img {
+  max-height: 50vh;
+}
+.hands-show {
+  bottom: 0;
 }
 
-.menu-item-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  flex-basis: 30%;
-}
-
-.lottie-button-container {
-  width: 120px;
-  height: 120px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.lottie-btn-text {
-  position: absolute;
+/* --- Page 1: 首頁 --- */
+#page-home {
   z-index: 10;
-  color: var(--color-background-dark);
-  font-weight: bold;
-  font-size: 0.9rem;
+  /* 首頁專屬背景 (請確保檔名改成 home_bg.png) */
+  background-image: url("./img/home_bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* 三張新圖都不擋按鈕、不推擠排版 */
+.home-rays,
+.home-splat,
+.home-grid {
+  position: absolute;
   pointer-events: none;
+  z-index: 1; /* 比你的標題低，比背景高 */
 }
 
-.menu-item-description {
-  color: var(--color-text-muted);
-  font-size: 0.8rem;
-  margin-top: var(--spacing-s);
+/* 射線 */
+.home-rays {
+  top: -5%;
+  left: -8%;
+  width: 45vw;
+  max-width: 1000px;
+  animation: floatRays 6s ease-in-out infinite;
 }
 
-.menu-desc-highlight {
-  color: var(--color-primary);
-  font-weight: bold;
+/* 蛋汁 */
+.home-splat {
+  top: 55%;
+  left: 50%;
+  width: 75vw;
+  max-width: 1100px;
+  transform: translate(-50%, -50%);
+  animation: floatSplat 7s ease-in-out infinite;
 }
 
-.game-version-info {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+/* 格子布 */
+.home-grid {
+  right: -20%;
+  bottom: -30%;
+  width: 70vw;
+  max-width: 1000px;
+  animation: floatGrid 5.5s ease-in-out infinite;
 }
 
-/* =========================================================================
-   5. Screen 2 (故事對話) 樣式
-   ========================================================================= */
-
-#screen-2 {
-  padding: var(--spacing-m);
+/* 漂浮動畫 */
+@keyframes floatRays {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
-.story-area {
-  flex-grow: 1;
+@keyframes floatSplat {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -56%);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes floatGrid {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.title-logo {
+  width: 60%;
+  max-width: 500px;
+  z-index: 2;
+  animation: floatAnim 4s ease-in-out infinite;
+}
+#start-btn {
+  width: 150px;
+  margin-top: 20px;
+  z-index: 2;
+}
+.deco {
+  position: absolute;
+  width: 160px;
+}
+
+/* --- Page 2: 故事頁 --- */
+
+#page-story {
+  background: transparent;
+}
+
+.chat-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 40px; /* 對話區從上方 40px 開始 */
+  bottom: 220px; /* ⬅ 對話區在 GO 之上結束，避免壓到按鈕 */
+
   width: 100%;
+  max-width: 900px;
+  padding: 40px;
+  box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
-  padding-bottom: var(--spacing-m);
-}
+  justify-content: flex-end; /* 新訊息堆在底部 */
+  gap: 12px;
 
-.dialog-history-container {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: var(--spacing-m);
-  border-radius: var(--border-radius-m);
-  background-color: var(--color-background-mid);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-  margin-bottom: var(--spacing-m);
-}
-
-.dialog-placeholder-intro {
-  text-align: center;
-  color: var(--color-text-muted);
-  margin-top: 50%;
-  transform: translateY(-50%);
+  overflow: visible; /* 超出上方沒關係，照 Figma 那樣往上飛 */
 }
 
 .chat-bubble {
-  padding: var(--spacing-m);
-  border-radius: var(--border-radius-l);
-  margin-bottom: var(--spacing-m);
-  max-width: 80%;
-  word-wrap: break-word;
-  background-color: var(--color-background-light);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  margin: 0 auto; /* 泡泡水平置中 */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center; /* ⭐ 水平讓文字置中 */
+  align-items: center; /* ⭐ 垂直置中（如果高度夠）*/
+  text-align: center; /* ⭐ 讓字本身置中 */
 }
 
-.chat-bubble.active {
+/* 不用 pseudo 三角形，因為你用的是整張圖 */
+.chat-bubble::after {
+  display: none;
+}
+
+.chat-bubble.show {
   opacity: 1;
-  transform: translateY(0);
+  transform: scale(1);
 }
 
-.speaker-name {
-  display: block;
-  font-weight: bold;
-  color: var(--color-primary);
-  margin-bottom: 4px;
+/* GO / SKIP 區塊：固定在下面中間 */
+.story-controls {
+  z-index: 60;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 80px; /* 你可以自己再調高低 */
 }
 
-.dialog-footer-controls {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-m);
+.bubble-1,
+.bubble-2,
+.bubble-3,
+.bubble-4 {
+  width: 673px;
+  min-height: 216px;
+  background-image: url("./img/chat-bubble-big.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  padding: 32px 70px 60px 140px; /* 上 右 下 左 */
+  /* ⭐ 左邊尖角佔空間 → 左 padding 要大一點 */
 }
 
-/* =========================================================================
-   6. Screen 4 (食材選擇) 樣式
-   ========================================================================= */
+.bubble-5,
+.bubble-6 {
+  width: 678px;
+  min-height: 166px;
+  background-image: url("./img/chat-bubble-small.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 
-#screen-4 {
-  justify-content: flex-start;
-  gap: var(--spacing-m);
+  padding: 26px 70px 50px 140px; /* 上 右 下 左 */
 }
 
-.selection-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: var(--spacing-s);
-  border-bottom: 1px solid var(--color-border);
+#btn-skip,
+#btn-go {
+  width: 100px;
 }
-
-.selection-status {
-  font-weight: bold;
-  color: var(--color-accent);
+#btn-go {
+  display: none;
 }
-
-.ingredient-grid-wrapper {
-  flex-grow: 1;
-  width: 100%;
-  overflow-y: auto;
-  padding: var(--spacing-m) 0;
-}
-
-.ingredient-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-m);
-  padding: var(--spacing-s);
-}
-
-.ingredient-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--color-background-mid);
-  border: 2px solid var(--color-border);
-  border-radius: var(--border-radius-m);
-  padding: var(--spacing-s);
+.img-btn {
   cursor: pointer;
-  position: relative;
-  transition: all var(--transition-fast);
-  text-align: center;
+  transition: transform 0.1s;
 }
-
-.ing-img {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
+.img-btn:hover {
+  filter: brightness(1.1);
 }
-
-.card-name {
-  font-size: 0.8rem;
-  margin-top: var(--spacing-s);
-  color: var(--color-text-light);
+.img-btn:active {
+  transform: scale(0.95);
 }
-
-/* 選擇狀態 */
-.ingredient-card.selected {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 15px rgba(240, 163, 10, 0.7);
-  transform: scale(1.05);
-  background-color: rgba(240, 163, 10, 0.2);
-}
-
-.selection-checkbox {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: var(--color-background-dark);
-  border: 2px solid var(--color-text-light);
-}
-
-.ingredient-card.selected .selection-checkbox {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-/* 鎖定狀態 */
-.ingredient-card.locked {
-  opacity: 0.3;
-  cursor: not-allowed;
-  border-style: dashed;
-}
-
-.ingredient-card.locked .card-name {
-  color: var(--color-danger);
-}
-
-/* 禁用狀態（選滿 3 個後） */
-.ingredient-card.disabled:not(.selected) {
-  opacity: 0.6;
+.img-btn.disabled {
+  filter: grayscale(1);
   pointer-events: none;
-  border-color: var(--color-background-light);
 }
 
-.selection-footer {
-  width: 100%;
-  padding-top: var(--spacing-m);
-  border-top: 1px solid var(--color-border);
+/* --- Page 3: 選擇主食頁 (修正版) --- */
+#page-select {
+  background: transparent;
+  display: flex; /* 改用 Flex 排版 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 上下居中 */
 }
 
-/* =========================================================================
-   7. Screen 5 (煉金儀式) 樣式
-   ========================================================================= */
-
-#screen-5 {
-  justify-content: space-around;
-}
-
-.video-container {
-  width: 100%;
-  max-width: 400px;
-  height: 250px;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--border-radius-l);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-}
-
-#casting-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.5s ease;
-  opacity: 0.1; /* 初始較暗 */
-}
-
-.spinner-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+/* 確保上方留一點空間給手部動畫，不被遮住 */
+/* --- Page 3: 選擇主食頁 (3D 輪播版) --- */
+#page-select {
+  background: transparent;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background-color: rgba(18, 18, 18, 0.6);
+  justify-content: center;
 }
 
-.loading-spinner {
-  border: 6px solid var(--color-background-light);
-  border-top: 6px solid var(--color-accent);
-  border-radius: 50%;
-  width: 50px;
+/* 確保上方留一點空間 */
+#page-select .spacer {
   height: 50px;
-  animation: spin 1.5s linear infinite;
+  width: 100%;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+/* 卡片容器 */
+.egg-carousel {
+  display: flex;
+  overflow-x: auto; /* 允許橫向滾動 */
+  width: 100%; /* 滿寬 */
+  height: 400px;
+  padding: 0 50%; /* ★關鍵：左右留白 50%，讓第一張和最後一張能置中 */
+  box-sizing: border-box; /* 包含 padding */
+
+  /* 隱藏滾動條 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  z-index: 60;
+  align-items: center;
+
+  /* 讓滾動更平滑 */
+  scroll-behavior: smooth;
+  position: relative;
+  top: -50px; /* 負數越多，就移得越上面。試試看 -50px 或 -80px */
 }
 
-.loading-text {
-  margin-top: var(--spacing-m);
-  color: var(--color-accent);
-  font-weight: bold;
+.egg-carousel::-webkit-scrollbar {
+  display: none;
+}
+.egg-carousel.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto; /* 拖曳時取消平滑，比較跟手 */
 }
 
-.casting-footer {
-  padding-top: var(--spacing-m);
+/* 單張卡片 */
+.egg-card {
+  flex: 0 0 220px; /* 固定寬度 */
+  height: 320px;
+  background: white;
+  border: 4px solid #555;
+  border-radius: 20px;
+  margin: 0 15px; /* 卡片間距 */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  /* ★關鍵：設定縮放的基準點在中心 */
+  transform-origin: center center;
+  transition: transform 0.1s ease-out, border-color 0.3s, opacity 0.3s;
+
+  user-select: none;
+  position: relative;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+  opacity: 0.5; /* 預設半透明，變大時才不透明 */
 }
 
-/* =========================================================================
-   8. 持久性 UI (Persistent UI)
-   ========================================================================= */
+/* 當卡片被判定為「激活」時的樣式 (由 JS 控制) */
+.egg-card.active {
+  border-color: var(--btn-border);
+  box-shadow: 0 0 25px rgba(255, 165, 0, 0.8);
+  z-index: 10;
+  opacity: 1;
+}
 
-.persistent-ui {
+.egg-tag {
+  background: #555;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.egg-card.active .egg-tag {
+  background: var(--btn-border);
+}
+
+.egg-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+#btn-choose-food {
+  width: 180px;
+  margin-top: 30px;
+  z-index: 60;
+  transition: all 0.3s;
+}
+
+/* 單張卡片 */
+.egg-card {
+  flex: 0 0 220px; /* 固定寬度，不要縮放 */
+  height: 320px;
+  background: white;
+  border: 4px solid #555;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  transition: transform 0.3s, border-color 0.3s;
+  user-select: none; /* 防止文字被選取 */
+  position: relative;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* 選中狀態 */
+.egg-card.active {
+  transform: scale(1.1); /* 放大 */
+  border-color: var(--btn-border); /* 變橘色框 */
+  box-shadow: 0 0 20px rgba(255, 165, 0, 0.6);
+  z-index: 2;
+}
+
+.egg-tag {
+  background: #555;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.egg-card.active .egg-tag {
+  background: var(--btn-border);
+}
+
+.egg-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  pointer-events: none; /* 防止拖圖片 */
+}
+
+/* 選擇按鈕 */
+#btn-choose-food {
+  width: 180px;
+  margin-top: 30px; /* 與卡片拉開距離 */
+  z-index: 60;
+  display: block; /* 確保它是顯示的 */
+}
+
+/* --- 布幕 --- */
+#curtain-layer {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: var(--z-index-mid);
-}
-
-/* UI 控制按鈕 */
-.ui-controls {
-  position: absolute;
-  top: var(--spacing-m);
-  right: var(--spacing-m);
+  z-index: 900;
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-s);
-  pointer-events: auto;
+}
+.curtain-panel {
+  width: 50%;
+  height: 100%;
+  background: #dd5e28;
+  position: relative;
+  transition: transform 0.8s ease-in-out;
+}
+.curtain-left {
+  transform: translateX(-100%);
+  background-image: url("./img/curtain_left.png");
+  background-size: cover;
+}
+.curtain-right {
+  transform: translateX(100%);
+  background-image: url("./img/curtain_right.png");
+  background-size: cover;
+}
+.curtains-closed .curtain-left {
+  transform: translateX(0);
+}
+.curtains-closed .curtain-right {
+  transform: translateX(0);
 }
 
-.ui-btn {
-  width: 40px;
-  height: 40px;
-  background-color: var(--color-background-mid);
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: var(--color-primary);
-  transition: all var(--transition-fast);
-  box-shadow: 0 0 5px rgba(240, 163, 10, 0.5);
+/* --- Page 4: 遊戲頁 --- */
+#page-game {
+  background-image: url("./img/bg_kitchen.png");
+  background-size: cover;
+  background-position: center;
+  display: none;
 }
-
-.ui-btn:hover {
-  background-color: rgba(240, 163, 10, 0.2);
-}
-
-/* 手部裝飾 */
-.hand-image-container {
+.slots-container {
   position: absolute;
-  width: 150px;
-  height: 150px;
-  bottom: 0;
-  z-index: var(--z-index-low);
-  pointer-events: none;
+  top: 15%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  z-index: 10;
 }
-
-.hand-left {
-  left: 0;
-  transform: translateX(-30%);
+.slot {
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px dashed #555;
+  border-radius: 5px;
+  position: relative;
 }
-
-.hand-right {
-  right: 0;
-  transform: translateX(30%);
-}
-
-.hand-graphic {
+.slot img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-
-.hand-status-light {
+.slot-remove {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 15px;
-  height: 15px;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background: red;
+  color: white;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  text-align: center;
+  line-height: 20px;
+  cursor: pointer;
+  display: none;
+  font-size: 12px;
 }
 
-.status-ready {
-  background-color: var(--color-success);
-}
-.status-active {
-  background-color: var(--color-accent);
-  animation: glow 1s infinite alternate;
-}
-
-@keyframes glow {
-  from {
-    opacity: 0.7;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* 狀態欄 */
-.status-bar-placeholder {
+#main-egg {
   position: absolute;
-  top: var(--spacing-m);
-  left: var(--spacing-m);
-  background-color: rgba(30, 30, 30, 0.8);
-  padding: var(--spacing-s);
-  border-radius: var(--border-radius-m);
-  border: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  pointer-events: none;
+  top: 50%; /* 原本大概 40% → 往上挪 */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px; /* 原本 180px → 放大約 45% */
+  height: 337px; /* 跟寬一致 */
+  z-index: 5;
+  transition: transform 0.2s;
 }
 
-.player-info {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: var(--color-primary);
-}
-
-.resource-bar {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.7rem;
-}
-
-.resource-label {
-  color: var(--color-text-muted);
-  width: 30px;
-}
-
-.bar-fill {
-  height: 8px;
-  border-radius: 4px;
-  transition: width 0.5s ease;
-}
-
-.mana-bar .bar-fill {
-  background-color: var(--color-accent);
-}
-.hp-bar .bar-fill {
-  background-color: var(--color-danger);
-}
-
-.bar-text {
-  width: 30px;
-  text-align: right;
-}
-
-/* =========================================================================
-   9. 新手導覽覆蓋層 (Guide Overlay) 樣式
-   ========================================================================= */
-
-.guide-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
-  z-index: var(--z-index-curtain); /* 比普通 Modal 低一點 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.3s;
-}
-
-.guide-overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.guide-focus-ring {
+.ingredient {
   position: absolute;
-  pointer-events: none;
-  border: 4px dashed var(--color-primary);
-  border-radius: var(--border-radius-l);
-  box-shadow: 0 0 20px rgba(240, 163, 10, 0.8);
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-.guide-tooltip {
-  position: absolute;
-  background-color: var(--color-background-light);
-  border: 2px solid var(--color-accent);
-  border-radius: var(--border-radius-m);
-  padding: var(--spacing-m);
-  width: 250px;
-  box-shadow: 0 0 15px rgba(10, 240, 192, 0.5);
+  width: 150px; /* 原本是 60px → 變大 */
+  height: 150px;
+  cursor: grab;
   pointer-events: auto;
-  opacity: 0;
-  transition: opacity 0.3s;
+  transition: transform 0.1s;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
 }
 
-.tooltip-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-s);
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 5px;
+.ingredient:active {
+  cursor: grabbing;
+  transform: scale(1.1);
 }
-
-.tooltip-stage-indicator {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+.ingredient.used {
+  display: none;
 }
-
-.tooltip-main-text {
-  font-size: 0.95rem;
-  color: var(--color-text-light);
-}
-
-.tooltip-footer {
-  margin-top: var(--spacing-m);
-  text-align: right;
-}
-
-.guide-click-prompt {
+#btn-magic {
   position: absolute;
-  bottom: 10%;
-  color: var(--color-primary);
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: var(--spacing-s);
-  border-radius: var(--border-radius-s);
-  font-size: 0.9rem;
-  animation: blink 1.5s infinite;
+  top: 15%;
+  right: 25%;
+  width: 150px;
+  display: none;
+  animation: pulse 1s infinite;
+  cursor: pointer;
+  z-index: 30;
 }
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
+@keyframes pulse {
+  0% {
+    transform: scale(1);
   }
   50% {
-    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
-/* =========================================================================
-   10. Screen Menu (食譜選單) & Gallery (圖鑑)
-   ========================================================================= */
-
-.recipe-list,
-.gallery-grid {
-  list-style: none;
-  padding: 0;
-  width: 100%;
-}
-
-.recipe-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-m);
-}
-
-.recipe-item {
-  background-color: var(--color-background-mid);
-  border-radius: var(--border-radius-m);
-  padding: var(--spacing-m);
-  border: 2px solid var(--color-border);
-  transition: all var(--transition-fast);
-}
-
-.recipe-item:hover:not(.locked) {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 10px rgba(10, 240, 192, 0.5);
-}
-
-.recipe-card-wrapper {
-  display: flex;
-  gap: var(--spacing-m);
-  align-items: center;
-}
-
-.recipe-thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--border-radius-s);
-  object-fit: contain;
-  background-color: var(--color-background-dark);
-}
-
-.recipe-info {
-  flex-grow: 1;
-}
-
-.recipe-name {
-  font-size: 1.1rem;
-  margin-bottom: 4px;
-}
-
-.recipe-ingredients,
-.recipe-description {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-}
-
-.highlight-success {
-  color: var(--color-success);
-}
-.highlight-danger {
-  color: var(--color-danger);
-}
-
-/* 鎖定食譜 */
-.recipe-card-locked {
-  opacity: 0.7;
-}
-
-.recipe-details-hidden {
-  margin-top: var(--spacing-s);
-}
-
-.hint-text {
-  color: var(--color-primary);
-  font-style: italic;
-}
-
-/* 圖鑑網格 */
-.gallery-filter-bar {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-m);
-  margin-top: var(--spacing-m);
-}
-
-.gallery-filter-bar .filter-btn {
-  background: none;
-  border: none;
-  color: var(--color-text-muted);
-  font-weight: bold;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-bottom: 2px solid transparent;
-  transition: all var(--transition-fast);
-}
-
-.gallery-filter-bar .filter-btn:hover,
-.gallery-filter-bar .filter-btn.active {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-m);
-}
-
-.gallery-card {
-  text-align: center;
-  padding: var(--spacing-s);
-  border: 2px solid var(--color-border);
-  border-radius: var(--border-radius-m);
-  position: relative;
-  transition: all var(--transition-fast);
-}
-
-.gallery-card:hover:not(.locked) {
-  border-color: var(--color-primary);
-  transform: scale(1.05);
-}
-
-.gallery-img {
-  width: 90%;
-  height: auto;
-  margin-bottom: var(--spacing-s);
-}
-
-.gallery-card.locked {
-  opacity: 0.4;
-}
-
-.card-overlay-detail {
+.table-overlay {
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%; /* 依照你桌子的比例調整 */
+  pointer-events: none; /* 避免擋到拖曳食材 */
+  z-index: 0; /* 壓在背景上面、但在蛋與食材下面 */
+}
+
+/* --- Page 5: 結果頁 --- */
+
+#page-result {
+  background-image: url("./img/4.0結局.png");
+  background-size: cover;
+  background-position: center;
+  display: none;
+}
+
+.plate-area {
+  position: absolute;
+  top: 55%; /* 你可以依照示意圖再調整 */
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 600px; /* ← 盤子區域變大 */
+  height: 400px; /* ← 依照盤子比例 */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.plate-img {
+  position: absolute;
+  width: 200%;
+  height: auto; /* ← 保持原始比例 */
+  z-index: 1;
+  pointer-events: none; /* ← 不擋到點擊 */
+}
+
+.result-dish {
+  width: 280px; /* ← 你可以試 220 / 250 / 280，看你喜歡哪種 */
+  z-index: 2;
+  margin-bottom: 40px; /* ← 放大後要讓它站在盤子中心，因此多一點間距 */
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.result-name {
+  position: absolute;
+  top: 80%; /* ← 往盤子下面移動 */
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 10; /* ← 確定比盤子高 */
+  font-size: 24px; /* ← 更清楚 */
+  font-weight: bold;
+  color: #333;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8); /* 讓字在盤子上更清晰 */
+}
+
+/* 結局對話框：改用圖片當底 */
+.result-dialog {
+  position: absolute;
+  bottom: 10%; /* 泡泡大概在盤子左下角，你可以再微調 */
+  left: 18%;
+  width: 495px; /* 依你的圖比例調整 */
+  height: 100px; /* 一樣依實際看起來微調 */
+
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+
+  border: none;
+  padding: 0;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 一般成功結局用這張 */
+.result-dialog.success {
+  background-image: url("./img/chat-bubble-finish.png");
+}
+
+/* 廚餘失敗結局用這張 */
+.result-dialog.fail {
+  background-image: url("./img/chat-bubble-fail.png");
+}
+
+/* 文字改成隱藏（還是保留給無障礙 / 測試用） */
+#result-text {
+  visibility: hidden; /* 如果完全不用也可以改 display:none; */
+  font-size: 0;
+}
+
+.result-btns {
+  position: absolute;
+  top: 20%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: var(--color-accent);
-  font-size: 0.7rem;
-  padding: 2px 0;
-  border-radius: 0 0 var(--border-radius-s) var(--border-radius-s);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 110px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+@keyframes popIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* --- Page 6: 圖鑑頁 --- */
+#page-gallery {
+  display: none;
+  /* 只改背景色（你要的黃底） */
+  background: #fff0b9 !important;
+
+  /* 讓它可以往下滑（body 仍然 overflow:hidden 沒關係） */
+  overflow-y: auto;
+
+  /* 覆蓋 full-page 原本的置中，避免內容被「頂在正中間」造成怪拉伸 */
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+/* 圖鑑容器：固定寬度 + 4欄 → 一頁大概 8 張（2列） */
+.gallery-container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 200px 30px 30px; /* 上面留空給上方按鈕 */
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 60px 70px;
+}
+
+/* 小螢幕改 2 欄 */
+@media (max-width: 820px) {
+  .gallery-container {
+    padding: 110px 30px 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px 22px;
+  }
+}
+
+/* 卡片本體：不要再被撐到超大 */
+.gallery-card {
+  width: 100%;
+  max-width: 170px;
+  justify-self: center;
+
+  /* 保留你原本翻面功能需要的設定 */
+  aspect-ratio: 3/4;
+  perspective: 1000px;
+  cursor: pointer;
+
+  /* 只改「卡片底色」：你要的那種淡黃卡片 */
+  background: #ffe7a6;
+  border: 2px solid #111;
+  border-radius: 10px;
+}
+
+/* 做出像你左圖那樣「散落」的感覺（只改排列/角度，不動翻面） */
+.gallery-card:nth-child(8n + 1) {
+  transform: rotate(-8deg);
+}
+.gallery-card:nth-child(8n + 2) {
+  transform: rotate(6deg);
+}
+.gallery-card:nth-child(8n + 3) {
+  transform: rotate(-4deg);
+}
+.gallery-card:nth-child(8n + 4) {
+  transform: rotate(7deg);
+}
+.gallery-card:nth-child(8n + 5) {
+  transform: rotate(-6deg);
+}
+.gallery-card:nth-child(8n + 6) {
+  transform: rotate(5deg);
+}
+.gallery-card:nth-child(8n + 7) {
+  transform: rotate(-3deg);
+}
+.gallery-card:nth-child(8n + 8) {
+  transform: rotate(4deg);
+}
+
+/* 翻面結構：維持你原本 */
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.gallery-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 圖片大小：只限制「圖鑑裡的卡片圖片」，避免影響其它頁按鈕 */
+#page-gallery .card-img {
+  width: 72%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* =========================================
+   完美漸層背景 (無接縫版)
+   ========================================= */
+
+/* 1. 將漸層設定在最外層容器，讓它固定不動 */
+#game-container {
+  /* 這是吸取你圖片顏色後的 CSS 漸層語法 */
+  background: linear-gradient(to bottom, #8faaff 0%, #e6e6ff 100%);
+
+  /* 確保寬高滿版 */
+  width: 100%;
+  height: 100%;
+}
+
+/* 2. 將「首頁」、「故事頁」、「選擇頁」、「圖鑑頁」背景設為透明 */
+/* 這樣它們就會透出下面 game-container 的漸層色 */
+#page-home,
+#page-story,
+#page-select,
+#page-gallery {
+  background: transparent !important;
+  background-image: none !important; /* 強制移除原本的圖片 */
+}
+
+#page-game {
+  background-image: url("./img/bg_kitchen.gif") !important;
+  background-size: cover;
+  background-position: center;
+  background-color: #fff;
+}
+
+/* ===========================
+   三大背景元素的底層設定
+   =========================== */
+
+.home-rays,
+.home-grid,
+.home-splat {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* 最底層：放射線 */
+.home-rays {
+  z-index: 0;
+  top: -30%;
+  left: -13%;
+  width: 60vw;
+
+  /* 你可以手動調整角度 */
+  transform: rotate(-13deg);
+
+  animation: floatRays 6s ease-in-out infinite;
+}
+
+/* 最底層：格子布 */
+.home-grid {
+  z-index: 0;
+  bottom: -58%;
+  right: -10%;
+  width: 60vw;
+
+  /* 你可以手動調整角度 */
+  transform: rotate(-25deg);
+
+  animation: floatGrid 5.5s ease-in-out infinite;
+}
+
+/* 中層：蛋液（要壓住上兩個） */
+.home-splat {
+  z-index: 1;
+  top: 56%;
+  left: 50%;
+  width: 100vw;
+  max-width: 2000px;
+  transform: translate(-50%, -50%);
+
+  animation: floatSplat 7s ease-in-out infinite;
+}
+
+/* ✅ 關鍵：每一頁都要裁切溢出，超大的首頁背景才不會殘影到後面 */
+#game-container .full-page {
+  overflow: hidden;
+}
+
+/* 保險：首頁本身也裁切 */
+#page-home {
+  overflow: hidden;
+}
+
+/* ===========================
+   動畫（可照你喜歡調整幅度）
+   =========================== */
+
+@keyframes floatRays {
+  0% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-6deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+}
+
+@keyframes floatGrid {
+  0% {
+    transform: translateY(0) rotate(10deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(10deg);
+  }
+  100% {
+    transform: translateY(0) rotate(10deg);
+  }
+}
+
+@keyframes floatSplat {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -55%);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ✅ 圖鑑頁背景：只改這裡（覆蓋後段的 transparent） */
+#page-gallery.full-page {
+  background: #8faaff !important; /* 你要的背景色就改這行 */
+}
+
+/* ==============================
+   ✅ Gallery 最終覆蓋修正版（只影響圖鑑）
+   放在 style.css 最底部
+   ============================== */
+
+#page-gallery {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 容器網格（你現在已經正常就保持） */
+#page-gallery .gallery-container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 200px 30px 90px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 90px 110px;
+}
+
+/* 卡片尺寸固定，避免任何圖片把卡片撐爆 */
+#page-gallery .gallery-card {
+  width: 100%;
+  max-width: 190px;
+  justify-self: center;
+  aspect-ratio: 3 / 4;
+  perspective: 1000px;
+  background: #ffe7a6; /* 你的卡片底色 */
+  border: 2px solid #111;
+  border-radius: 10px;
+}
+
+/* 翻面結構：保持原本效果 */
+#page-gallery .card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+#page-gallery .gallery-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+#page-gallery .card-front,
+#page-gallery .card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ 關鍵：補回「背面必須旋轉 180」(你原本有一段少了 .，導致失效) */
+#page-gallery .card-back {
+  transform: rotateY(180deg);
+}
+
+/* ✅ 關鍵：把圖鑑裡「所有圖片」都限制住，避免食材/結局圖炸開 */
+#page-gallery .gallery-card img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* 主圖（結局圖）大小：只管圖鑑 */
+#page-gallery .card-img {
+  width: 72%;
+  height: auto;
+}
+
+/* 小食材圖標（背面那排） */
+#page-gallery .mini-ing {
+  width: 26px;
+  height: 26px;
+}
+
+/* ✅ 圖鑑頁 TRY AGAIN：鎖死大小（只影響這顆） */
+#btn-gallery-back {
+  width: 160px !important; /* 你想再小就 140 / 150 */
+  height: auto !important;
+  max-width: 32vw !important;
+  object-fit: contain !important;
+  display: block;
+}
+#btn-gallery-back {
+  position: fixed;
+  top: 90px;
+  right: 100px; /* 右上兩顆圓按鈕旁邊，想更靠右就減小 */
+  z-index: 9999;
+}
+
+/* =========================
+   圖鑑卡片散落偏移（不碰撞版：17 種循環）
+   ========================= */
+
+#page-gallery .gallery-card {
+  position: relative;
+}
+
+/* top 約 -22~+34、left 約 -22~+34、rotate 約 -8~+8 */
+#page-gallery .gallery-card:nth-child(17n + 1) {
+  top: -22px;
+  left: -18px;
+  transform: rotate(-8deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 2) {
+  top: 14px;
+  left: 12px;
+  transform: rotate(7deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 3) {
+  top: -16px;
+  left: 22px;
+  transform: rotate(-5deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 4) {
+  top: 20px;
+  left: -10px;
+  transform: rotate(6deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 5) {
+  top: 34px;
+  left: -22px;
+  transform: rotate(-7deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 6) {
+  top: -6px;
+  left: 16px;
+  transform: rotate(4deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 7) {
+  top: 18px;
+  left: 28px;
+  transform: rotate(-6deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 8) {
+  top: 6px;
+  left: -14px;
+  transform: rotate(8deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 9) {
+  top: -12px;
+  left: 8px;
+  transform: rotate(-3deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 10) {
+  top: 26px;
+  left: 10px;
+  transform: rotate(5deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 11) {
+  top: -18px;
+  left: 30px;
+  transform: rotate(6deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 12) {
+  top: 16px;
+  left: -20px;
+  transform: rotate(-5deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 13) {
+  top: 30px;
+  left: 22px;
+  transform: rotate(-7deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 14) {
+  top: -8px;
+  left: -6px;
+  transform: rotate(3deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 15) {
+  top: 22px;
+  left: -14px;
+  transform: rotate(-4deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 16) {
+  top: -14px;
+  left: 14px;
+  transform: rotate(7deg);
+}
+#page-gallery .gallery-card:nth-child(17n + 17) {
+  top: 10px;
+  left: 32px;
+  transform: rotate(-6deg);
+}
+
+/* ====== HOTFIX：關掉首頁三大背景的漂浮動畫 ====== */
+.home-rays,
+.home-grid,
+.home-splat {
+  animation: none !important;
+}
+
+/* ====== Layer Fix：背景在底、貼紙在最前 ====== */
+#page-home {
+  position: relative;
+}
+
+/* 三張背景一定要能吃到 z-index（要有 position） */
+#page-home .home-rays,
+#page-home .home-grid,
+#page-home .home-splat {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* 背景層級：ray < grid < splat(蛋液) */
+#page-home .home-rays {
+  z-index: 10;
+}
+#page-home .home-grid {
+  z-index: 20;
+}
+#page-home .home-splat {
+  z-index: 30;
+}
+
+/* ✅ 貼紙層級：永遠比蛋液更前 */
+#page-home .deco.floater,
+#page-home .deco-front,
+#page-home .sticker-rotate {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* ====== FIX：標題/START 永遠在蛋液上面 ====== */
+#page-home {
+  position: relative;
+}
+
+/* 三張背景固定在底層（而且不擋點擊） */
+#page-home .home-rays,
+#page-home .home-grid,
+#page-home .home-splat {
+  position: absolute;
+  pointer-events: none;
+}
+
+#page-home .home-rays {
+  z-index: 0;
+}
+#page-home .home-grid {
+  z-index: 1;
+}
+#page-home .home-splat {
+  z-index: 2;
+} /* 蛋液在 ray/grid 上面 */
+
+/* ✅ 標題 + START：一定要有 position 才能吃 z-index */
+#page-home .title-logo,
+#page-home #start-btn {
+  position: relative;
+  z-index: 50;
+}
+
+/* ✅ 貼紙：最上面（你已經有 9999 也 OK，這是保險） */
+#page-home .sticker-rotate,
+#page-home .deco-front {
+  z-index: 9999;
+}
+
+/* ===================================
+   🔒 首頁裝飾只存在於 page-home
+   =================================== */
+
+/* 預設：所有頁面都不顯示首頁裝飾 */
+.home-rays,
+.home-grid,
+.home-splat,
+.deco,
+.deco-front,
+.sticker-rotate {
+  display: none;
+}
+
+/* 只有 page-home 裡面的才顯示 */
+#page-home .home-rays,
+#page-home .home-grid,
+#page-home .home-splat,
+#page-home .deco,
+#page-home .deco-front,
+#page-home .sticker-rotate {
+  display: block;
+}
+
+/* page-home 必須是定位容器 */
+#page-home {
+  position: relative;
+}
+
+/* 背景三層 */
+#page-home .home-rays {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#page-home .home-grid {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#page-home .home-splat {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* 標題 & START */
+#page-home .title-logo,
+#page-home #start-btn {
+  position: relative;
+  z-index: 10;
+}
+
+/* 貼紙永遠最上 */
+#page-home .deco-front,
+#page-home .sticker-rotate {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
 }
