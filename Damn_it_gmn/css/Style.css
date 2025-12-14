@@ -1,0 +1,1035 @@
+/* =========================================================================
+   1. CSS 變數與全域設定 (Variables & Global)
+   ========================================================================= */
+
+:root {
+  /* 基礎色彩 (Alchemy Dark Theme & Pop Art) */
+  --color-primary: #ffb703; /* 明亮橙黃 */
+  --color-secondary: #fb8500; /* 飽和橙色 */
+  --color-accent: #2ec4f1; /* 天空藍點綴 */
+  --color-background-dark: rgba(255, 255, 255, 0.1);
+  --color-background-mid: rgba(255, 255, 255, 0.2);
+  --color-background-light: rgba(255, 255, 255, 0.72);
+  --color-text-light: #1f1f1f;
+  --color-text-muted: #4a4a4a;
+  --color-border: rgba(255, 255, 255, 0.65);
+
+  /* 狀態色彩 */
+  --color-success: #4caf50;
+  --color-danger: #f44336;
+  --color-info: #2196f3;
+
+  /* 空間間距 */
+  --padding-unit: 16px;
+  --spacing-s: 8px;
+  --spacing-m: 16px;
+  --spacing-l: 24px;
+  --spacing-xl: 32px;
+
+  /* Z-Index 分層 */
+  --z-bg: 0;
+  --z-table: 6;
+  --z-item: 12;
+  --z-player: 16;
+  --z-effect: 20;
+  --z-ui: 100;
+  --z-overlay: 500;
+  --z-modal: 1000;
+  --z-curtain: 9999;
+
+  /* 過渡效果 */
+  --transition-fast: 0.2s ease-out;
+  --transition-medium: 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  --transition-page: 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* 彈性轉場 */
+
+  /* 邊角半徑 */
+  --border-radius-s: 4px;
+  --border-radius-m: 8px;
+  --border-radius-l: 12px;
+}
+
+body {
+  font-family: "Noto Sans TC", sans-serif; /* 預設字體 */
+  background-color: #b9d3f6;
+  color: var(--color-text-light);
+  min-height: 100vh;
+  overflow: hidden; /* 防止原生捲動，由 JS 控制畫面切換 */
+  position: relative;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: #3b2a00;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+/* 手型游標設定 */
+body.hand-cursor-left {
+  cursor: url("../img/Lhand.png") 18 18, grabbing;
+}
+body.hand-cursor-right {
+  cursor: url("../img/Rhand.png") 18 18, grabbing;
+}
+
+/* =========================================================================
+   2. 遊戲容器與轉場系統 (Game Container & Screens)
+   ========================================================================= */
+
+#world-layer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: var(--z-bg);
+}
+
+#game-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Screen 基礎設定 */
+.screen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto; /* 允許內容過長時捲動 */
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 預設隱藏並移出畫面 */
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 100%, 0); /* 預設在下方 */
+  transition: transform var(--transition-page), opacity var(--transition-medium);
+  z-index: 10;
+  background: transparent;
+  padding-bottom: 80px; /* 避開底部 UI */
+}
+
+/* Screen 狀態：Active (進場) */
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  z-index: 20;
+}
+
+/* Screen 狀態：Exiting (離場 - 往上飛走) */
+.screen.exiting {
+  opacity: 0;
+  transform: translate3d(0, -100%, 0) scale(0.9);
+  pointer-events: none;
+}
+
+/* Screen 狀態：Incoming (準備進場 - 從下飛入) */
+.screen.incoming {
+  transform: translate3d(0, 100%, 0);
+  opacity: 1;
+}
+
+/* 波浪進場動畫 (保留原本風味) */
+.screen.wave-enter {
+  animation: screen-wave 0.9s cubic-bezier(0.22, 0.72, 0.32, 1) forwards;
+}
+
+@keyframes screen-wave {
+  0% {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+/* =========================================================================
+   3. 首頁 (Screen 1)
+   ========================================================================= */
+
+.home-screen {
+  justify-content: center;
+  background: linear-gradient(180deg, #a9c6fb 0%, #cddcff 100%);
+  overflow: hidden; /* 首頁不捲動 */
+}
+
+.home-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* 背景元素定位 */
+.sky-gradient-img {
+  position: absolute;
+  width: 120%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radiation-lines {
+  position: absolute;
+  width: 140%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-11deg);
+  animation: radiation-float 18s ease-in-out infinite alternate;
+}
+
+.floating-stars img {
+  position: absolute;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.2));
+  animation: star-drift 8s ease-in-out infinite;
+}
+
+/* Logo */
+.logo-layer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh; /* 讓 Logo 偏上 */
+}
+
+.hero-logo {
+  width: clamp(300px, 60vw, 600px);
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.3));
+  animation: logo-float 4s ease-in-out infinite;
+}
+
+/* 按鈕群 */
+.start-button {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.2s;
+  z-index: 50;
+}
+.start-button img {
+  width: clamp(140px, 15vw, 200px);
+}
+.start-button:hover {
+  transform: translate(-50%, -5px) scale(1.05);
+}
+
+.go-picture-book-btn {
+  position: absolute;
+  top: 68%;
+  left: 75%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: rotate(15deg);
+  transition: transform 0.2s;
+  z-index: 50;
+}
+.go-picture-book-btn img {
+  width: 100px;
+}
+.go-picture-book-btn:hover {
+  transform: rotate(5deg) scale(1.1);
+}
+
+/* 漂浮貼紙 (Decoration) */
+.sticker {
+  position: absolute;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+  animation: float-sticker 6s ease-in-out infinite alternate;
+}
+/* 具體位置微調 */
+.sticker-stone {
+  top: 10%;
+  left: 5%;
+  width: 100px;
+  animation-delay: 0s;
+}
+.sticker-eggs {
+  top: 15%;
+  right: 5%;
+  width: 120px;
+  animation-delay: 1s;
+}
+.sticker-lemon {
+  bottom: 20%;
+  left: 10%;
+  width: 90px;
+  animation-delay: 2s;
+}
+.sticker-phone {
+  bottom: 25%;
+  right: 10%;
+  width: 100px;
+  animation-delay: 3s;
+}
+/* ...其他貼紙依此類推 */
+
+/* =========================================================================
+   4. 故事模式 (Screen 2)
+   ========================================================================= */
+
+.hand-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: var(--z-effect);
+  transition: transform 0.5s;
+}
+
+.hand-image {
+  width: clamp(200px, 30vw, 400px);
+  transform-origin: bottom center;
+}
+.hand-image.left {
+  transform: translate(-20px, 20px) rotate(-10deg);
+}
+.hand-image.right {
+  transform: translate(20px, 20px) rotate(10deg);
+}
+
+/* 雙手合十狀態 (用於教學或特定場景) */
+body.hands-folded .hand-image.left {
+  transform: translate(50px, 50px) rotate(10deg);
+}
+body.hands-folded .hand-image.right {
+  transform: translate(-50px, 50px) rotate(-10deg);
+}
+
+.story-stack {
+  position: relative;
+  z-index: 30;
+  width: min(600px, 90%);
+  margin-top: 15vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.messages {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.message-bubble {
+  background: #fff;
+  border: 4px solid #000;
+  border-radius: 20px;
+  padding: 15px 20px;
+  font-weight: bold;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.message-bubble.pop-in,
+.message-bubble.instant {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.typing-bubble {
+  display: none; /* 預設隱藏，由 JS 控制 visible */
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 50px;
+  padding: 10px 20px;
+}
+.typing-bubble.visible {
+  display: block;
+}
+
+.dialog-footer-controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  z-index: 50;
+}
+
+/* =========================================================================
+   5. 選擇主食 (Screen 3)
+   ========================================================================= */
+.egg-choice-screen {
+  padding-top: 80px;
+  background: #fff8e1;
+}
+
+.egg-choice-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.egg-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  width: 90%;
+  max-width: 1000px;
+  margin-bottom: 40px;
+}
+
+.egg-card {
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+.egg-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 rgba(0, 0, 0, 0.15);
+}
+
+.egg-card.selected {
+  border-color: var(--color-primary);
+  background: #fffbe6;
+  box-shadow: 0 0 0 4px var(--color-primary), 9px 9px 0 rgba(0, 0, 0, 0.15);
+}
+
+.egg-card.locked {
+  filter: grayscale(1);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.egg-illustration img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+}
+
+.choose-egg-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 2px solid #000;
+  background: var(--color-primary);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.egg-card.locked .choose-egg-btn {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* =========================================================================
+   6. 遊戲主畫面 (Screen 5) - 核心區
+   ========================================================================= */
+
+#screen-5 {
+  background: url("../img/廚房動圖.png") center/cover no-repeat;
+  justify-content: flex-end; /* 讓內容靠下 */
+}
+
+/* 米特蛋 (Drop Target) */
+.main-egg-display {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 250px;
+  height: 300px;
+  z-index: var(--z-player);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.egg-graphic {
+  width: 100%;
+  height: 100%;
+  background: url("../img/待機蛋 (去背) 1.png") center/contain no-repeat;
+  animation: egg-breathe 3s ease-in-out infinite;
+}
+
+/* 蛋的反應動畫 */
+.drop-target.feed-react .egg-graphic {
+  animation: egg-shake 0.5s ease-in-out;
+}
+
+/* 食材列 (Draggables) */
+.ingredient-table {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  border-top: 4px solid #fff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  z-index: var(--z-item);
+  padding-bottom: 120px; /* 預留底部空間給選單 */
+}
+
+.ingredient-token {
+  width: 80px;
+  height: 80px;
+  cursor: grab;
+  transition: transform 0.2s;
+  user-select: none;
+  touch-action: none; /* 重要：防止手機版原生捲動 */
+}
+
+.ingredient-token img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+.ingredient-token:active {
+  cursor: grabbing;
+}
+.ingredient-token.drag-active {
+  z-index: 9999;
+  pointer-events: none; /* 讓下層元素能偵測到 */
+  transform: scale(1.2);
+}
+
+.ingredient-token.disabled {
+  opacity: 0.5;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+/* Overlay UI (選中的食材槽) */
+.screen-ui-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  pointer-events: none; /* 讓點擊穿透到下方 */
+  z-index: var(--z-ui);
+  display: none; /* 預設隱藏，由 JS 控制 */
+}
+.screen-ui-overlay.active {
+  display: block;
+}
+
+.overlay-selection-bar {
+  pointer-events: auto; /* 恢復槽位的點擊 */
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 20px;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.slot-row {
+  display: flex;
+  gap: 10px;
+}
+
+.selection-slot {
+  width: 60px;
+  height: 60px;
+  background: #eee;
+  border: 2px dashed #999;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.selection-slot.filled {
+  border: 2px solid var(--color-primary);
+  background: #fff;
+}
+
+.slot-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.slot-text {
+  display: none;
+} /* 空間不足時隱藏文字 */
+
+.slot-clear {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  display: none;
+}
+.selection-slot.filled + .slot-clear {
+  display: block;
+}
+
+/* Magic Button */
+.magic-cloud {
+  background: var(--color-primary);
+  border: 3px solid #000;
+  color: #000;
+  font-weight: 900;
+  padding: 10px 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: transform 0.1s;
+}
+.magic-cloud:active {
+  transform: scale(0.95);
+}
+.magic-cloud:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* =========================================================================
+   7. 影片播放 (Screen 6)
+   ========================================================================= */
+.transformation-space {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#casting-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.skip-video-btn {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 60;
+}
+
+/* =========================================================================
+   8. 結果頁 (Screen 7)
+   ========================================================================= */
+.result-screen {
+  background: radial-gradient(circle, #fffbd5, #ffe87a);
+  justify-content: center;
+}
+
+.result-stage {
+  text-align: center;
+  animation: pop-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.result-egg {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.3));
+  margin-bottom: 20px;
+}
+
+.result-copy h2 {
+  font-size: 2rem;
+  color: #d32f2f;
+  margin-bottom: 10px;
+}
+.result-rarity {
+  font-weight: 900;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+}
+
+.result-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.menu-image-btn img {
+  width: 150px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.menu-image-btn:hover img {
+  transform: scale(1.1);
+}
+
+/* =========================================================================
+   9. 圖鑑 (Gallery - Screen 9) ★ 重點修改區 ★
+   ========================================================================= */
+
+.gallery-screen {
+  background: #f0f0f0;
+  padding-top: 100px;
+}
+
+.gallery-wrapper {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.gallery-ribbon {
+  background: var(--color-primary);
+  display: inline-block;
+  padding: 10px 40px;
+  border: 3px solid #000;
+  font-size: 1.5rem;
+  font-weight: 900;
+  transform: rotate(-2deg);
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+.floating-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 30px;
+  padding-bottom: 100px;
+}
+
+/* 卡片基礎樣式 */
+.gallery-card {
+  background: #fff;
+  border: 4px solid #fff; /* 拍立得白邊 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  text-align: center;
+  position: relative;
+  overflow: hidden; /* 確保 Popover 不溢出 */
+  transition: transform 0.3s, z-index 0s;
+  cursor: help;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  background: #f9f9f9;
+  border: 1px solid #eee;
+}
+
+.gallery-card h3 {
+  font-size: 0.9rem;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* 拼貼風格傾斜 (Collage Effect) */
+.gallery-card.tilt-1 {
+  transform: rotate(-3deg);
+}
+.gallery-card.tilt-2 {
+  transform: rotate(2deg);
+}
+.gallery-card.tilt-3 {
+  transform: rotate(-1deg);
+}
+
+/* Hover 互動 */
+.gallery-card:hover {
+  transform: scale(1.1) rotate(0deg);
+  z-index: 100;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  border-color: var(--color-primary);
+}
+
+/* ★ 新增：翻轉/懸停顯示素材邏輯 (JS適配) ★ */
+.card-hover-popover {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 30, 30, 0.95); /* 深色遮罩 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(100%); /* 預設在下方 */
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gallery-card:hover .card-hover-popover {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-hover-popover img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  border: none;
+  background: transparent;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+  animation: float-material 2s infinite ease-in-out;
+}
+.card-hover-popover img:nth-child(1) {
+  animation-delay: 0s;
+}
+.card-hover-popover img:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.card-hover-popover img:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* 鎖定狀態 */
+.gallery-card.locked {
+  filter: grayscale(1) opacity(0.7);
+  pointer-events: none;
+}
+.locked-mask {
+  position: absolute;
+  top: 40%;
+  left: 0;
+  width: 100%;
+  font-weight: 900;
+  font-size: 2rem;
+  color: #555;
+  transform: rotate(-15deg);
+  text-shadow: 2px 2px 0 #fff;
+}
+
+/* =========================================================================
+   10. 通用 UI 元件 (Buttons, Persistent UI)
+   ========================================================================= */
+
+/* 右上角固定 UI */
+.persistent-ui {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+  z-index: var(--z-ui);
+}
+
+.icon-btn {
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s;
+}
+.icon-btn:hover {
+  transform: scale(1.1);
+}
+.icon-btn img {
+  width: 30px;
+}
+.icon-btn.muted {
+  background: #ccc;
+}
+
+/* Alert Box */
+#alert-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 3px solid #000;
+  padding: 10px 30px;
+  border-radius: 30px;
+  font-weight: bold;
+  z-index: var(--z-modal);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: top 0.3s;
+}
+#alert-message.hidden {
+  top: -100px;
+}
+#alert-message.error {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+#alert-message.success {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+/* 導覽層 (Guide) */
+#guide-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: var(--z-modal);
+}
+#guide-overlay.hidden {
+  display: none;
+}
+
+.guide-focus-ring {
+  position: absolute;
+  border: 4px dashed var(--color-primary);
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7); /* 聚光燈效果 */
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.guide-tooltip {
+  position: absolute;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  transition: all 0.3s;
+}
+
+/* =========================================================================
+   11. 動畫 Keyframes
+   ========================================================================= */
+
+@keyframes radiation-float {
+  0% {
+    transform: translate(-50%, -50%) rotate(-11deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-5deg);
+  }
+}
+@keyframes star-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+@keyframes float-sticker {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+}
+@keyframes egg-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02) translateY(-5px);
+  }
+}
+@keyframes egg-shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes float-material {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes pop-up {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 手機版適配 */
+@media (max-width: 768px) {
+  .ingredient-token {
+    width: 60px;
+    height: 60px;
+  }
+  .gallery-card img {
+    height: 100px;
+  }
+  .hero-logo {
+    width: 80vw;
+  }
+}

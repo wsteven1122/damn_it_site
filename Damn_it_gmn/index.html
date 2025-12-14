@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="game-client">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>蛋米特 DAMN IT! - 魔法煉蛋廚房</title>
+    <link rel="icon" type="image/png" href="./img/Background_blue.png" />
+    <link rel="stylesheet" href="./css/Style.css" />
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"
+      defer
+    ></script>
+    <script src="script.js" defer></script>
+  </head>
+
+  <body class="theme-dark-alchemy screen-ready">
+    <div id="alert-message" class="alert hidden" role="alert">
+      <span id="alert-icon" class="alert-icon-symbol"></span>
+      <span id="alert-text">系統訊息</span>
+    </div>
+
+    <div id="guide-overlay" class="guide-overlay hidden">
+      <div id="guide-focus-ring" class="guide-focus-ring"></div>
+      <div id="guide-tooltip" class="guide-tooltip">
+        <header class="tooltip-header">
+          <span>步驟 <span id="tip-current-step">1</span></span>
+        </header>
+        <p id="tip-text">提示文字</p>
+        <button id="tip-next-btn" class="btn btn-primary">下一步</button>
+      </div>
+    </div>
+
+    <div id="curtain-transition" aria-hidden="true">
+      <div class="curtain curtain-left"></div>
+      <div class="curtain curtain-right"></div>
+    </div>
+
+    <div id="world-layer" class="world-layer">
+      <main id="game-container">
+        <section id="screen-1" class="screen home-screen active" data-index="1">
+          <div class="home-stage">
+            <div class="layer sky-layer">
+              <img src="./img/Background_blue.png" alt="背景" class="bg-img" />
+            </div>
+
+            <div class="layer rays-layer">
+              <img
+                src="./img/射綫_画板 1 1.png"
+                alt="放射線"
+                class="radiation-lines"
+              />
+            </div>
+
+            <div id="star-field" class="layer floating-stars"></div>
+
+            <div class="layer sticker-layer" id="sticker-layer">
+              <img
+                src="./img/Floating Object_Stone.png"
+                class="sticker s1"
+                data-depth="0.2"
+                style="top: 15%; left: 10%"
+              />
+              <img
+                src="./img/Floating object_egg.png"
+                class="sticker s2"
+                data-depth="0.1"
+                style="top: 20%; right: 15%"
+              />
+              <img
+                src="./img/Floating Object_Lemon.png"
+                class="sticker s3"
+                data-depth="0.3"
+                style="bottom: 25%; left: 20%"
+              />
+              <img
+                src="./img/Floating Object_Phone.png"
+                class="sticker s4"
+                data-depth="0.4"
+                style="top: 60%; right: 10%"
+              />
+              <img
+                src="./img/榴槤.png"
+                class="sticker s5"
+                data-depth="0.5"
+                style="bottom: 10%; right: 30%; width: 120px"
+              />
+              <img
+                src="./img/Floating object_bomb.png"
+                class="sticker s6"
+                data-depth="0.25"
+                style="top: 10%; left: 40%"
+              />
+            </div>
+
+            <div class="layer ui-layer">
+              <div class="logo-group">
+                <div id="lottie-title-container"></div>
+                <img
+                  src="./img/Title.png"
+                  alt="DAMN IT Logo"
+                  class="main-logo"
+                />
+              </div>
+
+              <button
+                id="lottie-start-btn"
+                class="start-btn next-screen-btn"
+                data-target="screen-2"
+              >
+                <img src="./img/botton_Start_.png" alt="開始遊戲" />
+              </button>
+
+              <button
+                class="gallery-shortcut-btn next-screen-btn"
+                data-target="screen-gallery"
+              >
+                <img
+                  src="./img/Secondary Botton_Picture Book_Default.png"
+                  alt="圖鑑"
+                />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-2" class="screen story-screen" data-index="2">
+          <div class="hand-overlay">
+            <img src="./img/Lhand.png" class="hand left" />
+            <img src="./img/Rhand.png" class="hand right" />
+          </div>
+
+          <div class="story-container">
+            <div id="messages" class="messages-area"></div>
+            <div id="typingIndicator" class="typing-bubble">
+              <span>.</span><span>.</span><span>.</span>
+            </div>
+          </div>
+
+          <div class="story-controls">
+            <button
+              id="continue-btn"
+              class="btn btn-primary next-screen-btn hidden"
+              data-target="screen-3"
+            >
+              進入煉蛋爐
+            </button>
+            <button id="dialog-skip-btn" class="btn btn-text">
+              跳過故事 (SKIP)
+            </button>
+          </div>
+        </section>
+
+        <section id="screen-3" class="screen egg-choice-screen" data-index="3">
+          <header class="screen-header">
+            <h2>選擇主食蛋</h2>
+            <p>米特蛋免費體驗，其餘需解鎖。</p>
+          </header>
+
+          <div class="egg-carousel">
+            <div class="egg-card locked" data-egg="黃金蛋">
+              <span class="tag">付費</span>
+              <img src="./img/台指數蛋.png" />
+              <h3>黃金蛋</h3>
+              <button disabled>鎖定中</button>
+            </div>
+
+            <div class="egg-card unlocked selected" data-egg="米特蛋">
+              <span class="tag free">免費</span>
+              <img src="./img/待機蛋 (去背) 1.png" />
+              <h3>米特蛋</h3>
+              <p>適合新手的基礎蛋。</p>
+              <button class="choose-egg-btn">選擇此蛋</button>
+            </div>
+
+            <div class="egg-card locked" data-egg="地雷蛋">
+              <span class="tag">付費</span>
+              <img src="./img/地雷系蛋.png" />
+              <h3>辣椒蛋</h3>
+              <button disabled>鎖定中</button>
+            </div>
+
+            <div class="egg-card locked" data-egg="邪惡蛋">
+              <span class="tag">付費</span>
+              <img src="./img/邪惡蟲蟲蛋糕.png" />
+              <h3>邪惡蛋</h3>
+              <button disabled>鎖定中</button>
+            </div>
+          </div>
+
+          <footer class="screen-footer">
+            <button
+              id="confirm-egg-btn"
+              class="btn btn-primary next-screen-btn"
+              data-target="screen-4"
+            >
+              前往煉蛋
+            </button>
+          </footer>
+        </section>
+
+        <section id="screen-4" class="screen guide-screen" data-index="4">
+          <div class="guide-modal">
+            <h2>煉蛋指南</h2>
+            <p>
+              1. 拖曳 3 種食材到蛋上。<br />2. 點擊 MAGIC 開始煉成。<br />3.
+              享受你的暗黑料理！
+            </p>
+            <button
+              class="btn btn-primary next-screen-btn"
+              data-target="screen-5"
+            >
+              開始動手！
+            </button>
+          </div>
+        </section>
+
+        <section id="screen-5" class="screen game-screen" data-index="5">
+          <div class="hand-overlay kitchen-hands">
+            <img src="./img/Lhand.png" class="hand left" />
+            <img src="./img/Rhand.png" class="hand right" />
+          </div>
+
+          <div class="main-egg-display drop-target">
+            <div class="egg-graphic"></div>
+            <p class="hint">拖曳食材到這裡</p>
+          </div>
+
+          <div id="ingredient-tray" class="ingredient-tray">
+            <div
+              class="ingredient-token"
+              data-ingredient="榴槤"
+              draggable="true"
+            >
+              <img src="./img/榴槤.png" />
+            </div>
+            <div
+              class="ingredient-token"
+              data-ingredient="魷魚"
+              draggable="true"
+            >
+              <img src="./img/魷魚.png" />
+            </div>
+            <div
+              class="ingredient-token"
+              data-ingredient="檸檬"
+              draggable="true"
+            >
+              <img src="./img/檸檬.png" />
+            </div>
+            <div
+              class="ingredient-token"
+              data-ingredient="手機"
+              draggable="true"
+            >
+              <img src="./img/手機.png" />
+            </div>
+            <div
+              class="ingredient-token"
+              data-ingredient="TNT"
+              draggable="true"
+            >
+              <img src="./img/炸彈.png" />
+            </div>
+            <div
+              class="ingredient-token"
+              data-ingredient="香菜"
+              draggable="true"
+            >
+              <img src="./img/香菜.png" />
+            </div>
+            <div
+              class="ingredient-token"
+              data-ingredient="隕石"
+              draggable="true"
+            >
+              <img src="./img/石頭.png" />
+            </div>
+            <div
+              class="ingredient-token"
+              data-ingredient="服裝"
+              draggable="true"
+            >
+              <img src="./img/褲子.png" />
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-6" class="screen video-screen" data-index="6">
+          <div class="video-container">
+            <video
+              id="casting-video"
+              src="./img/桌子.mp4"
+              playsinline
+              poster="./img/桌子.mp4"
+            ></video>
+            <div id="spinner-overlay" class="spinner">
+              <div class="loader"></div>
+            </div>
+            <button
+              id="skip-video-btn"
+              class="skip-btn next-screen-btn"
+              data-target="screen-7"
+            >
+              Skip
+            </button>
+          </div>
+        </section>
+
+        <section id="screen-7" class="screen result-screen" data-index="7">
+          <div class="result-content">
+            <div class="result-glow"></div>
+            <img id="result-main-image" src="" alt="結果" class="result-img" />
+            <h2 id="result-title">結果標題</h2>
+            <p id="result-description">結果描述...</p>
+            <p class="rarity">稀有度: <span id="result-rarity">R</span></p>
+
+            <div class="result-buttons">
+              <button
+                id="result-retry"
+                class="btn-icon next-screen-btn"
+                data-target="screen-1"
+              >
+                <img
+                  src="./img/Secondary Botton_Try Again_Default.png"
+                  alt="重試"
+                />
+              </button>
+              <button
+                id="result-gallery"
+                class="btn-icon next-screen-btn"
+                data-target="screen-gallery"
+              >
+                <img
+                  src="./img/Secondary Botton_Picture Book_Default.png"
+                  alt="圖鑑"
+                />
+              </button>
+            </div>
+
+            <button class="btn btn-text next-screen-btn" data-target="screen-1">
+              回首頁
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="screen-gallery"
+          class="screen gallery-screen"
+          data-index="9"
+        >
+          <header class="gallery-header">
+            <h3>成果圖鑑</h3>
+            <button class="btn-close next-screen-btn" data-target="screen-1">
+              ✕
+            </button>
+          </header>
+
+          <div class="gallery-scroll">
+            <div class="gallery-grid">
+              <article class="gallery-card">
+                <div class="card-front">
+                  <img src="./img/核武器.png" alt="毀滅之蛋" />
+                  <h4>毀滅之蛋</h4>
+                </div>
+                <div class="card-hover-popover">
+                  <p>合成配方</p>
+                  <div class="recipe-icons">
+                    <img src="./img/榴槤.png" />
+                    <img src="./img/炸彈.png" />
+                    <img src="./img/魷魚.png" />
+                  </div>
+                </div>
+              </article>
+
+              <article class="gallery-card">
+                <div class="card-front">
+                  <img src="./img/生化武器.png" alt="廣志之襪" />
+                  <h4>廣志之襪</h4>
+                </div>
+                <div class="card-hover-popover">
+                  <p>合成配方</p>
+                  <div class="recipe-icons">
+                    <img src="./img/檸檬.png" />
+                    <img src="./img/榴槤.png" />
+                    <img src="./img/香菜.png" />
+                  </div>
+                </div>
+              </article>
+
+              <article class="gallery-card locked">
+                <div class="locked-mask">?</div>
+                <div class="card-front">
+                  <img src="./img/大boss.png" style="filter: brightness(0)" />
+                  <h4>神秘結局</h4>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-settings" class="screen">
+          <div class="placeholder">設定頁面</div>
+        </section>
+      </main>
+    </div>
+
+    <div id="screen-ui-overlay">
+      <div class="overlay-layer overlay-ingredients" data-screen="screen-5">
+        <div class="selection-bar">
+          <div id="selection-row" class="slots">
+            <div class="selection-slot" data-slot-index="1">
+              <img class="slot-thumb" />
+              <button class="slot-clear">×</button>
+            </div>
+            <div class="selection-slot" data-slot-index="2">
+              <img class="slot-thumb" />
+              <button class="slot-clear">×</button>
+            </div>
+            <div class="selection-slot" data-slot-index="3">
+              <img class="slot-thumb" />
+              <button class="slot-clear">×</button>
+            </div>
+          </div>
+          <button
+            id="cast-spell-btn"
+            class="btn-magic next-screen-btn"
+            data-target="screen-6"
+            disabled
+          >
+            MAGIC!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="persistent-ui">
+      <button id="global-volume-btn" class="icon-btn volume-toggle">
+        <img src="./img/voice_on.png" />
+      </button>
+      <button id="global-guide-btn" class="icon-btn guide-trigger">
+        <img src="./img/Botton_teaching_Default.png" />
+      </button>
+    </div>
+
+    <audio
+      id="bgm-audio"
+      src="./img/おもしろすぎてどっかん @ フリーBGM DOVA-SYNDROME OFFICIAL YouTube CHANNEL.mp3"
+      loop
+    ></audio>
+  </body>
+</html>
