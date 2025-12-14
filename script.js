@@ -1,726 +1,766 @@
-// =========================================================================
-// I. 核心配置與資料 (Configuration and Data)
-// =========================================================================
+// =========================================
+//  1. 數據配置 (Ingredients & Eggs)
+// =========================================
 
-const CONFIG = {
-  TRANSITION_DURATION: 1000,
-  MAX_INGREDIENTS: 3,
-  // 故事腳本 (Screen 2)
-  DIALOG_LINES: [
-    {
-      speaker: "旁白",
-      text: "你來到了古老的煉金廚房，這裡瀰漫著硫磺和蛋的氣味。",
-    },
-    {
-      speaker: "米特蛋魂",
-      text: "歡迎，挑戰者！我的米特蛋身軀需要你用奇異的食材重塑。",
-    },
-    {
-      speaker: "米特蛋魂",
-      text: "記住，組合是關鍵。去吧，將你的意念轉化為食材，鑄造傳說！",
-    },
-  ],
-  // 導覽步驟 (Guide Module)
-  GUIDE_STEPS: [
-    {
-      targetId: "lottie-start-btn",
-      text: "點擊這個【開始遊戲】按鈕，即可展開你的煉金廚房之旅！",
-      position: "right",
-    },
-    {
-      targetId: "volume-btn",
-      text: "這是【音量按鈕】，點擊它來調整 BGM 或音效大小。",
-      position: "left",
-    },
-    {
-      targetId: "guide-btn",
-      text: "這是【指引按鈕】，可以隨時點擊它來重新查看本教學。",
-      position: "left",
-    },
-    {
-      targetId: "menu-btn",
-      text: "這是【主食選單】，旁邊是【成果圖鑑】，可以稍後再探索。",
-      position: "top",
-    },
-  ],
+const eatSfx = new Audio("./sfx/eat.mp3");
+eatSfx.volume = 0.8; // 音量 0~1，看你喜歡
+
+const EGG_IDLE_SRC = "./img/待機蛋 (去背).gif"; // 待機動畫
+const EGG_EAT_SRC = "./img/egg_eat.gif"; // 吃東西動畫
+
+const EGG_EAT_DURATION = 2000; // ← 改成你 GIF 實際長度（毫秒）
+
+const ingredientPositions = [
+  { top: "61%", left: "50%" }, // 1. 隕石（中偏左，上排）
+  { top: "70%", left: "67%" }, // 2. 魷魚（最右，上排）
+  { top: "75%", left: "53%" }, // 3. 衣服（右下）
+  { top: "57%", left: "62%" }, // 4. 香菜（中偏右，上排）
+  { top: "61%", left: "38%" }, // 5. 檸檬（中間，上排）
+  { top: "55%", left: "24%" }, // 6. 榴蓮（最左，上排）
+  { top: "77%", left: "40%" }, // 7. TNT（中下）
+  { top: "73%", left: "24%" }, // 8. 手機（左下）
+];
+
+// 食材清單 (對應 ID)
+// 1:隕石, 2:魷魚, 3:衣服, 4:香菜, 5:檸檬, 6:榴蓮, 7:TNT, 8:手機
+const ingredients = [
+  { id: 1, img: "recipe_rock.png", name: "隕石" },
+  { id: 2, img: "recipe_squid.png", name: "魷魚" },
+  { id: 3, img: "recipe_pants.png", name: "衣服" },
+  { id: 4, img: "recipe_vagetable.png", name: "香菜" },
+  { id: 5, img: "recipe_lemon.png", name: "檸檬" },
+  { id: 6, img: "recipe_ruit.png", name: "榴蓮" },
+  { id: 7, img: "recipe_tnt.png", name: "炸藥" },
+  { id: 8, img: "recipe_iphone17.png", name: "手機" },
+];
+
+// 請用這段取代 script.js 最上面的 eggs 陣列，確保圖片讀得到
+const eggs = [
+  { id: "bird", name: "鳥蛋", cost: "1450", img: "birdegg.png", locked: true },
+  {
+    id: "gold",
+    name: "黃金蛋",
+    cost: "114514",
+    img: "goldenegg.png",
+    locked: true,
+  },
+  {
+    id: "meat",
+    name: "米特蛋",
+    cost: "10",
+    img: "egg.png", // 你原本叫 egg.png
+    locked: false,
+  },
+  {
+    id: "evil",
+    name: "邪惡蛋",
+    cost: "???",
+    img: "evilegg.png",
+    locked: true,
+  },
+  {
+    id: "dino",
+    name: "黑幫蛋",
+    cost: "9999",
+    img: "mafiaegg.png", // 你原本叫 mafiaegg.png
+    locked: true,
+  },
+];
+
+// =========================================
+//  2. 結局資料庫 (Recipe Database)
+//  KEY = "ID-ID-ID" (由小到大排序)
+// =========================================
+const recipes = {
+  // --- 隕石 (1) 系列 ---
+  "1-2-3": { name: "魅力觸手怪", img: "魅力觸手怪.png" },
+  "1-2-4": { name: "香菜盆栽", img: "香菜盆栽.png" },
+  "1-2-6": { name: "流星鎚", img: "流星鎚.png" },
+  "1-2-5": { name: "手機支架", img: "手機支架.png" }, // 註：原文清單可能是 1-2-8? 這裡依據你提供的文字 "隕石、魷魚、檸檬" -> 1,2,5
+  "1-2-8": { name: "氛圍燈", img: "氛圍燈.png" },
+  "1-2-7": { name: "噴火拉麵", img: "噴火拉麵.png" },
+
+  "1-3-4": { name: "石頭火鍋", img: "石頭火鍋.png" },
+  "1-4-6": { name: "QNC臭臭鍋", img: "QNC臭臭鍋.png" },
+  "1-4-5": { name: "煞氣☆土地公沙拉乂", img: "煞氣蛋.png" },
+  "1-4-8": { name: "鼻子蛋捲", img: "鼻子蛋捲.png" },
+  "1-4-7": { name: "盧媽媽蛋餅", img: "盧媽媽蛋餅.png" },
+
+  "1-6-5": { name: "隕石貢丸米粉", img: "隕石貢丸米粉.png" },
+  "1-6-8": { name: "台指數炸彈", img: "台指數炸彈.png" },
+  "1-6-7": { name: "地雷系蛋", img: "地雷系蛋.png" },
+
+  // --- 魷魚 (2) 系列 ---
+  "2-3-4": { name: "香菜冰淇淋", img: "香菜冰淇淋.png" },
+  "2-3-6": { name: "燃燒吧!!布羅利石頭", img: "燃燒吧布羅利石頭.png" },
+  "2-3-5": { name: "魷夠派", img: "魷夠派.png" },
+  "2-3-8": { name: "潮魷", img: "潮魷.png" },
+  "2-3-7": { name: "黑人問號", img: "黑人問號.png" },
+
+  "2-4-6": { name: "流浪漢蛋", img: "流浪漢蛋.png" },
+  "2-4-5": { name: "Dora", img: "Dora.png" },
+  "2-4-8": { name: "Oiiai cat", img: "Oiiaicat.png" },
+  "2-4-7": { name: "魷魚燒", img: "魷魚燒.png" },
+
+  "2-6-5": { name: "魷魚檸檬汁", img: "魷魚檸檬汁.png" },
+  "2-6-8": { name: "大Boss", img: "大Boss.png" },
+  "2-6-7": { name: "魷魚翻身", img: "魷魚翻身.png" },
+
+  "2-5-8": { name: "憂鬱檸檬", img: "憂鬱檸檬.png" },
+  "2-5-7": { name: "章魚哥", img: "火爆章魚哥.png" },
+  "2-8-7": { name: "Ecraft", img: "Ecraft.png" },
+
+  // --- 衣服 (3) 系列 ---
+  "3-4-6": { name: "防毒面具", img: "防毒面具.png" },
+  "3-4-5": { name: "檸矇公爵", img: "檸矇公爵.png" },
+  "3-4-8": { name: "應援", img: "應援蛋.png" },
+  "3-4-7": { name: "香菜鴨", img: "香菜鴨.png" },
+
+  "3-6-5": { name: "章家檸檬綠茶", img: "章家檸檬綠茶.png" },
+  "3-6-8": { name: "防摔手機殼", img: "防摔手機殼.png" },
+  "3-6-7": { name: "暴躁雞蛋糕", img: "暴躁雞蛋糕.png" },
+
+  // --- 香菜 (4) 系列 ---
+  "4-6-5": { name: "野原廣志的襪子", img: "野原廣志的襪子.png" },
+  "4-6-8": { name: "香菜榴槤洋芋片", img: "香菜榴槤洋芋片.png" },
+  "4-6-7": { name: "生化武器", img: "生化武器.png" },
+
+  "4-5-8": { name: "香菜檸檬蛋糕", img: "香菜檸檬蛋糕.png" },
+  "4-5-7": { name: "爆辣螺獅粉", img: "爆辣螺獅粉.png" },
+  "4-8-7": { name: "外星蛋", img: "外星蛋.png" },
+
+  // --- 其他組合 ---
+  "6-5-8": { name: "海膽", img: "海膽.png" },
+  "6-5-7": { name: "一個跳舞的印度大叔", img: "印度大叔.png" },
+  "6-8-7": { name: "核武器按鈕", img: "核武器按鈕.png" },
+  "5-8-7": { name: "地獄跳跳糖", img: "地獄跳跳糖.png" },
+
+  "1-3-6": { name: "宇航員臭鼬", img: "宇航員臭鼬.png" },
+  "3-5-7": { name: "邪惡蟲蟲蛋糕", img: "邪惡蟲蟲蛋糕.png" },
+
+  // --- 廚餘系列 (統一圖片 result_fail.png) ---
+  "1-3-8": { name: "廚餘", img: "result_fail.png", isFail: true },
+  "1-3-7": { name: "廚餘", img: "result_fail.png", isFail: true },
+  "1-3-5": { name: "廚餘", img: "result_fail.png", isFail: true },
+  "1-8-7": { name: "廚餘", img: "result_fail.png", isFail: true }, // 修正：隕石 手機 TNT
+  "1-5-8": { name: "廚餘", img: "result_fail.png", isFail: true },
+  "1-5-7": { name: "廚餘", img: "result_fail.png", isFail: true },
+  "3-8-7": { name: "廚餘", img: "result_fail.png", isFail: true },
+  "3-5-8": { name: "廚餘", img: "result_fail.png", isFail: true },
 };
 
-// =========================================================================
-// II. 遊戲控制器類別 (GameController Class)
-// =========================================================================
+// 記錄已解鎖的圖鑑 (用 localStorage 存起來，刷新不會不見)
+let unlockedRecipes =
+  JSON.parse(localStorage.getItem("eggMagic_unlocked")) || [];
 
-class GameController {
-  constructor() {
-    this.dom = this.getDOMElements();
-    this.state = {
-      isTransitioning: false,
-      currentScreenId: "screen-1",
-      selectedIngredients: new Set(),
-      isMuted: false,
-      lottieInstances: {},
-    };
-    this.loadModules(); // 載入模塊 (Dialog, Guide)
-    this.init();
-  }
+// =========================================
+//  3. 狀態管理與 DOM
+// =========================================
+let state = {
+  selectedEgg: null,
+  chosenIngredients: [],
+  soundOn: true,
+};
 
-  // ---------------------- DOM 初始化 ----------------------
+const pages = {
+  home: document.getElementById("page-home"),
+  story: document.getElementById("page-story"),
+  select: document.getElementById("page-select"),
+  game: document.getElementById("page-game"),
+  result: document.getElementById("page-result"),
+  gallery: document.getElementById("page-gallery"),
+};
+const hands = {
+  story: document.getElementById("hands-story"),
+  select: document.getElementById("hands-select"),
+};
 
-  getDOMElements() {
-    // 集中查詢所有需要的 DOM 元素
-    return {
-      curtainOverlay: document.getElementById("curtain-overlay"),
-      persistentUI: document.getElementById("persistent-ui"),
-      nextScreenBtns: document.querySelectorAll(".next-screen-btn"),
-      ingredientCards: document.querySelectorAll(".ingredient-card"),
+// =========================================
+//  4. 初始化
+// =========================================
+document.addEventListener("DOMContentLoaded", () => {
+  initHome();
+  initSelect();
+  initGame();
+  initTopUI();
+});
 
-      lottieTitleContainer: document.getElementById("lottie-title-container"),
-      lottieStartBtn: document.getElementById("lottie-start-btn"),
+// --- 首頁 ---
+function initHome() {
+  document.getElementById("start-btn").addEventListener("click", () => {
+    scrollTransition(pages.home, pages.story);
+    setTimeout(() => startStory(), 800);
+    document.getElementById("btn-home").style.display = "block";
+  });
 
-      dialogHistory: document.getElementById("dialog-history"),
-      continueBtn: document.getElementById("continue-btn"),
-      dialogSkipBtn: document.getElementById("dialog-skip-btn"),
+  // 綁定回首頁
+  document.getElementById("btn-home").onclick = () => {
+    location.reload(); // 最簡單的回首頁方式
+  };
+}
 
-      castingVideo: document.getElementById("casting-video"),
-      nextFromVideoBtn: document.getElementById("next-from-video-btn"),
+// --- 故事 ---
+const storyLines = [
+  "我是一位廚師，因為到了30歲依舊母胎單身，因此獲得魔法成為了魔法廚師。",
+  "在因緣巧合之下，剛成為魔法師的我很幸運地拿到了霍格滑茲的入學offer，在一年前順利畢業，但畢業後一直不知道要繼續做什麼。",
+  "直到上周六晚上做飯的時候突然福至心靈，想到要是我把魔法用在這些食材上會怎麽樣？ （內心os:哈哈哈，我怎麼這麼聰明）",
+  "於是，我開始嘗試去超市買來最便宜的米特蛋製作料理，鷄蛋嘛，怎麽做都不會出錯的。",
+  "為了我的大業，我還特別跑到十公里外的卡斯頭賣場找來一些魔法材料來製作這個魔法料理實驗。",
+  "至於會做出什麼成品嗎……我告訴你，我也不知道。",
+  "事不宜遲，馬上開始行動！",
+];
 
-      resultModal: document.getElementById("result-modal"),
-      modalCloseBtn: document.querySelector("#result-modal .close-btn"),
-      saveToGalleryBtn: document.getElementById("save-to-gallery-btn"),
+function startStory() {
+  hands.story.classList.add("hands-show");
+  const container = document.querySelector(".chat-container");
+  container.innerHTML = "";
+  let idx = 0;
+  let speed = 1500;
 
-      alertBox: document.getElementById("alert-message"),
-      alertText: document.getElementById("alert-text"),
-      alertIcon: document.getElementById("alert-icon"),
+  const btnSkip = document.getElementById("btn-skip");
+  const btnGo = document.getElementById("btn-go");
 
-      volumeBtn: document.getElementById("volume-btn"),
-      guideBtn: document.getElementById("guide-btn"),
-      settingsBtn: document.getElementById("settings-btn"),
+  // 每次進來重置按鈕
+  btnSkip.style.display = "block";
+  btnGo.style.display = "none";
 
-      // Guide Elements
-      guideOverlay: document.getElementById("guide-overlay"),
-      guideFocusRing: document.getElementById("guide-focus-ring"),
-      guideTooltip: document.getElementById("guide-tooltip"),
-      tipText: document.getElementById("tip-text"),
-      tipNextBtn: document.getElementById("tip-next-btn"),
-
-      modalTitle: document.getElementById("modal-title"),
-      resultText: document.getElementById("result-text"),
-      resultImage: document.getElementById("result-image"),
-      selectionStatus: document.getElementById("current-selection-count"),
-      castSpellBtn: document.getElementById("cast-spell-btn"),
-    };
-  }
-
-  init() {
-    this.dom.curtainOverlay.style.pointerEvents = "none";
-    this.dom.persistentUI.style.display = "none";
-    this.loadLottieAnimations();
-    this.initEventListeners();
-    this.updateIngredientStatus();
-
-    // 首次開場動畫：布幕打開
-    setTimeout(() => {
-      this.dom.curtainOverlay.classList.add("curtain-open");
-      this.dom.curtainOverlay.classList.remove("curtain-closed");
-    }, 100);
-  }
-
-  // ---------------------- 核心流程控制 ----------------------
-
-  async closeCurtain() {
-    return new Promise((resolve) => {
-      this.dom.curtainOverlay.classList.remove("curtain-open");
-      this.dom.curtainOverlay.classList.add("curtain-closed");
-      this.dom.curtainOverlay.style.pointerEvents = "auto";
-      setTimeout(resolve, CONFIG.TRANSITION_DURATION);
-    });
-  }
-
-  async openCurtain() {
-    return new Promise((resolve) => {
-      this.dom.curtainOverlay.classList.remove("curtain-closed");
-      this.dom.curtainOverlay.classList.add("curtain-open");
-
-      setTimeout(() => {
-        this.dom.curtainOverlay.style.pointerEvents = "none";
-        resolve();
-      }, CONFIG.TRANSITION_DURATION);
-    });
-  }
-
-  switchScreens(nextScreenId) {
-    let currentScreen = document.querySelector(".screen.active");
-    let nextScreen = document.getElementById(nextScreenId);
-
-    if (currentScreen) {
-      currentScreen.classList.remove("active");
-    }
-    if (nextScreen) {
-      nextScreen.classList.add("active");
-    }
-    this.state.currentScreenId = nextScreenId;
-    this.updatePersistentUI(nextScreenId);
-  }
-
-  updatePersistentUI(screenId) {
-    if (
-      ["screen-1", "screen-menu", "screen-gallery", "screen-settings"].includes(
-        screenId
-      )
-    ) {
-      this.dom.persistentUI.style.display = "none";
-    } else {
-      this.dom.persistentUI.style.display = "block";
-    }
-  }
-
-  /** 執行紅色布幕轉場動畫並處理特殊流程 */
-  async performTransition(nextScreenId) {
-    if (this.state.isTransitioning) return;
-
-    this.state.isTransitioning = true;
-    this.dom.resultModal.classList.remove("active");
-    this.dom.resultModal.style.display = "none";
-
-    try {
-      await this.closeCurtain();
-      this.switchScreens(nextScreenId);
-
-      if (nextScreenId === "screen-2") {
-        // 進入對話流程
-        await this.Dialog.start();
-        this.performTransition(this.dom.continueBtn.dataset.target); // Dialog結束後自動切換到screen-3
-      } else if (nextScreenId === "screen-5") {
-        // 影片播放流程
-        await this.handleVideoTransition();
-        await this.openCurtain();
-      } else if (nextScreenId === "screen-6") {
-        // 結果生成與彈窗
-        this.generateResult();
-        await this.openCurtain();
-        this.dom.resultModal.classList.add("active");
-        this.dom.resultModal.style.display = "flex";
-      } else {
-        // 普通頁面切換
-        await this.openCurtain();
-      }
-
-      // 額外處理：回到首頁時重置遊戲
-      if (nextScreenId === "screen-1") {
-        this.resetGame();
-      }
-    } catch (error) {
-      console.error(`轉場失敗到 ${nextScreenId}:`, error);
-      this.showAlert("error", "轉場動畫或流程出錯了！");
-      await this.openCurtain();
-    } finally {
-      // 只有 screen-2 的流程需要由 Dialog 內部 resolve Transitioning 狀態
-      if (nextScreenId !== "screen-2") {
-        this.state.isTransitioning = false;
-      }
-    }
-  }
-
-  resetGame() {
-    this.state.selectedIngredients.clear();
-    this.updateIngredientStatus();
-    this.Dialog.reset();
-
-    if (this.dom.castingVideo) {
-      this.dom.castingVideo.style.opacity = 0;
-      this.dom.castingVideo.pause();
-      this.dom.castingVideo.currentTime = 0;
-    }
-  }
-
-  // ---------------------- 訊息與動畫 ----------------------
-
-  showAlert(type, text) {
-    const icons = { success: "✅", error: "❌", info: "💡" };
-
-    this.dom.alertBox.classList.remove("success", "error", "info", "hidden");
-    this.dom.alertBox.classList.add(type);
-    this.dom.alertText.textContent = text;
-    this.dom.alertIcon.textContent = icons[type] || "💡";
-    this.dom.alertBox.classList.remove("hidden");
-
-    setTimeout(() => {
-      this.dom.alertBox.classList.add("hidden");
-    }, 3000);
-  }
-
-  loadLottieAnimations() {
-    if (typeof lottie === "undefined") return;
-
-    // 標題動畫
-    this.state.lottieInstances.title = lottie.loadAnimation({
-      container: this.dom.lottieTitleContainer,
-      renderer: "svg",
-      loop: true,
-      autoplay: true,
-      path: "animations/main_title_animation.json",
-    });
-
-    // 開始按鈕動畫
-    this.state.lottieInstances.startBtn = lottie.loadAnimation({
-      container: this.dom.lottieStartBtn,
-      renderer: "svg",
-      loop: false,
-      autoplay: false,
-      path: "animations/start_button_animation.json",
-    });
-
-    // 按鈕互動效果
-    this.dom.lottieStartBtn.addEventListener("mouseenter", () =>
-      this.state.lottieInstances.startBtn.playSegments([0, 30], true)
-    );
-    this.dom.lottieStartBtn.addEventListener("mouseleave", () =>
-      this.state.lottieInstances.startBtn.stop()
-    );
-  }
-
-  // ---------------------- 食材選擇邏輯 ----------------------
-
-  updateIngredientStatus() {
-    if (this.dom.selectionStatus) {
-      this.dom.selectionStatus.textContent =
-        this.state.selectedIngredients.size;
-    }
-
-    const isCastDisabled =
-      this.state.selectedIngredients.size === 0 ||
-      this.state.selectedIngredients.size > CONFIG.MAX_INGREDIENTS;
-    if (this.dom.castSpellBtn) {
-      this.dom.castSpellBtn.disabled = isCastDisabled;
-    }
-
-    this.dom.ingredientCards.forEach((card) => {
-      const ingredient = card.dataset.ingredient;
-      const isSelected = this.state.selectedIngredients.has(ingredient);
-      const isFull =
-        this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
-
-      card.classList.toggle("selected", isSelected);
-      card.setAttribute("aria-checked", isSelected);
-      card.classList.toggle(
-        "disabled",
-        !isSelected && isFull && !card.classList.contains("locked")
-      );
-    });
-  }
-
-  handleIngredientSelection(event) {
-    const card = event.currentTarget;
-    const ingredient = card.dataset.ingredient;
-
-    if (
-      card.classList.contains("locked") ||
-      card.classList.contains("disabled")
-    )
+  function showNext() {
+    if (idx >= storyLines.length) {
+      btnSkip.style.display = "none";
+      btnGo.style.display = "block";
       return;
+    }
+    const div = document.createElement("div");
+    div.className = `chat-bubble bubble-${Math.min(idx + 1, 6)}`; // 防止超過樣式
+    div.innerText = storyLines[idx];
+    container.appendChild(div);
 
-    const isSelected = this.state.selectedIngredients.has(ingredient);
-    const isFull =
-      this.state.selectedIngredients.size >= CONFIG.MAX_INGREDIENTS;
+    setTimeout(() => div.classList.add("show"), 50);
+    idx++;
 
-    if (isSelected) {
-      this.state.selectedIngredients.delete(ingredient);
-      this.showAlert("info", `✅ ${ingredient} 已從煉金爐中移除。`);
+    // 自動播放邏輯
+    if (idx < storyLines.length) {
+      window.storyTimer = setTimeout(showNext, speed);
     } else {
-      if (isFull) {
-        this.showAlert(
-          "error",
-          `煉金爐已滿！最多只能加入 ${CONFIG.MAX_INGREDIENTS} 個食材。`
-        );
-        return;
-      }
-      this.state.selectedIngredients.add(ingredient);
-      this.showAlert("success", `✨ ${ingredient} 已成功加入煉金爐！`);
-    }
-
-    this.updateIngredientStatus();
-  }
-
-  // ---------------------- 影片與結果處理 ----------------------
-
-  async handleVideoTransition() {
-    this.dom.nextFromVideoBtn.classList.add("hidden");
-    if (this.dom.castingVideo) {
-      this.dom.castingVideo.style.opacity = 1;
-      this.dom.castingVideo.muted = this.state.isMuted;
-    }
-
-    try {
-      if (this.dom.castingVideo) {
-        this.dom.castingVideo.currentTime = 0;
-        await this.dom.castingVideo.play();
-      }
-    } catch (error) {
-      console.warn("影片自動播放被阻止:", error);
-      this.showAlert("info", "請點擊影片開始播放或按 [查看結果] 強制繼續");
-      this.dom.nextFromVideoBtn.classList.remove("hidden");
-      return Promise.resolve();
+      btnSkip.style.display = "none";
+      btnGo.style.display = "block";
     }
   }
 
-  handleVideoEnd() {
-    if (this.dom.castingVideo) {
-      this.dom.castingVideo.style.opacity = 0.5; // 播放完畢後變暗
+  window.storyTimer = setTimeout(showNext, 500);
+
+  btnSkip.onclick = () => {
+    speed = 100; // 加速
+  };
+
+  btnGo.onclick = () => {
+    scrollTransition(pages.story, pages.select);
+    setTimeout(() => {
+      hands.story.classList.remove("hands-show");
+      hands.select.classList.add("hands-show");
+    }, 500);
+  };
+}
+
+// --- 選擇蛋 (含拖曳功能) ---
+// --- 選擇蛋 (3D 輪播 + 自動吸附版) ---
+function initSelect() {
+  const carousel = document.getElementById("egg-carousel");
+  const btnChoose = document.getElementById("btn-choose-food");
+
+  // 清空內容
+  carousel.innerHTML = "";
+
+  // 1. 生成卡片
+  eggs.forEach((egg) => {
+    const el = document.createElement("div");
+    el.className = "egg-card";
+    // 這裡不用預設 active，交給下面的滾動邏輯判斷
+    el.dataset.id = egg.id; // 綁定 ID 以便查詢
+
+    el.innerHTML = `
+            <div class="egg-tag">${egg.locked ? "未解鎖" : "可選購"}</div>
+            <img src="./img/${egg.img}" class="egg-img" draggable="false"> 
+            <h3>${egg.name}</h3>
+            <p>價格: ${egg.cost}</p>
+        `;
+
+    // 點擊卡片時，自動捲動到該卡片
+    el.addEventListener("click", () => {
+      scrollToCard(el);
+    });
+
+    carousel.appendChild(el);
+  });
+
+  // 2. 核心：滾動時計算縮放 (3D效果)
+  function updateCarousel() {
+    const center = carousel.offsetWidth / 2;
+    const cards = document.querySelectorAll(".egg-card");
+    let closestCard = null;
+    let minDist = Infinity;
+
+    cards.forEach((card) => {
+      // 計算卡片中心點相對於視窗的位置
+      const cardCenter =
+        card.offsetLeft + card.offsetWidth / 2 - carousel.scrollLeft;
+
+      // 計算距離中心的絕對值
+      const dist = Math.abs(cardCenter - center);
+
+      // 縮放公式：距離越近 scale 越大 (最大 1.2, 最小 0.8)
+      // 500 是一個參數，控制縮放的敏感度
+      let scale = 1.2 - dist / 500;
+      if (scale < 0.8) scale = 0.8;
+
+      card.style.transform = `scale(${scale})`;
+
+      // 找出距離中心最近的那張卡
+      if (dist < minDist) {
+        minDist = dist;
+        closestCard = card;
+      }
+    });
+
+    // 處理「選中狀態」
+    if (closestCard) {
+      document
+        .querySelectorAll(".egg-card")
+        .forEach((c) => c.classList.remove("active"));
+      closestCard.classList.add("active");
+
+      // 只有中間是米特蛋時，按鈕才有效
+      if (closestCard.dataset.id === "meat") {
+        btnChoose.classList.remove("disabled");
+        state.selectedEgg = "meat";
+      } else {
+        btnChoose.classList.add("disabled");
+        state.selectedEgg = null;
+      }
     }
-    this.dom.nextFromVideoBtn.classList.remove("hidden");
   }
 
-  generateResult() {
-    const ingredients = Array.from(this.state.selectedIngredients);
-    const count = ingredients.length;
+  // 綁定滾動事件
+  carousel.addEventListener("scroll", updateCarousel);
+  // 初始化執行一次
+  setTimeout(updateCarousel, 100);
 
-    const hasTNT = ingredients.includes("TNT");
-    const has榴槤 = ingredients.includes("榴槤");
-    const has魷魚 = ingredients.includes("魷魚");
-    const has檸檬 = ingredients.includes("檸檬");
-    const has香菜 = ingredients.includes("香菜");
-    const has隕石 = ingredients.includes("隕石");
+  // 3. 初始定位：直接捲動到米特蛋 (假設是第3顆，index 2)
+  // 要稍微延遲，等 CSS 渲染完
+  setTimeout(() => {
+    const meatCard = carousel.children[2]; // 0:鳥, 1:金, 2:米特
+    if (meatCard) scrollToCard(meatCard);
+  }, 200);
 
-    let title, text, image, rarity;
-
-    // 根據食材組合生成結果
-    if (count === 3 && has榴槤 && has魷魚 && hasTNT) {
-      title = "💥 究極爆臭：毀滅之蛋";
-      text =
-        "榴槤、TNT、魷魚完美結合，獲得了一顆可以毀滅世界的臭蛋。稀有度：SSSR";
-      image = "assets/results/egg_ultimate.png";
-      rarity = "SSSR";
-    } else if (has香菜 && has榴槤 && has檸檬) {
-      title = "💀 生化武器：廣志之襪";
-      text = "你複製了野原廣志的襪子！這顆蛋散發出讓魔法界聞風喪膽的氣味。";
-      image = "assets/results/egg_chemical.png";
-      rarity = "SSR";
-    } else if (count >= 2 && hasTNT && has隕石) {
-      title = "💣 地雷系：盧媽媽炸彈";
-      text = "這顆蛋看起來隨時會爆炸，充滿了危險的能量，千萬不要搖晃它。";
-      image = "assets/results/egg_tnt.png";
-      rarity = "SR";
-    } else if (count >= 1) {
-      title = "🥚 普通成功：經典煉金蛋";
-      text =
-        "你成功地用奇異的食材煉出了一顆還能吃的經典蛋。雖然無趣，但安全可靠。";
-      image = "assets/results/egg_001.png";
-      rarity = "R";
-    } else {
-      title = "💥 失敗結局：爆裂米特渣";
-      text = "食材太少，煉金爐無法啟動。您得到了一堆無法形容的殘渣。";
-      image = "assets/results/egg_fail.png";
-      rarity = "E";
-    }
-
-    this.dom.modalTitle.textContent = title;
-    this.dom.resultText.textContent = text;
-    this.dom.resultImage.src = image;
-    document.getElementById("result-rarity").textContent = rarity;
+  // 輔助函式：捲動到特定卡片
+  function scrollToCard(card) {
+    const center = carousel.offsetWidth / 2;
+    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+    carousel.scrollTo({
+      left: cardCenter - center,
+      behavior: "smooth",
+    });
   }
 
-  // ---------------------- 模塊加載 ----------------------
+  // 4. 滑鼠拖曳邏輯 (保留並優化)
+  let isDown = false;
+  let startX;
+  let scrollLeft;
 
-  loadModules() {
-    this.Dialog = this.createDialogModule();
-    this.Guide = this.createGuideModule();
-  }
+  carousel.addEventListener("mousedown", (e) => {
+    isDown = true;
+    carousel.classList.add("dragging");
+    startX = e.pageX - carousel.offsetLeft;
+    scrollLeft = carousel.scrollLeft;
+  });
+  carousel.addEventListener("mouseleave", () => {
+    isDown = false;
+    carousel.classList.remove("dragging");
+    snapToNearest(); // 離開時吸附
+  });
+  carousel.addEventListener("mouseup", () => {
+    isDown = false;
+    carousel.classList.remove("dragging");
+    snapToNearest(); // 放開時吸附
+  });
+  carousel.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - carousel.offsetLeft;
+    const walk = (x - startX) * 2; // 拖曳速度
+    carousel.scrollLeft = scrollLeft - walk;
+  });
 
-  // ---------------------- 對話模塊 (Screen 2) ----------------------
+  // 自動吸附到最近的卡片
+  function snapToNearest() {
+    // 延遲一點點，讓慣性跑一下再吸附，體驗比較好
+    setTimeout(() => {
+      const center = carousel.offsetWidth / 2;
+      const cards = document.querySelectorAll(".egg-card");
+      let closest = null;
+      let min = Infinity;
 
-  createDialogModule() {
-    let currentStepIndex = 0;
-    const self = this;
-
-    // ... (內部函數 createBubble, showStepAndAwaitClick, finishDialog 略，與上一個版本相同)
-
-    // 內部函數：創建並顯示聊天氣泡
-    function createBubble(speaker, text) {
-      return new Promise((resolve) => {
-        const bubble = document.createElement("div");
-        bubble.classList.add("chat-bubble");
-        bubble.innerHTML = `<span class="speaker-name">${speaker}</span>${text}`;
-
-        self.dom.dialogHistory.appendChild(bubble);
-        self.dom.dialogHistory.scrollTop = self.dom.dialogHistory.scrollHeight;
-
-        setTimeout(() => {
-          bubble.classList.add("active");
-          resolve(bubble);
-        }, 10);
-      });
-    }
-
-    // 內部函數：顯示下一步並等待點擊
-    function showStepAndAwaitClick() {
-      return new Promise((resolveStep) => {
-        if (currentStepIndex >= CONFIG.DIALOG_LINES.length) {
-          finishDialog();
-          resolveStep();
-          return;
-        }
-
-        const step = CONFIG.DIALOG_LINES[currentStepIndex];
-
-        createBubble(step.speaker, step.text).then(() => {
-          const clickHandler = () => {
-            self.dom.dialogHistory.removeEventListener("click", clickHandler);
-            resolveStep();
-          };
-          self.dom.dialogHistory.addEventListener("click", clickHandler);
-        });
-      });
-    }
-
-    // 內部函數：故事結束，顯示繼續按鈕
-    function finishDialog() {
-      currentStepIndex = CONFIG.DIALOG_LINES.length;
-      self.dom.continueBtn.classList.remove("hidden");
-      self.dom.dialogHistory.style.pointerEvents = "none";
-    }
-
-    return {
-      start: () => {
-        return new Promise((resolve) => {
-          currentStepIndex = 0;
-          self.dom.continueBtn.classList.add("hidden");
-          self.dom.dialogHistory.innerHTML = "";
-          self.dom.dialogHistory.style.pointerEvents = "auto";
-
-          // Continue按鈕的職責：觸發轉場到選材頁 (並結束 Dialog.start Promise)
-          self.dom.continueBtn.onclick = () => {
-            self.state.isTransitioning = false;
-            resolve();
-          };
-
-          // Skip按鈕的職責：直接跳到 Dialog 結束
-          self.dom.dialogSkipBtn.onclick = () => {
-            currentStepIndex = CONFIG.DIALOG_LINES.length;
-            finishDialog();
-          };
-
-          let sequence = Promise.resolve();
-          for (let i = 0; i < CONFIG.DIALOG_LINES.length; i++) {
-            sequence = sequence.then(() => {
-              currentStepIndex = i;
-              return showStepAndAwaitClick();
-            });
-          }
-
-          sequence.then(() => {
-            finishDialog();
-          });
-        });
-      },
-      reset: () => {
-        currentStepIndex = 0;
-        self.dom.dialogHistory.innerHTML = "";
-        self.dom.continueBtn.classList.add("hidden");
-        self.dom.dialogHistory.style.pointerEvents = "none";
-      },
-    };
-  }
-
-  // ---------------------- 導覽模塊 (Guide Module) ----------------------
-
-  createGuideModule() {
-    let currentStep = 0;
-    const self = this;
-
-    // 輔助函數：取得目標元素範圍
-    function getTargetRect(element) {
-      const rect = element.getBoundingClientRect();
-      const padding = 15;
-      return {
-        x: rect.x - padding,
-        y: rect.y - padding,
-        width: rect.width + 2 * padding,
-        height: rect.height + 2 * padding,
-      };
-    }
-
-    // 輔助函數：計算提示框位置 (略，與上一個版本相同)
-    function calculateTooltipPosition(targetRect, position) {
-      let top, left;
-      const tooltip = self.dom.guideTooltip;
-
-      tooltip.style.opacity = 0;
-      tooltip.style.display = "block";
-
-      top = targetRect.y + targetRect.height / 2 - tooltip.offsetHeight / 2;
-      left = targetRect.x + targetRect.width + 30;
-
-      if (position === "left") {
-        left = targetRect.x - tooltip.offsetWidth - 30;
-      } else if (position === "top") {
-        top = targetRect.y - tooltip.offsetHeight - 30;
-        left = targetRect.x + targetRect.width / 2 - tooltip.offsetWidth / 2;
-      }
-
-      left = Math.max(
-        20,
-        Math.min(left, window.innerWidth - tooltip.offsetWidth - 20)
-      );
-      top = Math.max(
-        20,
-        Math.min(top, window.innerHeight - tooltip.offsetHeight - 20)
-      );
-
-      tooltip.style.opacity = 1;
-      return { top, left };
-    }
-
-    function showStep() {
-      if (currentStep >= CONFIG.GUIDE_STEPS.length) {
-        exit();
-        return;
-      }
-
-      const step = CONFIG.GUIDE_STEPS[currentStep];
-      const targetElement = document.getElementById(step.targetId);
-
-      if (!targetElement || targetElement.offsetParent === null) {
-        currentStep++;
-        showStep();
-        return;
-      }
-
-      const targetRect = getTargetRect(targetElement);
-
-      self.dom.guideFocusRing.style.width = `${targetRect.width}px`;
-      self.dom.guideFocusRing.style.height = `${targetRect.height}px`;
-      self.dom.guideFocusRing.style.top = `${targetRect.y}px`;
-      self.dom.guideFocusRing.style.left = `${targetRect.x}px`;
-
-      self.dom.tipText.textContent = step.text;
-
-      const tooltipPos = calculateTooltipPosition(targetRect, step.position);
-      self.dom.guideTooltip.style.top = `${tooltipPos.top}px`;
-      self.dom.guideTooltip.style.left = `${tooltipPos.left}px`;
-
-      self.dom.guideTooltip.classList.add("active");
-      self.dom.tipNextBtn.textContent =
-        currentStep === CONFIG.GUIDE_STEPS.length - 1 ? "完成指引" : "下一步";
-
-      document.getElementById("tip-current-step").textContent = currentStep + 1;
-      document.getElementById("tip-total-steps").textContent =
-        CONFIG.GUIDE_STEPS.length;
-    }
-
-    function start() {
-      if (self.state.currentScreenId !== "screen-1") {
-        self.showAlert("info", "請先回到首頁才能啟動新手導覽。");
-        return;
-      }
-      if (self.state.isTransitioning) return;
-
-      self.dom.guideOverlay.classList.remove("hidden");
-      self.dom.guideTooltip.classList.add("active");
-      currentStep = 0;
-      showStep();
-      self.state.isTransitioning = true; // 鎖定遊戲流程
-    }
-
-    function exit() {
-      self.dom.guideOverlay.classList.add("hidden");
-      self.dom.guideTooltip.classList.remove("active");
-      self.state.isTransitioning = false;
-    }
-
-    function next() {
-      currentStep++;
-      showStep();
-    }
-
-    self.dom.tipNextBtn.addEventListener("click", next);
-    self.dom.guideOverlay.addEventListener("click", (event) => {
-      if (event.target === self.dom.guideOverlay) {
-        next();
-      }
-    });
-
-    return { start, exit, next };
-  }
-
-  // ---------------------- 事件監聽器 ----------------------
-
-  initEventListeners() {
-    // 1. 普通轉場按鈕 (Menu, Gallery, Next, Back)
-    this.dom.nextScreenBtns.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        if (this.state.isTransitioning) return;
-        const targetId = e.currentTarget.dataset.target;
-        this.performTransition(targetId);
-      });
-    });
-
-    // 2. Lottie 開始遊戲按鈕 (Screen 1 Start)
-    this.dom.lottieStartBtn.addEventListener("click", () => {
-      if (this.state.isTransitioning) return;
-      this.performTransition(this.dom.lottieStartBtn.dataset.target);
-    });
-
-    // 3. 食材選擇
-    this.dom.ingredientCards.forEach((card) => {
-      card.addEventListener("click", (e) => this.handleIngredientSelection(e));
-    });
-
-    // 4. 影片結束
-    if (this.dom.castingVideo) {
-      this.dom.castingVideo.addEventListener("ended", () =>
-        this.handleVideoEnd()
-      );
-    }
-
-    // 5. Modal 關閉/重置
-    const resetHandler = () => {
-      this.dom.resultModal.classList.remove("active");
-      this.dom.resultModal.style.display = "none";
-      this.performTransition("screen-1");
-    };
-
-    this.dom.modalCloseBtn.addEventListener("click", resetHandler);
-    this.dom.saveToGalleryBtn.addEventListener("click", () => {
-      this.dom.resultModal.classList.remove("active");
-      this.dom.resultModal.style.display = "none";
-      this.performTransition("screen-gallery");
-      this.showAlert("success", "結果已儲存到圖鑑！");
-    });
-
-    // 6. 永久 UI 按鈕
-    this.dom.volumeBtn.addEventListener("click", () => {
-      this.state.isMuted = !this.state.isMuted;
-      this.dom.volumeBtn.textContent = this.state.isMuted ? "🔇" : "🔊";
-      this.showAlert("info", this.state.isMuted ? "已關閉音效" : "已開啟音效");
-      if (this.dom.castingVideo) {
-        this.dom.castingVideo.muted = this.state.isMuted;
-      }
-    });
-
-    // 7. 新手導覽按鈕 (僅點擊時啟動)
-    this.dom.guideBtn.addEventListener("click", () => this.Guide.start());
-
-    // 8. 設置按鈕
-    this.dom.settingsBtn.addEventListener("click", (e) => {
-      this.performTransition(e.currentTarget.dataset.target);
-    });
-
-    // 9. 施法按鈕 (Cast Spell)
-    if (this.dom.castSpellBtn) {
-      this.dom.castSpellBtn.addEventListener("click", () => {
-        if (!this.dom.castSpellBtn.disabled) {
-          this.performTransition(this.dom.castSpellBtn.dataset.target);
-        } else {
-          this.showAlert("error", "請選擇 1 到 3 種食材才能施法！");
+      cards.forEach((card) => {
+        const cardCenter =
+          card.offsetLeft + card.offsetWidth / 2 - carousel.scrollLeft;
+        const dist = Math.abs(cardCenter - center);
+        if (dist < min) {
+          min = dist;
+          closest = card;
         }
       });
+
+      if (closest) {
+        scrollToCard(closest);
+      }
+    }, 50);
+  }
+
+  // 按鈕事件
+  btnChoose.addEventListener("click", () => {
+    if (state.selectedEgg === "meat") {
+      playCurtainTransition(() => {
+        pages.select.style.display = "none";
+        pages.game.style.display = "block";
+        hands.select.classList.remove("hands-show");
+        resetGame();
+      });
     }
+  });
+}
+
+// 滑鼠拖曳邏輯
+let isDown = false;
+let startX;
+let scrollLeft;
+
+carousel.addEventListener("mousedown", (e) => {
+  isDown = true;
+  carousel.classList.add("dragging");
+  startX = e.pageX - carousel.offsetLeft;
+  scrollLeft = carousel.scrollLeft;
+});
+carousel.addEventListener("mouseleave", () => {
+  isDown = false;
+  carousel.classList.remove("dragging");
+});
+carousel.addEventListener("mouseup", () => {
+  isDown = false;
+  carousel.classList.remove("dragging");
+});
+carousel.addEventListener("mousemove", (e) => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - carousel.offsetLeft;
+  const walk = (x - startX) * 2;
+  carousel.scrollLeft = scrollLeft - walk;
+});
+
+btnChoose.addEventListener("click", () => {
+  if (state.selectedEgg === "meat") {
+    playCurtainTransition(() => {
+      pages.select.style.display = "none";
+      pages.game.style.display = "block";
+      hands.select.classList.remove("hands-show");
+      resetGame();
+    });
+  }
+});
+
+// --- 遊戲邏輯 ---
+function initGame() {
+  const pool = document.getElementById("ingredients-pool");
+  const slots = document.querySelectorAll(".slot");
+  const btnMagic = document.getElementById("btn-magic");
+  const gameTip = document.getElementById("game-tip");
+
+  gameTip.onclick = () => (gameTip.style.display = "none");
+
+  // 生成食材
+  ingredients.forEach((ing, index) => {
+    const img = document.createElement("img");
+    img.src = `./img/${ing.img}`;
+    img.className = "ingredient";
+    const pos = ingredientPositions[index];
+    img.style.position = "absolute";
+    img.style.top = pos.top;
+    img.style.left = pos.left;
+    img.dataset.id = ing.id;
+
+    img.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", ing.id);
+      e.dataTransfer.effectAllowed = "move";
+    });
+
+    // 手機版點擊也可添加
+    img.addEventListener("click", () => addIngredient(ing.id));
+    pool.appendChild(img);
+  });
+
+  // 放置區
+  const eggArea = document.getElementById("main-egg");
+  eggArea.addEventListener("dragover", (e) => e.preventDefault());
+  eggArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    addIngredient(parseInt(id));
+  });
+
+  btnMagic.addEventListener("click", () => {
+    playCurtainTransition(showResult);
+  });
+}
+
+// 播放喂食音效（如果有做靜音開關，可以一起判斷）
+try {
+  // 如果你有 state.isMuted 或類似變數，可以這樣寫：
+  // if (!state.isMuted) {
+  eatSfx.currentTime = 0; // 每次從頭播
+  eatSfx.play();
+  // }
+} catch (e) {
+  console.warn("eatSfx 播放失敗：", e);
+}
+
+// 切成吃東西的 GIF
+egg.src = EGG_EAT_SRC;
+
+// 如果你的 state 物件沒有 eggTimer，先在一開始加： state.eggTimer = null;
+
+function addIngredient(id) {
+  if (state.chosenIngredients.length >= 3) return;
+  if (state.chosenIngredients.includes(id)) return;
+
+  state.chosenIngredients.push(id);
+  updateSlots();
+
+  const egg = document.getElementById("main-egg");
+
+  // 先清掉舊的計時器（避免連續餵食卡住）
+  if (state.eggTimer) {
+    clearTimeout(state.eggTimer);
+    state.eggTimer = null;
+  }
+
+  // 切成吃東西的 GIF
+  egg.src = EGG_EAT_SRC;
+
+  // 等 GIF 播完才換回待機蛋
+  state.eggTimer = setTimeout(() => {
+    egg.src = EGG_IDLE_SRC;
+    state.eggTimer = null;
+  }, EGG_EAT_DURATION);
+
+  // 下面原本你 addIngredient 裡的其他邏輯（例如顯示按鈕之類）照舊放就好
+}
+
+function removeIngredient(index) {
+  if (state.chosenIngredients[index]) {
+    const id = state.chosenIngredients[index];
+    state.chosenIngredients.splice(index, 1);
+
+    document.querySelectorAll(".ingredient").forEach((el) => {
+      if (el.dataset.id == id) el.classList.remove("used");
+    });
+    updateSlots();
   }
 }
 
-// =========================================================================
-// III. 程式碼啟動點 (Entry Point)
-// =========================================================================
+function updateSlots() {
+  const slots = document.querySelectorAll(".slot");
+  const btnMagic = document.getElementById("btn-magic");
 
-document.addEventListener("DOMContentLoaded", () => {
-  new GameController();
-});
+  slots.forEach((slot, i) => {
+    const id = state.chosenIngredients[i];
+    const removeBtn = slot.querySelector(".slot-remove");
+
+    // 清空
+    slot.innerHTML = "";
+
+    if (id) {
+      const ingData = ingredients.find((x) => x.id === id);
+      slot.innerHTML = `<img src="./img/${ingData.img}"><div class="slot-remove">x</div>`;
+
+      // 重新綁定移除事件
+      slot.querySelector(".slot-remove").onclick = (e) => {
+        e.stopPropagation();
+        removeIngredient(i);
+      };
+    } else {
+      slot.innerHTML = `<div class="slot-remove">x</div>`;
+    }
+  });
+
+  if (state.chosenIngredients.length === 3) {
+    btnMagic.style.display = "block";
+  } else {
+    btnMagic.style.display = "none";
+  }
+}
+
+function resetGame() {
+  state.chosenIngredients = [];
+  updateSlots();
+  document
+    .querySelectorAll(".ingredient")
+    .forEach((el) => el.classList.remove("used"));
+  document.getElementById("btn-magic").style.display = "none";
+}
+
+// =========================================
+//  5. 結果與圖鑑系統 (核心修改)
+// =========================================
+function showResult() {
+  pages.game.style.display = "none";
+  pages.result.style.display = "block";
+
+  // 1. 將選中的 ID 排序 (確保 1-2-3 和 3-2-1 是一樣的)
+  const sortedIds = [...state.chosenIngredients].sort((a, b) => a - b);
+  const comboKey = sortedIds.join("-"); // 變成 "1-2-3" 這種格式
+
+  // 2. 查找配方
+  let result = recipes[comboKey];
+
+  // 3. 防呆：如果找不到配方 (應該不會發生)，給個預設值
+  if (!result) {
+    result = { name: "未知物體", img: "result_fail.png", isFail: true };
+  }
+
+  // 4. 解鎖並存檔
+  if (!unlockedRecipes.includes(comboKey)) {
+    unlockedRecipes.push(comboKey);
+    localStorage.setItem("eggMagic_unlocked", JSON.stringify(unlockedRecipes));
+  }
+
+  // 5. 顯示畫面
+  document.getElementById("result-img").src = `./img/${result.img}`;
+  document.getElementById("result-name").innerText = result.name;
+  document.getElementById("result-text").innerText = result.isFail
+    ? "哎呀！好像變成了不可名狀的廚餘..."
+    : "哇！大成功！這是新的食譜！";
+  // 依是否為廚餘，切換對話框的背景圖
+  const resultDialog = document.querySelector(".result-dialog");
+  if (result.isFail) {
+    resultDialog.classList.remove("success");
+    resultDialog.classList.add("fail");
+  } else {
+    resultDialog.classList.remove("fail");
+    resultDialog.classList.add("success");
+  }
+
+  // 按鈕
+  document.getElementById("btn-res-retry").onclick = () => {
+    playCurtainTransition(() => {
+      pages.result.style.display = "none";
+      pages.game.style.display = "block";
+      resetGame();
+    });
+  };
+  document.getElementById("btn-res-book").onclick = () => {
+    playCurtainTransition(() => {
+      pages.result.style.display = "none";
+      renderGallery();
+      pages.gallery.style.display = "block";
+    });
+  };
+}
+
+function renderGallery() {
+  const grid = document.getElementById("gallery-grid");
+  grid.innerHTML = "";
+
+  // 遍歷所有定義好的食譜
+  Object.keys(recipes).forEach((key) => {
+    const recipe = recipes[key];
+    const isUnlocked = unlockedRecipes.includes(key);
+
+    const card = document.createElement("div");
+    card.className = "gallery-card";
+
+    if (isUnlocked) {
+      // 顯示已解鎖內容
+      // 還原食材圖片
+      const ingIds = key.split("-");
+      const ingHtml = ingIds
+        .map((id) => {
+          const ing = ingredients.find((i) => i.id == id);
+          return `<img src="./img/${ing.img}" class="mini-ing">`;
+        })
+        .join("");
+
+      card.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="./img/${recipe.img}" class="card-img">
+                        <div class="card-name">${recipe.name}</div>
+                    </div>
+                    <div class="card-back">
+                        <p>配方：</p>
+                        <div class="card-ingredients">${ingHtml}</div>
+                    </div>
+                </div>
+            `;
+      card.onclick = () => card.classList.toggle("flipped");
+    } else {
+      // 顯示未解鎖
+      card.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-front" style="background:#eee; justify-content:center;">
+                        <div style="font-size:30px; color:#aaa;">?</div>
+                        <div class="card-name">???</div>
+                    </div>
+                </div>
+            `;
+    }
+    grid.appendChild(card);
+  });
+
+  document.getElementById("btn-gallery-back").onclick = () => {
+    playCurtainTransition(() => {
+      pages.gallery.style.display = "none";
+      pages.game.style.display = "block";
+      resetGame();
+    });
+  };
+}
+
+// =========================================
+//  6. 轉場與 UI
+// =========================================
+function scrollTransition(curr, next) {
+  curr.classList.add("scrolled-up");
+  curr.classList.remove("active-page");
+  next.style.display = "flex";
+  void next.offsetWidth; // Trigger Reflow
+  next.classList.remove("hidden-page");
+  next.classList.add("active-page");
+}
+
+function playCurtainTransition(callback) {
+  const layer = document.getElementById("curtain-layer");
+  layer.classList.add("curtains-closed");
+  setTimeout(() => {
+    if (callback) callback();
+    setTimeout(() => {
+      layer.classList.remove("curtains-closed");
+    }, 500);
+  }, 800);
+}
+
+function initTopUI() {
+  const modal = document.getElementById("tutorial-modal");
+  const btnHelp = document.getElementById("btn-tutorial");
+  if (btnHelp && modal) {
+    btnHelp.onclick = () => {
+      modal.style.display = "flex";
+    };
+    const closeBtn = modal.querySelector(".close-btn");
+    if (closeBtn)
+      closeBtn.onclick = () => {
+        modal.style.display = "none";
+      };
+    modal.onclick = (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    };
+  }
+}
