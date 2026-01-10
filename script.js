@@ -9,14 +9,9 @@ const CONFIG = {
   CURTAIN_OPEN_MS: 1100,
   MAX_INGREDIENTS: 3,
   INGREDIENT_IMAGES: {
-    榴槤: "./img/榴槤.png",
-    魷魚: "./img/魷魚.png",
-    檸檬: "./img/檸檬.png",
-    手機: "./img/手機.png",
-    TNT: "./img/炸彈.png",
-    香菜: "./img/香菜.png",
-    隕石: "./img/石頭.png",
-    服裝: "./img/褲子.png",
+    魔法方塊A: "./img/Title.png",
+    魔法方塊B: "./img/Title.png",
+    魔法方塊C: "./img/Title.png",
   },
   SFX_PROFILE: {
     uiTap: 520,
@@ -86,12 +81,12 @@ const CONFIG = {
     "screen-5": [
       {
         targetId: "selection-row",
-        text: "這些欄位顯示已放入的食材，按叉叉可清除。",
+        text: "這些欄位顯示已放入的方塊，按叉叉可清除。",
         position: "bottom",
       },
       {
         targetId: "ingredient-tray",
-        text: "直接拖曳原始圖片食材到米特蛋上方，最多三種。",
+        text: "直接拖曳任何魔法方塊到米特蛋上方，最多三種。",
         position: "top",
       },
       {
@@ -732,7 +727,7 @@ class GameController {
           slot.classList.remove("filled");
           slot.dataset.ingredient = "";
           if (label) label.textContent = "空槽";
-          if (hint) hint.textContent = "拖曳食材進入";
+          if (hint) hint.textContent = "拖曳方塊進入";
           if (thumb) {
             thumb.removeAttribute("src");
             thumb.alt = "已選食材縮圖";
@@ -1484,6 +1479,15 @@ class GameController {
           }
           this.state.selectedEgg = eggName;
           this.highlightEggChoice(eggName);
+
+          // 單擊免費米特蛋時，直接帶玩家前往下一幕，減少多餘操作
+          if (
+            eggName === "米特蛋" &&
+            this.dom.confirmEggBtn &&
+            !this.dom.confirmEggBtn.disabled
+          ) {
+            this.performTransition(this.dom.confirmEggBtn.dataset.target);
+          }
         };
 
         card.addEventListener("click", selectEgg);
