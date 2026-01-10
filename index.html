@@ -12,10 +12,10 @@
     <link
       rel="icon"
       type="image/png"
-      href="./img/frame_001 1.png"
+      href="./img/Background_blue.png"
       sizes="32x32"
     />
-    <link rel="apple-touch-icon" href="./img/botton_Start_.png" />
+    <link rel="apple-touch-icon" href="./img/Title.png" />
     <link rel="stylesheet" href="./css/Style.css" />
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"
@@ -78,58 +78,92 @@
             aria-label="首頁：蛋米特 DAMN IT!"
           >
             <div class="home-stage">
-              <img
-                src="./img/Vector 11.png"
-                alt="放射線"
-                class="radiation-lines"
-              />
-              <img
-                src="./img/Rectangle 97.png"
-                alt="流動蛋液"
-                class="egg-liquid"
-              />
+              <div class="sky-gradient layer" aria-hidden="true">
+                <img
+                  src="./img/Background_blue.png"
+                  alt="天空漸層背景"
+                  class="sky-gradient-img"
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="radiation-rays layer" aria-hidden="true">
+                <img
+                  src="./img/射綫_画板 1 1.png"
+                  alt="放射線"
+                  class="radiation-lines"
+                />
+              </div>
+
+              <div class="egg-liquid-layer layer" aria-hidden="true">
+                <img
+                  src="./img/蛋白_画板 1 1.png"
+                  alt="流動蛋液"
+                  class="egg-liquid"
+                />
+              </div>
+
+              <div class="background-objects layer" aria-hidden="true">
+                <img
+                  src="./img/網格_画板 1 1.png"
+                  alt="棋盤布"
+                  class="checkered-cloth"
+                />
+                <img
+                  src="./img/Component 177.png"
+                  alt="蛋液光澤"
+                  class="egg-gloss"
+                />
+              </div>
+
               <div
                 id="star-field"
-                class="floating-stars"
+                class="floating-stars layer"
                 aria-hidden="true"
               ></div>
-              <div class="logo-layer">
+
+              <div class="logo-layer layer">
                 <img
-                  src="./img/frame_001 1.png"
+                  src="./img/Title.png"
                   alt="蛋米特 DAMN IT!"
                   class="hero-logo"
                   loading="lazy"
                 />
               </div>
-              <img
-                src="./img/Rectangle 98.png"
-                alt="棋盤布"
-                class="checkered-cloth"
-              />
-              <img
-                src="./img/Component 177.png"
-                alt="蛋液光澤"
-                class="egg-gloss"
-              />
-              <button
-                id="lottie-start-btn"
-                class="start-button next-screen-btn"
-                data-target="screen-2"
-                aria-label="開始遊戲"
-              >
-                <img
-                  src="./img/Primary botton_Start_Defauit.png"
-                  alt="開始遊戲"
-                />
-              </button>
-              <button
-                id="settings-btn"
-                class="home-settings-btn next-screen-btn"
-                data-target="screen-settings"
-                aria-label="設定"
-              >
-                <img src="./img/太陽.png" alt="設定" />
-              </button>
+
+              <div class="cards-layer layer">
+                <button
+                  id="lottie-start-btn"
+                  class="start-button next-screen-btn"
+                  data-target="screen-2"
+                  aria-label="開始遊戲"
+                >
+                  <img
+                    src="./img/Primary botton_Start_Defauit.png"
+                    alt="開始遊戲"
+                  />
+                </button>
+              </div>
+
+              <div class="ui-buttons layer" aria-label="主要導覽">
+                <button class="home-ui-btn" aria-label="回到首頁">
+                  <img src="./img/HomePage.png" alt="首頁" />
+                </button>
+                <button class="speaker-ui-btn" aria-label="音量">
+                  <img src="./img/voice_on.png" alt="音量" />
+                </button>
+                <button class="help-ui-btn" aria-label="幫助">
+                  <img src="./img/Botton_teaching_Default.png" alt="幫助" />
+                </button>
+                <button
+                  id="settings-btn"
+                  class="home-settings-btn next-screen-btn"
+                  data-target="screen-settings"
+                  aria-label="設定"
+                >
+                  <img src="./img/太陽.png" alt="設定" />
+                </button>
+              </div>
             </div>
           </section>
 
